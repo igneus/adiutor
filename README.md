@@ -1,24 +1,8 @@
-# README
+# Adiutor
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Internal app assisting work on the [In adiutorium][ia] project.
+Basically a database of chant pieces.
 
-Things you may want to cover:
+Secondary purpose is trying out recent Rails.
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+[ia]: https://github.com/igneus/In-adiutorium
