@@ -14,14 +14,19 @@ class LilypondImageGenerator
   private
 
   def chant_lily(chant)
-    spolecne = File.join ENV['IN_ADIUTORIUM_SOURCES_PATH'], 'spolecne.ly'
-
     [
       "\\version \"2.19.0\"",
-      "\\include \"#{spolecne}\"",
+      include_statement('spolecne.ly'),
+      include_statement('dilyresponsorii.ly'),
       "\\header { tagline = ##f }",
       "\\paper { left-margin = 0\\cm   right-margin = 0\\cm   top-margin = 0\\cm   bottom-margin = 0\\cm }",
       chant.lilypond_code
     ].join("\n")
+  end
+
+  def include_statement(ia_path)
+    full_path = File.join(ENV['IN_ADIUTORIUM_SOURCES_PATH'], ia_path)
+
+    "\\include \"#{full_path}\""
   end
 end
