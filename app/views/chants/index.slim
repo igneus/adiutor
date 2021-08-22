@@ -1,0 +1,5 @@
+h1 Chants
+
+ul
+  - @chants.each do |c|
+    li= link_to c.link_text, chant_path(c)

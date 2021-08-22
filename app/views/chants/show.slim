@@ -1,0 +1,12 @@
+h1
+  ' Chant:
+  = @chant.link_text
+
+table
+  tbody
+    - @properties.each do |label, value|
+      tr
+        th= label
+        td= value
+
+pre= @chant.lilypond_code
