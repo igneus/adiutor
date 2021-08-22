@@ -31,5 +31,6 @@
 # Ignore config
 /.env
 
-# Ignore Emacs backups
+# Ignore editor files
+/.idea
 *~
