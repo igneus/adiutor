@@ -2,6 +2,8 @@ h1
   ' Chant:
   = @chant.link_text
 
+= button_to 'Open in editor', open_in_editor_chant_path(@chant), method: :post
+
 table
   tbody
     - @properties.each do |label, value|
