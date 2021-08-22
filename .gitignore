@@ -34,3 +34,6 @@
 # Ignore editor files
 /.idea
 *~
+
+# Ignore generated assets
+/app/assets/images/chants/*.svg
