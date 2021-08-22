@@ -5,7 +5,7 @@ class InAdiutoriumImporter
   end
 
   def import_file(path)
-    return if path =~ /(antifonar|cizojazycne|hymny|nechoral|psalmodie|rytmicke|zalm\d+)/
+    return if path =~ /(antifonar|cizojazycne|hymny|nechoral|psalmodie|rytmicke|variationes|zalm\d+)/
 
     Lyv::LilyPondMusic.new(path).scores.each do |s|
       puts s
