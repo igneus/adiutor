@@ -1,6 +1,6 @@
 class ChantsController < ApplicationController
   def index
-    @chants = Chant.all
+    @chants = Chant.where(filter_params)
   end
 
   def show
@@ -16,5 +16,11 @@ class ChantsController < ApplicationController
     flash[:info] = "Chant #{chant.id} opened for editation"
 
     redirect_back fallback_location: root_path
+  end
+
+  private
+
+  def filter_params
+    params.permit(:quid, :modus, :differentia)
   end
 end

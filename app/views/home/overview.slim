@@ -4,14 +4,14 @@ h2 Genres
 
 ul
   - @genres.each do |g|
-    li= g
+    li= link_to g, chants_path(quid: g)
 
 h2 Modi & Differentiae
 
 ul
   - @modes.each_pair do |modus, differentiae|
     li
-      = modus.blank? ? modus.inspect : modus
+      = link_to((modus.blank? ? modus.inspect : modus), chants_path(modus: modus))
       ul
         - differentiae.each do |d|
-          li= d.blank? ? d.inspect : d
+          li= link_to((d.blank? ? d.inspect : d), chants_path(modus: modus, differentia: d))
