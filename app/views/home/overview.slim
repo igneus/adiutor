@@ -1,0 +1,17 @@
+h1 Overview
+
+h2 Genres
+
+ul
+  - @genres.each do |g|
+    li= g
+
+h2 Modi & Differentiae
+
+ul
+  - @modes.each_pair do |modus, differentiae|
+    li
+      = modus.blank? ? modus.inspect : modus
+      ul
+        - differentiae.each do |d|
+          li= d.blank? ? d.inspect : d
