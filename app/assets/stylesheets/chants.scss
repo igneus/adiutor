@@ -2,11 +2,17 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+$attention-colour: orange;
+
 .chant-image {
   margin: 30px;
 }
 
 .chant-properties {
   th { text-align: left }
-  .placet, .textus_approbatus { background-color: orange; }
+  .placet, .textus_approbatus { background-color: $attention-colour; }
+}
+
+.chant-with-quality-notice {
+  background-color: $attention-colour;
 }

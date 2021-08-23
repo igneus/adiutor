@@ -6,7 +6,7 @@ p
 
 ul
   - @chants.each do |c|
-    li
+    li class=(c.marked_for_revision? ? 'chant-with-quality-notice' : nil)
       = link_to c.link_text, chant_path(c)
       - if @display_music
         br

@@ -18,4 +18,8 @@ class Chant < ApplicationRecord
   def fial
     "#{source_file_path}##{chant_id}"
   end
+
+  def marked_for_revision?
+    placet.present? && placet != '*'
+  end
 end
