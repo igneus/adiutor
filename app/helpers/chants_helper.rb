@@ -12,4 +12,11 @@ module ChantsHelper
       .new(chant.textus_approbatus, chant.lyrics)
       .to_s(:html)
   end
+
+  def lilypond_syntax_highlight(code)
+    formatter = Rouge::Formatters::HTML.new
+    lexer = Rouge::Lexers::TeX.new # rouge does not have a proper lexer for LilyPond
+
+    formatter.format lexer.lex code
+  end
 end

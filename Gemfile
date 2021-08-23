@@ -31,6 +31,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'diffy'
 gem 'dotenv-rails'
 gem 'lyv', github: 'igneus/lyv'
+gem 'rouge'
 gem 'slim'
 
 group :development, :test do
