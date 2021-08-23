@@ -37,3 +37,14 @@
 
 # Ignore generated assets
 /app/assets/images/chants/*.svg
+
+# Ignore docker volumes
+/docker/gem_cache
+
+# Ignore webpack files
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
