@@ -22,4 +22,8 @@ class Chant < ApplicationRecord
   def marked_for_revision?
     placet.present? && placet != '*'
   end
+
+  def lyrics_edited?
+    textus_approbatus.present?
+  end
 end

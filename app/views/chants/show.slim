@@ -15,4 +15,9 @@ table.chant-properties
         th= label
         td= value
 
+    - if @chant.lyrics_edited?
+      tr
+        th lyrics diff
+        td== lyrics_diff @chant
+
 pre= @chant.lilypond_code
