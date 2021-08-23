@@ -2,7 +2,7 @@
 # (only makes sense when running on a local workstation)
 class EditorOpener
   def call(chant)
-    project_root = ENV['IN_ADIUTORIUM_SOURCES_PATH']
+    project_root = Adiutor::IN_ADIUTORIUM_SOURCES_PATH
     tool = File.join project_root, 'nastroje', 'editfial.rb'
 
     Dir.chdir(project_root) do

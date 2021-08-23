@@ -10,6 +10,6 @@ class Chant < ApplicationRecord
   private
 
   def in_project_path
-    source_file_path.sub(ENV['IN_ADIUTORIUM_SOURCES_PATH'] + '/', '')
+    source_file_path.sub(Adiutor::IN_ADIUTORIUM_SOURCES_PATH + '/', '')
   end
 end

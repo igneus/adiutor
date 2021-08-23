@@ -25,7 +25,7 @@ class LilypondImageGenerator
   end
 
   def include_statement(ia_path)
-    full_path = File.join(ENV['IN_ADIUTORIUM_SOURCES_PATH'], ia_path)
+    full_path = File.join(Adiutor::IN_ADIUTORIUM_SOURCES_PATH, ia_path)
 
     "\\include \"#{full_path}\""
   end
