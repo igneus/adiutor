@@ -4,10 +4,11 @@ h1
 
 = button_to 'Open in editor', open_in_editor_chant_path(@chant), method: :post
 
-table
+table.chant-properties
   tbody
     - @properties.each do |label, value|
-      tr
+      - next if value.blank?
+      tr class=label
         th= label
         td= value
 
