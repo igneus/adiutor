@@ -5,10 +5,7 @@ h1
 = button_to 'Open in editor', open_in_editor_chant_path(@chant), method: :post
 
 .chant-image
-  - begin
-    = image_tag "chants/#{@chant.id}.svg"
-  - rescue Sprockets::Rails::Helper::AssetNotFound
-    p Image not found
+  = render 'image', chant: @chant
 
 table.chant-properties
   tbody

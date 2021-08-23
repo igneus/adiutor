@@ -1,6 +1,7 @@
 class ChantsController < ApplicationController
   def index
     @chants = Chant.where(filter_params)
+    @display_music = @chants.count < 500
   end
 
   def show
