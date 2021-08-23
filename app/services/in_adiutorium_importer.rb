@@ -15,7 +15,12 @@ class InAdiutoriumImporter
 
   def import_score(score)
     header = score.header
-    Chant.find_or_create_by!(chant_id: header['id'], source_file_path: score.src_file) do |chant|
+    in_project_path =
+      score
+        .src_file
+        .sub(Adiutor::IN_ADIUTORIUM_SOURCES_PATH, '')
+        .sub(%r{^/}, '')
+    Chant.find_or_create_by!(chant_id: header['id'], source_file_path: in_project_path) do |chant|
       chant.lilypond_code = score.text
       chant.lyrics = score.lyrics_readable
       chant.header = header

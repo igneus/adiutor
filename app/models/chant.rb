@@ -4,12 +4,6 @@ class Chant < ApplicationRecord
   end
 
   def fial
-    "#{in_project_path}##{chant_id}"
-  end
-
-  private
-
-  def in_project_path
-    source_file_path.sub(Adiutor::IN_ADIUTORIUM_SOURCES_PATH + '/', '')
+    "#{source_file_path}##{chant_id}"
   end
 end
