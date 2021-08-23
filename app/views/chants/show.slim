@@ -4,6 +4,12 @@ h1
 
 = button_to 'Open in editor', open_in_editor_chant_path(@chant), method: :post
 
+.chant-image
+  - begin
+    = image_tag "chants/#{@chant.id}.svg"
+  - rescue Sprockets::Rails::Helper::AssetNotFound
+    p Image not found
+
 table.chant-properties
   tbody
     - @properties.each do |label, value|
@@ -13,8 +19,3 @@ table.chant-properties
         td= value
 
 pre= @chant.lilypond_code
-
-- begin
-  = image_tag "chants/#{@chant.id}.svg"
-- rescue Sprockets::Rails::Helper::AssetNotFound
-  p Image not found

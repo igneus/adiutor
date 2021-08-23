@@ -2,6 +2,10 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+.chant-image {
+  margin: 30px;
+}
+
 .chant-properties {
   th { text-align: left }
   .placet, .textus_approbatus { background-color: orange; }
