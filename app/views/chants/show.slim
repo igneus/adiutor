@@ -13,4 +13,7 @@ table
 
 pre= @chant.lilypond_code
 
-= image_tag "chants/#{@chant.id}.svg"
+- begin
+  = image_tag "chants/#{@chant.id}.svg"
+- rescue Sprockets::Rails::Helper::AssetNotFound
+  p Image not found
