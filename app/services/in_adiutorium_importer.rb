@@ -19,10 +19,12 @@ class InAdiutoriumImporter
       chant.lilypond_code = score.text
       chant.lyrics = score.lyrics_readable
       chant.header = header
-      %w[quid modus differentia psalmus].each do |key|
+      %w[quid modus differentia psalmus placet textus_approbatus].each do |key|
         chant.public_send "#{key}=", header[key]
       end
-      p chant
     end
+  rescue
+    p score
+    raise
   end
 end
