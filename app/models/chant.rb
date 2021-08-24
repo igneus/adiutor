@@ -12,10 +12,10 @@ class Chant < ApplicationRecord
   end
 
   def link_text
-    lyrics.present? ? lyrics : fial
+    lyrics.present? ? lyrics : fial_of_self
   end
 
-  def fial
+  def fial_of_self
     "#{source_file_path}##{chant_id}"
   end
 

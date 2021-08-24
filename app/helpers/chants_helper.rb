@@ -4,6 +4,7 @@ module ChantsHelper
     c << 'quality notice' if chant.marked_for_revision?
     c << 'favourite' if chant.placet == '*'
     c << 'edited lyrics' if chant.lyrics_edited?
+    c << 'copy' if chant.fial.present?
 
     c
   end

@@ -5,7 +5,7 @@ class EditorOpener
     project_root = Adiutor::IN_ADIUTORIUM_SOURCES_PATH
     tool = File.join project_root, 'nastroje', 'editfial.rb'
 
-    fial = chant.fial
+    fial = chant.fial_of_self
     fial += ":#{line}" if line
 
     Dir.chdir(project_root) do
