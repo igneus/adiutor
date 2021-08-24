@@ -1,0 +1,9 @@
+h2 Modi & Differentiae
+
+ul
+  - @modes.each_pair do |modus, differentiae|
+    li
+      = link_to((modus.blank? ? modus.inspect : modus), chants_path(modus: modus))
+      ul
+        - differentiae.each do |d|
+          li= link_to((d.blank? ? d.inspect : d), chants_path(modus: modus, differentia: d))

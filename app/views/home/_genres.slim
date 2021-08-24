@@ -1,0 +1,5 @@
+h2 Genres
+
+ul
+  - @genres.each do |g|
+    li= link_to g, chants_path(quid: g)
