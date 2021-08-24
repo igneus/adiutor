@@ -9,15 +9,20 @@ h1
 
 table.chant-properties
   tbody
+    tr
+      th lyrics
+      td= @chant.lyrics
+    - if @chant.lyrics_edited?
+      tr
+        th textus_approbatus
+        td= @chant.textus_approbatus
+      tr
+        th lyrics diff
+        td== lyrics_diff @chant
     - @properties.each do |label, value|
       - next if value.blank?
       tr class=label
         th= label
         td= value
-
-    - if @chant.lyrics_edited?
-      tr
-        th lyrics diff
-        td== lyrics_diff @chant
 
 pre.code-highlight== lilypond_syntax_highlight @chant.lilypond_code

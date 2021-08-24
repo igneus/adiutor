@@ -6,7 +6,7 @@ class ChantsController < ApplicationController
 
   def show
     @chant = Chant.find params[:id]
-    @properties = @chant.attributes.except(*%w(id lilypond_code header))
+    @properties = @chant.attributes.except(*%w(id lilypond_code header lyrics textus_approbatus))
   end
 
   def open_in_editor
