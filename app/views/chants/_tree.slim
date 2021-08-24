@@ -1,0 +1,15 @@
+.entry class=(parent == highlight ? 'highlighted' : nil)
+  a href=chant_path(parent)
+    => parent.fial_of_self
+  - if parent.parent
+    ' <
+    a href=chant_path(parent.parent)
+      = parent.fial
+  br
+    a href=chant_path(parent)
+      = render 'image', chant: parent
+
+- if parent.children.present?
+  .children
+    - parent.children.each do |c|
+      = render 'tree', parent: c, highlight: highlight

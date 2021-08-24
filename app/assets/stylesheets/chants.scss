@@ -31,3 +31,16 @@ pre {
   &.quality-notice { background-color: $attention-colour; }
   &.edited-lyrics { background-color: slateblue; }
 }
+
+.tree-of-origin {
+  .entry {
+    border: 1px solid #ccc;
+    margin: 10px;
+  }
+  .highlighted {
+    border: 2px solid red;
+  }
+  .children {
+    margin-left: 50px;
+  }
+}

@@ -1,6 +1,6 @@
 class Chant < ApplicationRecord
   belongs_to :parent, class_name: 'Chant'
-  has_many :children, class_name: 'Chant'
+  has_many :children, class_name: 'Chant', foreign_key: 'parent_id'
 
   def self.genres
     distinct.pluck(:quid).compact.sort
@@ -12,6 +12,10 @@ class Chant < ApplicationRecord
       .sort_by {|i| i[0].to_s }
       .group_by {|i| i[0] }
       .transform_values {|v| v.collect {|i| i[1] }.sort_by(&:to_s) }
+  end
+
+  def parental_tree_top
+    parent.nil? ? self : parent.parental_tree_top
   end
 
   def link_text

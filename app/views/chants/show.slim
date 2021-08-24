@@ -26,3 +26,8 @@ table.chant-properties
         td= value
 
 pre.code-highlight== lilypond_syntax_highlight @chant.lilypond_code
+
+- if @chant.parent.present? || @chant.children.present?
+  h2 Tree of origin
+  .tree-of-origin
+    = render 'tree', parent: @chant.parental_tree_top, highlight: @chant
