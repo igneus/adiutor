@@ -13,7 +13,7 @@ class ChantsController < ApplicationController
     raise 'forbidden' unless Rails.env.development?
 
     chant = Chant.find params[:id]
-    EditorOpener.new.(chant)
+    EditorOpener.new.(chant, params[:line])
     flash[:info] = "Chant #{chant.id} opened for editation"
 
     redirect_back fallback_location: root_path

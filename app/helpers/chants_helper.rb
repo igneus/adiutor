@@ -18,6 +18,11 @@ module ChantsHelper
     formatter = Rouge::Formatters::HTML.new
     lexer = Rouge::Lexers::TeX.new # rouge does not have a proper lexer for LilyPond
 
-    formatter.format lexer.lex code
+    formatter
+      .format(lexer.lex(code))
+      .each_line
+      .with_index
+      .collect {|l, i| link_to(l.rstrip.html_safe, open_in_editor_chant_path(line: i), method: :post) + "\n" }
+      .join
   end
 end
