@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_24_211203) do
+ActiveRecord::Schema.define(version: 2021_08_24_212009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,9 @@ ActiveRecord::Schema.define(version: 2021_08_24_211203) do
     t.string "placet"
     t.text "textus_approbatus"
     t.string "fial"
+    t.bigint "parent_id"
+    t.index ["parent_id"], name: "index_chants_on_parent_id"
   end
 
+  add_foreign_key "chants", "chants", column: "parent_id"
 end

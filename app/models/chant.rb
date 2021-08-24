@@ -1,4 +1,7 @@
 class Chant < ApplicationRecord
+  belongs_to :parent, class_name: 'Chant'
+  has_many :children, class_name: 'Chant'
+
   def self.genres
     distinct.pluck(:quid).compact.sort
   end

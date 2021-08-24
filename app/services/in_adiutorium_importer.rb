@@ -22,6 +22,7 @@ class InAdiutoriumImporter
         .sub(%r{^/}, '')
 
     set_properties = lambda do |chant|
+      chant.parent = nil
       chant.lilypond_code = score.text
       chant.lyrics = score.lyrics_readable
       chant.header = header
