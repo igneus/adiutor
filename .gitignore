@@ -39,7 +39,7 @@
 /app/assets/images/chants/*.svg
 
 # Ignore docker volumes
-/docker/gem_cache
+/docker/volumes
 
 # Ignore webpack files
 /public/packs
