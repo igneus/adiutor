@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/igneus/lyv.git
-  revision: 09cf7a5468ce470f79cb3dd868dad6af3e3fa32f
+  revision: 3c14ce4d46855a95d7c7209f44df610456c2a9ae
   specs:
     lyv (0.0.0)
       thor
