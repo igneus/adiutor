@@ -13,14 +13,20 @@ $attention-colour: orange;
   .placet, .textus_approbatus { background-color: $attention-colour; }
 }
 
-.chant-with-quality-notice {
-  background-color: $attention-colour;
-}
-
-.chant-with-edited-lyrics {
-  background-color: #eee;
-}
-
 pre {
   margin: 50px 0;
+}
+
+.tag {
+  display: inline-block;
+  font-size: x-small;
+  padding: 2px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+  background-color: grey;
+  color: white;
+  font-weight: bold;
+
+  &.quality-notice { background-color: $attention-colour; }
+  &.edited-lyrics { background-color: slateblue; }
 }

@@ -7,7 +7,7 @@ p
 table
   tbody
     - @chants.each do |c|
-      tr class=listing_item_classes(c)
+      tr
         td= link_to c.id, chant_path(c)
         td= link_to c.quid, chants_path(quid: c.quid)
         td= link_to c.modus, chants_path(modus: c.modus) if c.modus
@@ -16,3 +16,4 @@ table
         - if @display_music
           td= render 'image', chant: c
         td= c.source_file_path
+        td= render 'tags', chant: c
