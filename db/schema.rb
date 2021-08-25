@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_25_212926) do
+ActiveRecord::Schema.define(version: 2021_08_25_230530) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,12 +40,21 @@ ActiveRecord::Schema.define(version: 2021_08_25_212926) do
     t.bigint "parent_id"
     t.bigint "book_id"
     t.bigint "cycle_id"
+    t.bigint "season_id"
     t.index ["book_id"], name: "index_chants_on_book_id"
     t.index ["cycle_id"], name: "index_chants_on_cycle_id"
     t.index ["parent_id"], name: "index_chants_on_parent_id"
+    t.index ["season_id"], name: "index_chants_on_season_id"
   end
 
   create_table "cycles", force: :cascade do |t|
+    t.string "name"
+    t.string "system_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "seasons", force: :cascade do |t|
     t.string "name"
     t.string "system_name"
     t.datetime "created_at", precision: 6, null: false

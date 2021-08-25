@@ -1,0 +1,5 @@
+h2 Seasons
+
+ul
+  - @seasons.each do |s|
+    li= link_to s.name, chants_path(season_id: s.id)

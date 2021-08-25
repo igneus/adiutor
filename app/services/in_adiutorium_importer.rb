@@ -14,19 +14,38 @@ class InAdiutoriumImporter
 
     book = book_by_file_path(in_project_path)
     cycle = cycle_by_file_path(in_project_path)
+    season = season_by_file_path(in_project_path)
 
-    Lyv::LilyPondMusic.new(path).scores.each do |s|
+    scores = Lyv::LilyPondMusic.new(path).scores
+
+    # file due to historical reasons
+    # containing chants of two seasons
+    if in_project_path == 'velikonoce_velikonocnioktav.ly'
+      triduum_scores, scores =
+        scores
+          .slice_before {|i| p i.header['id'] == 'po-mc-a1' }
+          .to_a
+      season_triduum = Season.for_cr_season CR::Seasons::TRIDUUM
+
+      triduum_scores.each do |s|
+        puts s
+        import_score s, in_project_path, book, cycle, season_triduum
+      end
+    end
+
+    scores.each do |s|
       puts s
-      import_score s, in_project_path, book, cycle
+      import_score s, in_project_path, book, cycle, season
     end
   end
 
-  def import_score(score, in_project_path, book, cycle)
+  def import_score(score, in_project_path, book, cycle, season)
     header = score.header
 
     set_properties = lambda do |chant|
       chant.book = book
       chant.cycle = cycle
+      chant.season = season
       chant.parent = nil
       chant.lilypond_code = score.text
       chant.lyrics = score.lyrics_readable
@@ -78,5 +97,27 @@ class InAdiutoriumImporter
       end
 
     Cycle.find_by_system_name! cycle_name
+  end
+
+  def season_by_file_path(in_project_path)
+    season =
+      case File.basename(in_project_path)
+      when /^advent/
+        CR::Seasons::ADVENT
+      when /^vanoce/
+        CR::Seasons::CHRISTMAS
+      when /^pust_triduum/
+        CR::Seasons::TRIDUUM
+      when /^pust/
+        CR::Seasons::LENT
+      when /^velikonoce/
+        CR::Seasons::EASTER
+      when /^mezidobi/
+        CR::Seasons::ORDINARY
+      else
+        nil
+      end
+
+    season && Season.for_cr_season(season)
   end
 end

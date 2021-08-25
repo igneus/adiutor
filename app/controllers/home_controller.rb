@@ -8,5 +8,6 @@ class HomeController < ApplicationController
     @modes = Chant.modi_and_differentiae
     @books = Book.all
     @cycles = Cycle.all
+    @seasons = Season.all
   end
 end
