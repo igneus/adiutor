@@ -1,6 +1,10 @@
 class ChantsController < ApplicationController
   def index
     @chants = Chant.where(filter_params)
+    if params[:lyrics]
+      @chants = @chants.where("lyrics ILIKE ?", "%#{params[:lyrics]}%")
+    end
+
     @display_music = @chants.count < 500
   end
 
