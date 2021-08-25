@@ -7,21 +7,24 @@ class InAdiutoriumImporter
   def import_file(path)
     return if path =~ /(antifonar|cizojazycne|hymny|nechoral|psalmodie|rytmicke|variationes|zalm\d+)/
 
-    Lyv::LilyPondMusic.new(path).scores.each do |s|
-      puts s
-      import_score s
-    end
-  end
-
-  def import_score(score)
-    header = score.header
     in_project_path =
-      score
-        .src_file
+      path
         .sub(Adiutor::IN_ADIUTORIUM_SOURCES_PATH, '')
         .sub(%r{^/}, '')
 
+    book = book_by_file_path(in_project_path)
+
+    Lyv::LilyPondMusic.new(path).scores.each do |s|
+      puts s
+      import_score s, in_project_path, book
+    end
+  end
+
+  def import_score(score, in_project_path, book)
+    header = score.header
+
     set_properties = lambda do |chant|
+      chant.book = book
       chant.parent = nil
       chant.lilypond_code = score.text
       chant.lyrics = score.lyrics_readable
@@ -39,5 +42,23 @@ class InAdiutoriumImporter
   rescue
     p score
     raise
+  end
+
+  private
+
+  def book_by_file_path(in_project_path)
+    book_name =
+      case in_project_path
+      when /^reholni/
+        in_project_path.split('/')[1].downcase
+      when /^paraliturgicke/
+        'other'
+      when 'velikonoce_vigilie.ly'
+        'olm'
+      else
+        'dmc'
+      end
+
+    Book.find_by_system_name! book_name
   end
 end

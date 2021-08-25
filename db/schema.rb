@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_24_212009) do
+ActiveRecord::Schema.define(version: 2021_08_25_205057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "books", force: :cascade do |t|
+    t.string "name"
+    t.string "system_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "chants", force: :cascade do |t|
     t.text "lilypond_code"
@@ -31,6 +38,8 @@ ActiveRecord::Schema.define(version: 2021_08_24_212009) do
     t.text "textus_approbatus"
     t.string "fial"
     t.bigint "parent_id"
+    t.bigint "book_id"
+    t.index ["book_id"], name: "index_chants_on_book_id"
     t.index ["parent_id"], name: "index_chants_on_parent_id"
   end
 
