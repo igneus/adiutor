@@ -5,6 +5,6 @@ h1 Overview
     .column= render 'genres'
     .column= render 'modes'
     .column
-      = render 'books'
-      = render 'cycles'
-      = render 'seasons'
+      = render 'listing', title: 'Books', items: @books, filter_param: :book_id
+      = render 'listing', title: 'Cycles', items: @cycles, filter_param: :cycle_id
+      = render 'listing', title: 'Seasons', items: @seasons, filter_param: :season_id
