@@ -1,5 +1,5 @@
 class Chant < ApplicationRecord
-  belongs_to :parent, class_name: 'Chant'
+  belongs_to :parent, class_name: 'Chant', optional: true
   has_many :children, class_name: 'Chant', foreign_key: 'parent_id'
 
   def self.genres

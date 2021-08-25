@@ -35,7 +35,7 @@ class InAdiutoriumImporter
     Chant
       .find_or_create_by!(chant_id: header['id'], source_file_path: in_project_path, &set_properties)
       .tap(&set_properties)
-      .save
+      .save!
   rescue
     p score
     raise
