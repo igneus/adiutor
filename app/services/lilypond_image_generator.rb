@@ -5,7 +5,8 @@ class LilypondImageGenerator
     [
       "\\version \"2.19.0\"",
       "\\include \"adiutor_preview_settings.ly\"",
-      chant_code
+      chant_code.sub(/.*(?=\\score)/, ''),
+      '' # end with a newline
     ].join("\n")
   end
 
