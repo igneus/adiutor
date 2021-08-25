@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :chants do
     member do
       post 'open_in_editor', as: :open_in_editor
+      get '/compare/:other_id', action: :compare, as: :compare
     end
   end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html

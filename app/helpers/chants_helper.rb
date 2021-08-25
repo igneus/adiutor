@@ -9,10 +9,14 @@ module ChantsHelper
     c
   end
 
-  def lyrics_diff(chant)
+  def diff(a, b)
     Diffy::Diff
-      .new(chant.textus_approbatus, chant.lyrics)
+      .new(a, b)
       .to_s(:html)
+  end
+
+  def lyrics_diff(chant)
+    diff chant.textus_approbatus, chant.lyrics
   end
 
   def lilypond_syntax_highlight(code)

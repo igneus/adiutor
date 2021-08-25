@@ -5,6 +5,7 @@
     ' <
     a href=chant_path(parent.parent)
       = parent.fial
+    =< link_to 'compare', compare_chant_path(parent.parent, parent), class: 'button'
   br
     a href=chant_path(parent)
       = render 'image', chant: parent

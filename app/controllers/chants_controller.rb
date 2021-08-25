@@ -19,6 +19,15 @@ class ChantsController < ApplicationController
     redirect_back fallback_location: root_path
   end
 
+  def compare
+    @chant_a = Chant.find params[:id]
+    @chant_b = Chant.find params[:other_id]
+
+    @relation =
+      @chant_b.parent == @chant_a &&
+        FIAL.parse(@chant_b.fial).additional
+  end
+
   private
 
   def filter_params
