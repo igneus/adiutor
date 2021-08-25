@@ -1,5 +1,6 @@
 class Chant < ApplicationRecord
   belongs_to :book
+  belongs_to :cycle
   belongs_to :parent, class_name: 'Chant', optional: true
   has_many :children, class_name: 'Chant', foreign_key: 'parent_id'
 

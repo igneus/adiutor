@@ -35,6 +35,6 @@ class ChantsController < ApplicationController
   private
 
   def filter_params
-    params.permit(:quid, :modus, :differentia, :book_id)
+    params.permit(:quid, :modus, :differentia, :book_id, :cycle_id)
   end
 end

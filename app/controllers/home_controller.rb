@@ -7,5 +7,6 @@ class HomeController < ApplicationController
     @genres = Chant.genres
     @modes = Chant.modi_and_differentiae
     @books = Book.all
+    @cycles = Cycle.all
   end
 end

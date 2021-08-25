@@ -5,7 +5,7 @@ class InAdiutoriumImporter
   end
 
   def import_file(path)
-    return if path =~ /(antifonar|cizojazycne|hymny|nechoral|psalmodie|rytmicke|variationes|zalm\d+)/
+    return if path =~ /(antifonar|cizojazycne|hymny|nechoral|psalmodie|rytmicke|variationes|zalm\d+|kratkeverse)/
 
     in_project_path =
       path
@@ -13,18 +13,20 @@ class InAdiutoriumImporter
         .sub(%r{^/}, '')
 
     book = book_by_file_path(in_project_path)
+    cycle = cycle_by_file_path(in_project_path)
 
     Lyv::LilyPondMusic.new(path).scores.each do |s|
       puts s
-      import_score s, in_project_path, book
+      import_score s, in_project_path, book, cycle
     end
   end
 
-  def import_score(score, in_project_path, book)
+  def import_score(score, in_project_path, book, cycle)
     header = score.header
 
     set_properties = lambda do |chant|
       chant.book = book
+      chant.cycle = cycle
       chant.parent = nil
       chant.lilypond_code = score.text
       chant.lyrics = score.lyrics_readable
@@ -60,5 +62,21 @@ class InAdiutoriumImporter
       end
 
     Book.find_by_system_name! book_name
+  end
+
+  def cycle_by_file_path(in_project_path)
+    cycle_name =
+      case in_project_path
+      when %r{^antifony/(tyden|doplnovaci|ferie_kantevgant|invitatoria)}
+        'psalter'
+      when %r{^(sanktoral|reholni)/}
+        'sanctorale'
+      when 'zakladni_napevy.ly', 'marianske_antifony.ly', %r{^invitatoria/}
+        'ordinarium'
+      else
+        'temporale'
+      end
+
+    Cycle.find_by_system_name! cycle_name
   end
 end

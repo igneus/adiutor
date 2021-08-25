@@ -1,5 +1,5 @@
 desc 'import chants from In-adiutorium sources'
-task import: [:environment, :create_books] do
+task import: [:environment, :create_books, :create_cycles] do
   InAdiutoriumImporter.new.call Adiutor::IN_ADIUTORIUM_SOURCES_PATH
 end
 
@@ -16,5 +16,17 @@ task create_books: [:environment] do
     order_shortcut = File.basename f
 
     Book.find_or_create_by!(system_name: order_shortcut.downcase, name: "Proprium #{order_shortcut}")
+  end
+end
+
+desc 'create Cycles'
+task create_cycles: [:environment] do
+  %w(
+  Ordinarium
+  Psalter
+  Temporale
+  Sanctorale
+  ).each do |name|
+    Cycle.find_or_create_by!(system_name: name.downcase, name: name)
   end
 end
