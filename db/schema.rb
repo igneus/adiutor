@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_25_230530) do
+ActiveRecord::Schema.define(version: 2021_08_27_220026) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,9 @@ ActiveRecord::Schema.define(version: 2021_08_25_230530) do
     t.bigint "book_id"
     t.bigint "cycle_id"
     t.bigint "season_id"
+    t.integer "syllable_count"
+    t.integer "word_count"
+    t.integer "melody_section_count"
     t.index ["book_id"], name: "index_chants_on_book_id"
     t.index ["cycle_id"], name: "index_chants_on_cycle_id"
     t.index ["parent_id"], name: "index_chants_on_parent_id"

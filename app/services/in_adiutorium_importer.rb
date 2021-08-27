@@ -42,6 +42,8 @@ class InAdiutoriumImporter
   def import_score(score, in_project_path, book, cycle, season)
     header = score.header
 
+    score_with_stats = LyvExtensions::ScoreWithStats.new score
+
     set_properties = lambda do |chant|
       chant.book = book
       chant.cycle = cycle
@@ -50,9 +52,14 @@ class InAdiutoriumImporter
       chant.lilypond_code = score.text
       chant.lyrics = score.lyrics_readable
       chant.header = header
+
       chant.textus_approbatus = header['textus_approbatus']&.gsub(/\s+/, ' ')
       %w[quid modus differentia psalmus placet fial].each do |key|
         chant.public_send "#{key}=", header[key]
+      end
+
+      %i[syllable_count word_count melody_section_count].each do |property|
+        chant.public_send "#{property}=", score_with_stats.public_send(property)
       end
     end
 
