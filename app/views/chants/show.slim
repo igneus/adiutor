@@ -31,3 +31,12 @@ pre.code-highlight== lilypond_syntax_highlight @chant.lilypond_code
   h2 Tree of origin
   .tree-of-origin
     = render 'tree', parent: @chant.parental_tree_top, highlight: @chant
+
+.container
+  .row
+    .column
+      h2 Similar by melody structure
+      = render 'chant_listing', chants: @similar_structure
+    .column
+      h2 Similar by lyrics length
+      = render 'chant_listing', chants: @similar_length

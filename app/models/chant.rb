@@ -17,6 +17,17 @@ class Chant < ApplicationRecord
       .transform_values {|v| v.collect {|i| i[1] }.sort_by(&:to_s) }
   end
 
+  def self.similar_by_structure_to(chant, limit=5)
+    where(melody_section_count: chant.melody_section_count)
+      .limit(limit)
+  end
+
+  def self.similar_by_lyrics_length_to(chant, limit=5)
+    where(word_count: chant.word_count)
+      .or(where(syllable_count: chant.syllable_count))
+      .limit(limit)
+  end
+
   def parental_tree_top
     parent.nil? ? self : parent.parental_tree_top
   end

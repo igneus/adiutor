@@ -11,6 +11,9 @@ class ChantsController < ApplicationController
   def show
     @chant = Chant.find params[:id]
     @properties = @chant.attributes.except(*%w(id lilypond_code header lyrics textus_approbatus))
+
+    @similar_structure = Chant.similar_by_structure_to(@chant)
+    @similar_length = Chant.similar_by_lyrics_length_to(@chant)
   end
 
   def open_in_editor
