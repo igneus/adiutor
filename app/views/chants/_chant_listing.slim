@@ -1,5 +1,5 @@
 .chants-listing
   - chants.each do |chant|
     .item
-      = link_to(chant_url(chant)) do
+      = link_to(chant_path(chant)) do
         = render 'image', chant: chant

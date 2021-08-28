@@ -38,6 +38,15 @@ class ChantsController < ApplicationController
   private
 
   def filter_params
-    params.permit(:quid, :modus, :differentia, :book_id, :cycle_id, :season_id)
+    params.permit(
+      :quid,
+      :modus,
+      :differentia,
+      :book_id,
+      :cycle_id,
+      :season_id,
+      :word_count,
+      :melody_section_count
+    )
   end
 end
