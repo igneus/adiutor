@@ -5,6 +5,9 @@ task import: IMPORT_PREREQUISITES do
   InAdiutoriumImporter.new.call Adiutor::IN_ADIUTORIUM_SOURCES_PATH
 end
 
+desc 'run import together with subsequent data-building tasks'
+task refresh: %i[import update_parents]
+
 desc 'import chants from a specified file'
 task :import_file, [:file] => IMPORT_PREREQUISITES do |task, args|
   InAdiutoriumImporter.new.import_file File.join(Adiutor::IN_ADIUTORIUM_SOURCES_PATH, args.file)
