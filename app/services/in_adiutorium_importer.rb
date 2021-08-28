@@ -42,7 +42,7 @@ class InAdiutoriumImporter
   def import_score(score, in_project_path, book, cycle, season)
     header = score.header
 
-    score_with_stats = LyvExtensions::ScoreWithStats.new score
+    score_with_stats = LyvExtensions::ScoreStats.new score
 
     set_properties = lambda do |chant|
       chant.book = book

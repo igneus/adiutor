@@ -1,6 +1,6 @@
 module LyvExtensions
   # Decorates a Lyv::LilypondScore, extends it with summary stats.
-  class ScoreWithStats < SimpleDelegator
+  class ScoreStats < SimpleDelegator
     def syllable_count
       lyrics_raw
         .split

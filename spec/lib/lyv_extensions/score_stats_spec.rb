@@ -1,4 +1,4 @@
-describe LyvExtensions::ScoreWithStats do
+describe LyvExtensions::ScoreStats do
   describe '#word_count' do
     [
       ['', 0],
