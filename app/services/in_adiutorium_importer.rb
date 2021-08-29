@@ -53,7 +53,7 @@ class InAdiutoriumImporter
       chant.lyrics = score.lyrics_readable
       chant.header = header
 
-      chant.modus = header['modus'].sub(/\.$/, '')
+      chant.modus = header['modus']&.sub(/\.$/, '')
       chant.textus_approbatus = header['textus_approbatus']&.gsub(/\s+/, ' ')
       %w[quid differentia psalmus placet fial].each do |key|
         chant.public_send "#{key}=", header[key]
