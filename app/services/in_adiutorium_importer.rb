@@ -35,6 +35,12 @@ class InAdiutoriumImporter
 
     scores.each do |s|
       puts s
+
+      if s.header['id'].blank?
+        puts 'score ID missing, skip'
+        next
+      end
+
       import_score s, in_project_path, book, cycle, season
     end
   end
