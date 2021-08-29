@@ -40,7 +40,7 @@ class InAdiutoriumImporter
   end
 
   def import_score(score, in_project_path, book, cycle, season)
-    header = score.header
+    header = score.header.transform_values {|v| v == '' ? nil : v }
 
     score_with_stats = LyvExtensions::ScoreStats.new score
 
