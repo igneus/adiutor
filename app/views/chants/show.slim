@@ -32,11 +32,11 @@ pre.code-highlight== lilypond_syntax_highlight @chant.lilypond_code
   .tree-of-origin
     = render 'tree', parent: @chant.parental_tree_top, highlight: @chant
 
-.container
-  .row
-    .column
-      h2= link_to 'Similar by melody structure', chants_path(melody_section_count: @chant.melody_section_count)
-      = render 'chant_listing', chants: @similar_structure
-    .column
-      h2= link_to 'Similar by lyrics length', chants_path(word_count: @chant.word_count)
-      = render 'chant_listing', chants: @similar_length
+h2 Similar
+.row
+  .column
+    h3= link_to 'by melody structure', chants_path(melody_section_count: @chant.melody_section_count)
+    = render 'chant_listing', chants: @similar_structure
+  .column
+    h3= link_to 'by lyrics length', chants_path(word_count: @chant.word_count)
+    = render 'chant_listing', chants: @similar_length
