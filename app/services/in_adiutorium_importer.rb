@@ -16,7 +16,11 @@ class InAdiutoriumImporter
     cycle = cycle_by_file_path(in_project_path)
     season = season_by_file_path(in_project_path)
 
-    scores = Lyv::LilyPondMusic.new(path).scores
+    scores =
+      Lyv::LilyPondMusic
+        .new(path)
+        .scores
+        .collect {|i| LyvExtensions::ScoreBetterLyrics.new i }
 
     # file due to historical reasons
     # containing chants of two seasons
