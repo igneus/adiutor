@@ -1,0 +1,20 @@
+h1 Mismatches
+p
+  => @mismatches.count
+  | results
+
+table
+  tbody
+    - @mismatches.each do |m|
+      tr
+        td= link_to m.id, mismatch_path(m)
+        td= link_to m.child.fial, mismatch_path(m)
+        td
+          - if m.simple_copy?
+            span.tag simple copy
+        td
+          = link_to chant_path(m.child) do
+            = render 'chants/image', chant: m.child
+        td
+          = link_to chant_path(m.parent) do
+            = render 'chants/image', chant: m.parent

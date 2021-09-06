@@ -8,5 +8,11 @@ Rails.application.routes.draw do
       get '/compare/:other_id', action: :compare, as: :compare
     end
   end
+
+  resources :mismatches do
+    member do
+      post 'resolve', as: :resolve
+    end
+  end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

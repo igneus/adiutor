@@ -1,0 +1,6 @@
+h1 Parent mismatch
+
+= link_to 'Resolve', resolve_mismatch_path(@mismatch), class: 'button', method: :post
+= link_to 'Next >', mismatch_path(@next), class: 'button button-outline'
+
+= render 'chants/comparison', chant_a: @mismatch.parent, chant_b: @mismatch.child, relation: @mismatch.relation

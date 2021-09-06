@@ -47,4 +47,8 @@ class Chant < ApplicationRecord
   def lyrics_edited?
     textus_approbatus.present?
   end
+
+  def lyv_score
+    Lyv::LilyPondScore.new(lilypond_code)
+  end
 end

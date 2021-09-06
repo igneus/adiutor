@@ -1,33 +1,3 @@
 h1 Comparison
 
-- if @chant_b.parent == @chant_a
-  h2 Declared relation
-  - if @relation.empty?
-    p Simple copy (expected to be the same).
-  - else
-    = @relation
-
-h2 Rendered scores
-
-div
-  => link_to @chant_a.fial_of_self, chant_path(@chant_a)
-  br
-  a href=chant_path(@chant_a)
-    = render 'image', chant: @chant_a
-
-div
-  => link_to @chant_b.fial_of_self, chant_path(@chant_b)
-  br
-  a href=chant_path(@chant_b)
-    = render 'image', chant: @chant_b
-
-h2 Lyrics
-
-- if @chant_a.lyrics == @chant_b.lyrics
-  p Lyrics are the same.
-- else
-  == diff(@chant_a.lyrics, @chant_b.lyrics)
-
-h2 Source code
-
-== diff @chant_a.lilypond_code, @chant_b.lilypond_code
+= render 'comparison', chant_a: @chant_a, chant_b: @chant_b, relation: @relation
