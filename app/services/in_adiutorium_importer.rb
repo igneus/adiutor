@@ -74,8 +74,13 @@ class InAdiutoriumImporter
       end
     end
 
-    Chant
-      .find_or_create_by!(chant_id: header['id'], source_file_path: in_project_path, &set_properties)
+    chant = Chant.find_or_initialize_by(chant_id: header['id'], source_file_path: in_project_path)
+
+    if chant.lilypond_code && chant.lilypond_code != score.text
+      delete_image chant
+    end
+
+    chant
       .tap(&set_properties)
       .save!
   rescue
@@ -137,5 +142,11 @@ class InAdiutoriumImporter
       end
 
     season && Season.for_cr_season(season)
+  end
+
+  def delete_image(chant)
+    puts "deleting image of #{chant.fial_of_self}"
+    path = LilypondImageGenerator.image_path chant
+    File.delete path if File.exist? path
   end
 end

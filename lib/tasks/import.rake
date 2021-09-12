@@ -6,7 +6,7 @@ task import: IMPORT_PREREQUISITES do
 end
 
 desc 'run import together with subsequent data-building tasks'
-task refresh: %i[import update_parents compare_parents]
+task refresh: %i[import update_parents compare_parents missing_images]
 
 desc 'import chants from a specified file'
 task :import_file, [:file] => IMPORT_PREREQUISITES do |task, args|
