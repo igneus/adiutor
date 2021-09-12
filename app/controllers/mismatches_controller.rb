@@ -10,8 +10,11 @@ class MismatchesController < ApplicationController
   end
 
   def resolve
-    ParentChildMismatch.unresolved.find(params[:id]).update!(resolved_at: Time.now)
+    mismatch = ParentChildMismatch.unresolved.find(params[:id])
+    mismatch.update!(resolved_at: Time.now)
 
-    redirect_back
+    up_next = ParentChildMismatch.unresolved.next_to(mismatch)
+
+    redirect_to mismatch_path(up_next)
   end
 end
