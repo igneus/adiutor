@@ -43,6 +43,7 @@ class ChantsController < ApplicationController
       :modus,
       :differentia,
       :book_id,
+      :corpus_id,
       :cycle_id,
       :season_id,
       :word_count,

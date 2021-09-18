@@ -98,6 +98,9 @@ GEM
     loofah (2.12.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
+    lygre (0.0.3)
+      polyglot (~> 0.3)
+      treetop (~> 1.6)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     marcel (1.0.1)
@@ -109,6 +112,7 @@ GEM
     nokogiri (1.12.3-x86_64-linux)
       racc (~> 1.4)
     pg (1.2.3)
+    polyglot (0.3.5)
     puma (5.4.0)
       nio4r (~> 2.0)
     racc (1.5.2)
@@ -190,6 +194,8 @@ GEM
     temple (0.8.2)
     thor (1.1.0)
     tilt (2.0.10)
+    treetop (1.6.11)
+      polyglot (~> 0.3)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -216,11 +222,13 @@ DEPENDENCIES
   dotenv-rails
   jbuilder (~> 2.7)
   listen (~> 3.3)
+  lygre
   lyv!
   pg (~> 1.1)
   puma (~> 5.0)
   rack-mini-profiler (~> 2.0)
   rails (~> 6.1.4, >= 6.1.4.1)
+  roman-numerals
   rouge
   rspec-rails
   sass-rails (>= 6)

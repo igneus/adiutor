@@ -9,7 +9,7 @@ class InAdiutoriumImporter
 
     in_project_path =
       path
-        .sub(Adiutor::IN_ADIUTORIUM_SOURCES_PATH, '')
+        .sub(Adiutor::IN_ADIUTORIUM_SOURCES_PATH, '') # TODO: importer should not know this constant
         .sub(%r{^/}, '')
 
     book = book_by_file_path(in_project_path)

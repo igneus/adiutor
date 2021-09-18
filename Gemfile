@@ -36,7 +36,9 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'calendarium-romanum', require: 'calendarium-romanum/cr'
 gem 'diffy'
 gem 'dotenv-rails'
+gem 'lygre', require: 'grely'
 gem 'lyv', github: 'igneus/lyv'
+gem 'roman-numerals'
 gem 'rouge'
 gem 'slim'
 
