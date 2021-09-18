@@ -22,7 +22,7 @@ class LilypondImageGenerator
     lib_lily = File.join Rails.root, 'lib', 'lilypond'
 
     Tempfile.open('chant') do |f|
-      f.puts self.class.buildable_code chant.lilypond_code
+      f.puts self.class.buildable_code chant.source_code
       f.flush
 
       `lilypond -dbackend=svg -dno-point-and-click --include=#{Adiutor::IN_ADIUTORIUM_SOURCES_PATH} --include=#{lib_lily} --output=#{output_file} #{f.path}`

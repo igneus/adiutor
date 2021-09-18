@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_18_213757) do
+ActiveRecord::Schema.define(version: 2021_09_18_215129) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 2021_09_18_213757) do
   end
 
   create_table "chants", force: :cascade do |t|
-    t.text "lilypond_code"
+    t.text "source_code"
     t.text "lyrics"
     t.json "header"
     t.string "quid"
@@ -45,11 +45,13 @@ ActiveRecord::Schema.define(version: 2021_09_18_213757) do
     t.integer "word_count"
     t.integer "melody_section_count"
     t.bigint "corpus_id"
+    t.bigint "source_language_id"
     t.index ["book_id"], name: "index_chants_on_book_id"
     t.index ["corpus_id"], name: "index_chants_on_corpus_id"
     t.index ["cycle_id"], name: "index_chants_on_cycle_id"
     t.index ["parent_id"], name: "index_chants_on_parent_id"
     t.index ["season_id"], name: "index_chants_on_season_id"
+    t.index ["source_language_id"], name: "index_chants_on_source_language_id"
   end
 
   create_table "corpuses", force: :cascade do |t|
@@ -75,6 +77,13 @@ ActiveRecord::Schema.define(version: 2021_09_18_213757) do
   end
 
   create_table "seasons", force: :cascade do |t|
+    t.string "name"
+    t.string "system_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "source_languages", force: :cascade do |t|
     t.string "name"
     t.string "system_name"
     t.datetime "created_at", precision: 6, null: false

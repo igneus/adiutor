@@ -3,6 +3,7 @@ class Chant < ApplicationRecord
   belongs_to :cycle
   belongs_to :season, optional: true
   belongs_to :corpus
+  belongs_to :source_language
   belongs_to :parent, class_name: 'Chant', optional: true
   has_many :children, class_name: 'Chant', foreign_key: 'parent_id'
 
@@ -50,6 +51,6 @@ class Chant < ApplicationRecord
   end
 
   def lyv_score
-    Lyv::LilyPondScore.new(lilypond_code)
+    Lyv::LilyPondScore.new(source_code)
   end
 end

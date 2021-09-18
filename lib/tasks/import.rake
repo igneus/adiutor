@@ -1,4 +1,7 @@
-IMPORT_PREREQUISITES = [:environment, :create_books, :create_cycles, :create_seasons]
+IMPORT_PREREQUISITES = [
+  :environment,
+  :create_books, :create_cycles, :create_seasons, :create_corpuses, :create_source_languages
+]
 
 desc 'import chants from In-adiutorium sources'
 task import: IMPORT_PREREQUISITES do
@@ -52,4 +55,10 @@ desc 'create Corpuses'
 task create_corpuses: [:environment] do
   Corpus.find_or_create_by!(system_name: 'in_adiutorium', name: 'In adiutorium')
   Corpus.find_or_create_by!(system_name: 'la1960', name: 'Liber antiphonarius 1960')
+end
+
+desc 'create SourceLanguages'
+task create_source_languages: [:environment] do
+  SourceLanguage.find_or_create_by!(system_name: 'lilypond', name: 'LilyPond')
+  SourceLanguage.find_or_create_by!(system_name: 'gabc', name: 'GABC (Gregorio)')
 end

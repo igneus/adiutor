@@ -16,6 +16,7 @@ class InAdiutoriumImporter
     cycle = cycle_by_file_path(in_project_path)
     season = season_by_file_path(in_project_path)
     corpus = Corpus.find_by_system_name! 'in_adiutorium'
+    language = SourceLanguage.find_by_system_name! 'lilypond'
 
     scores =
       Lyv::LilyPondMusic
@@ -34,7 +35,7 @@ class InAdiutoriumImporter
 
       triduum_scores.each do |s|
         puts s
-        import_score s, in_project_path, book, cycle, season_triduum, corpus
+        import_score s, in_project_path, book, cycle, season_triduum, corpus, language
       end
     end
 
@@ -46,11 +47,11 @@ class InAdiutoriumImporter
         next
       end
 
-      import_score s, in_project_path, book, cycle, season, corpus
+      import_score s, in_project_path, book, cycle, season, corpus, language
     end
   end
 
-  def import_score(score, in_project_path, book, cycle, season, corpus)
+  def import_score(score, in_project_path, book, cycle, season, corpus, language)
     header = score.header.transform_values {|v| v == '' ? nil : v }
 
     score_with_stats = LyvExtensions::ScoreStats.new score
@@ -60,8 +61,9 @@ class InAdiutoriumImporter
       chant.book = book
       chant.cycle = cycle
       chant.season = season
+      chant.source_language = language
       chant.parent = nil
-      chant.lilypond_code = score.text
+      chant.source_code = score.text
       chant.lyrics = score.lyrics_readable
       chant.header = header_json header
 
@@ -78,7 +80,7 @@ class InAdiutoriumImporter
 
     chant = Chant.find_or_initialize_by(chant_id: header['id'], source_file_path: in_project_path)
 
-    if chant.lilypond_code && chant.lilypond_code != score.text
+    if chant.source_code && chant.source_code != score.text
       delete_image chant
     end
 
