@@ -15,6 +15,7 @@ class InAdiutoriumImporter
     book = book_by_file_path(in_project_path)
     cycle = cycle_by_file_path(in_project_path)
     season = season_by_file_path(in_project_path)
+    corpus = Corpus.find_by_system_name! 'in_adiutorium'
 
     scores =
       Lyv::LilyPondMusic
@@ -33,7 +34,7 @@ class InAdiutoriumImporter
 
       triduum_scores.each do |s|
         puts s
-        import_score s, in_project_path, book, cycle, season_triduum
+        import_score s, in_project_path, book, cycle, season_triduum, corpus
       end
     end
 
@@ -45,16 +46,17 @@ class InAdiutoriumImporter
         next
       end
 
-      import_score s, in_project_path, book, cycle, season
+      import_score s, in_project_path, book, cycle, season, corpus
     end
   end
 
-  def import_score(score, in_project_path, book, cycle, season)
+  def import_score(score, in_project_path, book, cycle, season, corpus)
     header = score.header.transform_values {|v| v == '' ? nil : v }
 
     score_with_stats = LyvExtensions::ScoreStats.new score
 
     set_properties = lambda do |chant|
+      chant.corpus = corpus
       chant.book = book
       chant.cycle = cycle
       chant.season = season

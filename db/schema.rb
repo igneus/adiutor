@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_06_201922) do
+ActiveRecord::Schema.define(version: 2021_09_18_213757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,10 +44,19 @@ ActiveRecord::Schema.define(version: 2021_09_06_201922) do
     t.integer "syllable_count"
     t.integer "word_count"
     t.integer "melody_section_count"
+    t.bigint "corpus_id"
     t.index ["book_id"], name: "index_chants_on_book_id"
+    t.index ["corpus_id"], name: "index_chants_on_corpus_id"
     t.index ["cycle_id"], name: "index_chants_on_cycle_id"
     t.index ["parent_id"], name: "index_chants_on_parent_id"
     t.index ["season_id"], name: "index_chants_on_season_id"
+  end
+
+  create_table "corpuses", force: :cascade do |t|
+    t.string "name"
+    t.string "system_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "cycles", force: :cascade do |t|

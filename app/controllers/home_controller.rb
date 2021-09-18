@@ -9,5 +9,6 @@ class HomeController < ApplicationController
     @books = Book.all
     @cycles = Cycle.all
     @seasons = Season.all
+    @corpuses = Corpus.all
   end
 end

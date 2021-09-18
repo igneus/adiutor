@@ -47,3 +47,9 @@ task create_seasons: [:environment] do
     Season.find_or_create_by!(system_name: s.symbol, name: s.name)
   end
 end
+
+desc 'create Corpuses'
+task create_corpuses: [:environment] do
+  Corpus.find_or_create_by!(system_name: 'in_adiutorium', name: 'In adiutorium')
+  Corpus.find_or_create_by!(system_name: 'la1960', name: 'Liber antiphonarius 1960')
+end
