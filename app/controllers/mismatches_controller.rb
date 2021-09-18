@@ -15,6 +15,12 @@ class MismatchesController < ApplicationController
 
     up_next = ParentChildMismatch.unresolved.next_to(mismatch)
 
+    if up_next.nil?
+      flash[:info] = 'Last mismatch reached'
+      redirect_to mismatches_path
+      return
+    end
+
     redirect_to mismatch_path(up_next)
   end
 end
