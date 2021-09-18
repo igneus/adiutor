@@ -61,7 +61,7 @@ class InAdiutoriumImporter
       chant.parent = nil
       chant.lilypond_code = score.text
       chant.lyrics = score.lyrics_readable
-      chant.header = header
+      chant.header = header_json header
 
       chant.modus = header['modus']&.sub(/\.$/, '')
       chant.textus_approbatus = header['textus_approbatus']&.gsub(/\s+/, ' ')
@@ -148,5 +148,18 @@ class InAdiutoriumImporter
     puts "deleting image of #{chant.fial_of_self}"
     path = LilypondImageGenerator.image_path chant
     File.delete path if File.exist? path
+  end
+
+  def header_json(score_header)
+    score_header
+      .dup
+      .tap do |h|
+      fial_key = 'fial'
+      # FIAL denormalized to JSON object of components
+      # to allow exact SQL querying by FIAL contents
+      if h[fial_key]
+        h[fial_key] = FIAL.parse(h[fial_key]).as_json
+      end
+    end
   end
 end
