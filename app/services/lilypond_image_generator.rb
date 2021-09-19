@@ -11,13 +11,15 @@ class LilypondImageGenerator
   end
 
   def self.image_path(chant, with_extension: true)
-    "app/assets/images/chants/#{chant.id}" + (with_extension ? '.svg' : '')
+    "app/assets/images/chants/lilypond/#{chant.id}" + (with_extension ? '.svg' : '')
   end
+
+  delegate :image_path, to: self
 
   def call(chant)
     # lilypond always adds the '.svg' extension to the provided path, so we omit it
-    output_file = self.class.image_path chant, with_extension: false
-    output_file_full = self.class.image_path chant
+    output_file = image_path chant, with_extension: false
+    output_file_full = image_path chant
 
     lib_lily = File.join Rails.root, 'lib', 'lilypond'
 

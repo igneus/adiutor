@@ -1,4 +1,4 @@
 - begin
-  = image_tag "chants/#{chant.id}.svg"
+  = image_tag "chants/#{chant.source_language.system_name}/#{chant.id}.svg"
 - rescue Sprockets::Rails::Helper::AssetNotFound
   p Image not found

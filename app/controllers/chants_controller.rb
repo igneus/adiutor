@@ -1,6 +1,6 @@
 class ChantsController < ApplicationController
   def index
-    @chants = Chant.where(filter_params)
+    @chants = Chant.where(filter_params).joins(:source_language)
     if params[:lyrics]
       @chants = @chants.where("lyrics ILIKE ?", "%#{params[:lyrics]}%")
     end

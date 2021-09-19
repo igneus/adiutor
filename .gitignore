@@ -36,7 +36,7 @@
 *~
 
 # Ignore generated assets
-/app/assets/images/chants/*.svg
+/app/assets/images/chants/*/*.svg
 
 # Ignore docker volumes
 /docker/volumes
