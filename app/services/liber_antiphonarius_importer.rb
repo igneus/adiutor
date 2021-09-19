@@ -20,7 +20,7 @@ class LiberAntiphonariusImporter
       return # just skip the failed score
     end
 
-    header = score.header.to_hash
+    header = score.header.to_hash.transform_values {|v| v == '' ? nil : v }
     page = page_from_header_book header['book']
 
     book = Book.find_by_system_name! 'la1960'
@@ -42,7 +42,16 @@ class LiberAntiphonariusImporter
     chant.lyrics = score.music.lyrics_readable
     chant.header = header
 
-    chant.modus = RomanNumerals.to_roman header['mode'].to_i
+    header_mode = header['mode']
+    chant.modus =
+      case header_mode
+      when nil
+        nil
+      when /^\d+$/
+        RomanNumerals.to_roman(header_mode.to_i)
+      else
+        header_mode
+      end
 
     lyrics = score.music.lyric_syllables.reject {|i| i == ['*'] }
     chant.syllable_count = lyrics.flatten.size
