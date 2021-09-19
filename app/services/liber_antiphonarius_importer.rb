@@ -12,14 +12,20 @@ class LiberAntiphonariusImporter
     p path
     in_project_path = path.sub(dir, '').sub(/^\//, '')
 
+    source = File.read path
+    begin
+      score = parse source
+    rescue RuntimeError => e
+      STDERR.puts "failed to parse '#{path}': #{e.message}"
+      return # just skip the failed score
+    end
+
+    header = score.header.to_hash
+    page = page_from_header_book header['book']
+
     book = Book.find_by_system_name! 'la1960'
     corpus = Corpus.find_by_system_name! 'la1960'
     language = SourceLanguage.find_by_system_name! 'gabc'
-
-    source = File.read path
-    score = parse source
-    header = score.header.to_hash
-    page = page_from_header_book header['book']
 
     cycle = cycle_by_page(page)
     season = season_by_page(page)
@@ -33,7 +39,7 @@ class LiberAntiphonariusImporter
     chant.source_language = language
 
     chant.source_code = source
-    # chant.lyrics = score.lyrics_readable
+    chant.lyrics = score.music.lyrics_readable
     chant.header = header
 
     chant.modus = RomanNumerals.to_roman header['mode'].to_i
@@ -49,11 +55,12 @@ class LiberAntiphonariusImporter
   end
 
   def parse(source)
-    GabcParser.new.parse(source) || raise("failed to parse: #{source}")
+    parser = GabcParser.new
+    parser.parse(source)&.create_score || raise(parser_failure_msg(parser))
   end
 
   def page_from_header_book(value)
-    value.match(/.+?, pp (\d+)/) {|m| m[1].to_i } || raise("page not found in #{value.inspect}")
+    value.match(/.+?, pp (\[?\d+\]?)/) {|m| m[1] } || raise("page not found in #{value.inspect}")
   end
 
   def cycle_by_page(page)
@@ -64,5 +71,9 @@ class LiberAntiphonariusImporter
   def season_by_page(page)
     # TODO
     Season.find_by_system_name! 'ordinary'
+  end
+
+  def parser_failure_msg(parser)
+    "'#{parser.failure_reason}' on line #{parser.failure_line} column #{parser.failure_column}"
   end
 end

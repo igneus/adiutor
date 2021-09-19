@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/igneus/lygre.git
+  revision: cc1560a7143cf7042a8ad417f670abc4943dd2ce
+  specs:
+    lygre (0.0.3)
+      polyglot (~> 0.3)
+      treetop (~> 1.6)
+
+GIT
   remote: https://github.com/igneus/lyv.git
   revision: 3c14ce4d46855a95d7c7209f44df610456c2a9ae
   specs:
@@ -98,9 +106,6 @@ GEM
     loofah (2.12.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
-    lygre (0.0.3)
-      polyglot (~> 0.3)
-      treetop (~> 1.6)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     marcel (1.0.1)
@@ -222,7 +227,7 @@ DEPENDENCIES
   dotenv-rails
   jbuilder (~> 2.7)
   listen (~> 3.3)
-  lygre
+  lygre!
   lyv!
   pg (~> 1.1)
   puma (~> 5.0)
