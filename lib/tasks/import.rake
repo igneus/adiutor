@@ -21,7 +21,6 @@ task create_books: [:environment] do
   Book.find_or_create_by!(system_name: 'dmc', name: 'Denní modlitba církve')
   Book.find_or_create_by!(system_name: 'olm', name: 'Mešní lekcionář')
   Book.find_or_create_by!(system_name: 'other', name: 'Jiné')
-  Book.find_or_create_by!(system_name: 'la1960', name: 'Liber antiphonarius 1960') # TODO: delete
   Book.find_or_create_by!(system_name: 'br', name: 'Breviarium Romanum')
 
   Dir[File.join(Adiutor::IN_ADIUTORIUM_SOURCES_PATH, 'reholni', '*')]

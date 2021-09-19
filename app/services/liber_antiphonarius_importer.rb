@@ -23,7 +23,7 @@ class LiberAntiphonariusImporter
     header = score.header.to_hash.transform_values {|v| v == '' ? nil : v }
     page = page_from_header_book header['book']
 
-    book = Book.find_by_system_name! 'la1960'
+    book = Book.find_by_system_name! 'br'
     corpus = Corpus.find_by_system_name! 'la1960'
     language = SourceLanguage.find_by_system_name! 'gabc'
 
