@@ -24,6 +24,11 @@ table.chant-properties
       tr class=label
         th= label
         td= value
+      - if label == 'volpiano'
+        tr
+          th volpiano rendered
+          td
+            span.volpiano_music= @properties['volpiano']
 
 pre.code-highlight== lilypond_syntax_highlight @chant.source_code
 

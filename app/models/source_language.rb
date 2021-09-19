@@ -5,4 +5,10 @@ class SourceLanguage < ApplicationRecord
   def image_generator
     Kernel.const_get("#{system_name.capitalize}ImageGenerator").new
   end
+
+  def volpiano_translator
+    Kernel.const_get("#{system_name.capitalize}VolpianoTranslator").new
+  rescue NameError
+    nil
+  end
 end

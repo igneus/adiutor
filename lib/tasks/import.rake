@@ -21,7 +21,8 @@ task create_books: [:environment] do
   Book.find_or_create_by!(system_name: 'dmc', name: 'Denní modlitba církve')
   Book.find_or_create_by!(system_name: 'olm', name: 'Mešní lekcionář')
   Book.find_or_create_by!(system_name: 'other', name: 'Jiné')
-  Book.find_or_create_by!(system_name: 'la1960', name: 'Liber antiphonarius 1960')
+  Book.find_or_create_by!(system_name: 'la1960', name: 'Liber antiphonarius 1960') # TODO: delete
+  Book.find_or_create_by!(system_name: 'br', name: 'Breviarium Romanum')
 
   Dir[File.join(Adiutor::IN_ADIUTORIUM_SOURCES_PATH, 'reholni', '*')]
     .each {|f| p f }
@@ -62,4 +63,19 @@ desc 'create SourceLanguages'
 task create_source_languages: [:environment] do
   SourceLanguage.find_or_create_by!(system_name: 'lilypond', name: 'LilyPond')
   SourceLanguage.find_or_create_by!(system_name: 'gabc', name: 'GABC (Gregorio)')
+end
+
+desc 'generate Volpiano for all scores'
+task volpiano: [:environment] do
+  # we can only convert gabc pieces to Volpiano (yet)
+  supported_chants =
+    Chant
+      .joins(:source_language)
+      .where(source_languages: { system_name: 'gabc' })
+
+  supported_chants.find_each do |c|
+    p c.id
+    volpiano = c.source_language.volpiano_translator&.(c.source_code)
+    c.update!(volpiano: volpiano)
+  end
 end
