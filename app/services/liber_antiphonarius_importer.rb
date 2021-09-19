@@ -59,18 +59,57 @@ class LiberAntiphonariusImporter
     parser.parse(source)&.create_score || raise(parser_failure_msg(parser))
   end
 
+  PageNumber = Struct.new(:number, :prefix, :suffix) do
+    def in_range?(range, prefix=nil)
+      self.prefix == prefix && range.include?(number)
+    end
+  end
+
   def page_from_header_book(value)
-    value.match(/.+?, pp (\[?\d+\]?)/) {|m| m[1] } || raise("page not found in #{value.inspect}")
+    value.match(/.+?, pp (\[)?(\d+)(\*)?/) {|m| PageNumber.new(m[2].to_i, m[1], m[3]) } || raise("page not found in #{value.inspect}")
   end
 
   def cycle_by_page(page)
-    # TODO
-    Cycle.find_by_system_name! 'temporale'
+    system_name =
+      if page.in_range?(1..209)
+        'psalter'
+      elsif page.in_range?(210..576)
+        'temporale'
+      elsif page.in_range?(577..931) || page.in_range?(1..141, '[')
+        'sanctorale'
+      elsif page.suffix == '*'
+        'ordinarium'
+      else
+        'temporale' # TODO
+      end
+
+    Cycle.find_by_system_name! system_name
   end
 
   def season_by_page(page)
-    # TODO
-    Season.find_by_system_name! 'ordinary'
+    # here we pragmatically impose post-Vatican II notions of liturgical seasons,
+    # since the material is being imported for purposes of comparison
+    # with the vernacular chants for a post-Vatican II LOTH
+    system_name =
+      if page.in_range?(210..258)
+        'advent'
+      elsif page.in_range?(259..335)
+        'christmas'
+      elsif page.in_range?(336..340)
+        'ordinary'
+      elsif page.in_range?(341..431)
+        'lent'
+      elsif page.in_range?(432..447)
+        'triduum'
+      elsif page.in_range?(448..515)
+        'easter'
+      elsif page.in_range?(516..576)
+        'ordinary'
+      else
+        nil
+      end
+
+    system_name && Season.find_by_system_name!(system_name)
   end
 
   def parser_failure_msg(parser)
