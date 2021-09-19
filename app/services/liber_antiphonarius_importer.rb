@@ -43,13 +43,11 @@ class LiberAntiphonariusImporter
     chant.header = header
 
     chant.modus = RomanNumerals.to_roman header['mode'].to_i
-    # %w[quid differentia psalmus placet fial].each do |key|
-    #   chant.public_send "#{key}=", header[key]
-    # end
-    #
-    # %i[syllable_count word_count melody_section_count].each do |property|
-    #   chant.public_send "#{property}=", score_with_stats.public_send(property)
-    # end
+
+    lyrics = score.music.lyric_syllables.reject {|i| i == ['*'] }
+    chant.syllable_count = lyrics.flatten.size
+    chant.word_count = lyrics.size
+    # TODO: chant.melody_section_count
 
     chant.save!
   end
