@@ -4,9 +4,9 @@ h1 Overview
   .row
     .column
       = render 'listing', title: 'Genres', items: @genres, filter_param: :genre_id
+      = render 'listing', title: 'Cycles', items: @cycles, filter_param: :cycle_id
+      = render 'listing', title: 'Seasons', items: @seasons, filter_param: :season_id
     .column= render 'modes'
     .column
       = render 'listing', title: 'Books', items: @books, filter_param: :book_id
       = render 'listing', title: 'Corpora', items: @corpuses, filter_param: :corpus_id
-      = render 'listing', title: 'Cycles', items: @cycles, filter_param: :cycle_id
-      = render 'listing', title: 'Seasons', items: @seasons, filter_param: :season_id
