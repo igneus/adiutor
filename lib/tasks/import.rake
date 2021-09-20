@@ -1,6 +1,6 @@
 IMPORT_PREREQUISITES = [
   :environment,
-  :create_books, :create_cycles, :create_seasons, :create_corpuses, :create_source_languages
+  :create_books, :create_cycles, :create_seasons, :create_corpuses, :create_source_languages, :create_genres
 ]
 
 desc 'import chants from In-adiutorium sources'
@@ -64,6 +64,18 @@ task create_source_languages: [:environment] do
   SourceLanguage.find_or_create_by!(system_name: 'gabc', name: 'GABC (Gregorio)')
 end
 
+desc 'create Genres'
+task create_genres: [:environment] do
+  Genre.find_or_create_by!(system_name: 'invitatory', name: 'Invitatory')
+  Genre.find_or_create_by!(system_name: 'antiphon', name: 'Antiphon')
+  Genre.find_or_create_by!(system_name: 'antiphon_psalter', name: 'Psalter antiphon')
+  Genre.find_or_create_by!(system_name: 'antiphon_gospel', name: 'Gospel antiphon')
+  Genre.find_or_create_by!(system_name: 'antiphon_standalone', name: 'Votive/final/processional antiphon')
+  Genre.find_or_create_by!(system_name: 'responsory_short', name: 'Short responsory')
+  Genre.find_or_create_by!(system_name: 'responsory_nocturnal', name: 'Nocturnal responsory')
+  Genre.find_or_create_by!(system_name: 'varia', name: 'Varia')
+end
+
 desc 'generate Volpiano for all scores'
 task volpiano: [:environment] do
   # we can only convert gabc pieces to Volpiano (yet)
@@ -74,7 +86,14 @@ task volpiano: [:environment] do
 
   supported_chants.find_each do |c|
     p c.id
-    volpiano = c.source_language.volpiano_translator&.(c.source_code)
+
+    begin
+      volpiano = c.source_language.volpiano_translator&.(c.source_code)
+    rescue RuntimeError => e
+      STDERR.puts e.message
+      next
+    end
+
     c.update!(volpiano: volpiano)
   end
 end

@@ -46,6 +46,7 @@ class ChantsController < ApplicationController
       :corpus_id,
       :cycle_id,
       :season_id,
+      :genre_id,
       :word_count,
       :melody_section_count
     )

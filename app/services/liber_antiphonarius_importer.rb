@@ -37,6 +37,7 @@ class LiberAntiphonariusImporter
     chant.cycle = cycle
     chant.season = season
     chant.source_language = language
+    chant.genre = detect_genre header, cycle
 
     chant.source_code = source
     chant.lyrics = score.music.lyrics_readable
@@ -117,6 +118,26 @@ class LiberAntiphonariusImporter
       end
 
     system_name && Season.find_by_system_name!(system_name)
+  end
+
+  def detect_genre(header, cycle)
+    office_part = header['office-part']
+
+    genre =
+      if office_part == 'Responsoria brevia'
+        'responsory_short'
+      elsif office_part == 'Antiphonae'
+        # TODO: there is currently no easy and general way to detect gospel antiphons
+        if cycle.system_name == 'psalter'
+          'antiphon_psalter'
+        else
+          'antiphon'
+        end
+      else
+        'varia'
+      end
+
+    Genre.find_by_system_name!(genre)
   end
 
   def parser_failure_msg(parser)

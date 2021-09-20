@@ -4,7 +4,7 @@ class HomeController < ApplicationController
   end
 
   def overview
-    @genres = Chant.genres
+    @genres = Genre.all
     @modes = Chant.modi_and_differentiae
     @books = Book.all
     @cycles = Cycle.all

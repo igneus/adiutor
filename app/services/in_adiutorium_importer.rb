@@ -62,6 +62,7 @@ class InAdiutoriumImporter
       chant.cycle = cycle
       chant.season = season
       chant.source_language = language
+      chant.genre = detect_genre header, in_project_path
       chant.parent = nil
       chant.source_code = score.text
       chant.lyrics = score.lyrics_readable
@@ -146,6 +147,32 @@ class InAdiutoriumImporter
       end
 
     season && Season.for_cr_season(season)
+  end
+
+  def detect_genre(header, path)
+    id = header['id']
+    quid = header['quid']
+
+    genre =
+      if id =~ /invit/
+        'invitatory'
+      elsif quid =~ /k (Benedictus|Magnificat)/
+        'antiphon_gospel'
+      elsif quid =~ /resp/
+        if id =~ /mc/
+          'responsory_nocturnal'
+        else
+          'responsory_short'
+        end
+      elsif path =~ /^antifony\/(tyden|ferie|doplnovaci)/
+        'antiphon_psalter'
+      elsif quid =~ /ant(\.|ifona)/
+        'antiphon'
+      else
+        'varia'
+      end
+
+    Genre.find_by_system_name!(genre)
   end
 
   def delete_image(chant)

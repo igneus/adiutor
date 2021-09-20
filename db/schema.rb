@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_19_191536) do
+ActiveRecord::Schema.define(version: 2021_09_20_214410) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,9 +47,11 @@ ActiveRecord::Schema.define(version: 2021_09_19_191536) do
     t.bigint "corpus_id"
     t.bigint "source_language_id"
     t.string "volpiano"
+    t.bigint "genre_id"
     t.index ["book_id"], name: "index_chants_on_book_id"
     t.index ["corpus_id"], name: "index_chants_on_corpus_id"
     t.index ["cycle_id"], name: "index_chants_on_cycle_id"
+    t.index ["genre_id"], name: "index_chants_on_genre_id"
     t.index ["parent_id"], name: "index_chants_on_parent_id"
     t.index ["season_id"], name: "index_chants_on_season_id"
     t.index ["source_language_id"], name: "index_chants_on_source_language_id"
@@ -63,6 +65,13 @@ ActiveRecord::Schema.define(version: 2021_09_19_191536) do
   end
 
   create_table "cycles", force: :cascade do |t|
+    t.string "name"
+    t.string "system_name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "genres", force: :cascade do |t|
     t.string "name"
     t.string "system_name"
     t.datetime "created_at", precision: 6, null: false

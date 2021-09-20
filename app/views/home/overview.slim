@@ -2,7 +2,8 @@ h1 Overview
 
 .container
   .row
-    .column= render 'genres'
+    .column
+      = render 'listing', title: 'Genres', items: @genres, filter_param: :genre_id
     .column= render 'modes'
     .column
       = render 'listing', title: 'Books', items: @books, filter_param: :book_id

@@ -4,6 +4,7 @@ class Chant < ApplicationRecord
   belongs_to :season, optional: true
   belongs_to :corpus
   belongs_to :source_language
+  belongs_to :genre
   belongs_to :parent, class_name: 'Chant', optional: true
   has_many :children, class_name: 'Chant', foreign_key: 'parent_id'
 
