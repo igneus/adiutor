@@ -10,7 +10,9 @@ from .conversion import gabc2volpiano
         ('(c3) lyr(a)', '1---c---'), # Why?
         ('(c3) ly(a)ric(b)', '1---c--d---'),
         ('(c3) ly(a) ric(b)', '1---c---d---'),
+        ('(c3) ly(a)ric(b) ly(c)ric(d)', '1---c--d---e--f---'),
         ('(c3) lyr(ab)', '1---c---d-'), # TODO: neume not handled as such
+        ('(c3) lyr(a b)', '1---c---d-'), # TODO: two neumes on he same syllable not handled as such
 
         # divisiones
         ('(c3) lyr(a) (,)', '1---c---'),
