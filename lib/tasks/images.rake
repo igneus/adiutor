@@ -9,13 +9,18 @@ task missing_images: [:environment] do
     generator = c.source_language.image_generator
     next if File.exist? generator.image_path c
 
-    generator.(c)
+    begin
+      generator.(c)
+    rescue => e
+      STDERR.puts "Generating image for Chant #{c.id} failed:"
+      STDERR.puts e
+    end
   end
 end
 
 desc 'generate image for a specified Chant'
 task :image, [:chant_id] => [:environment] do |task, args|
-  LilypondImageGenerator.new.(
-    Chant.find(args.chant_id)
-  )
+  Chant
+    .find(args.chant_id)
+    .then {|c| c.source_language.image_generator.(c) }
 end
