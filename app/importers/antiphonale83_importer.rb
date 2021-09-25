@@ -39,6 +39,7 @@ class Antiphonale83Importer < BaseImporter
     chant.corpus = corpus
     chant.book = book
     chant.cycle = cycle
+    chant.hour = detect_hour header, in_project_path
     chant.source_language = language
     chant.genre = detect_genre header, in_project_path
 
@@ -48,7 +49,7 @@ class Antiphonale83Importer < BaseImporter
     chant.source_code = score_to_gabc score
 
     chant.lyrics = lyrics.readable
-    chant.header = header
+    chant.header = header.instance_variable_get :@headers # only last value for each repeated key!
 
     last_annotation = header.each_value('annotation').to_a.last
     chant.modus, chant.differentia =
@@ -85,6 +86,14 @@ class Antiphonale83Importer < BaseImporter
     id = header['id']
 
     hour =
+      case path
+      when /completorium/
+        'compline'
+      else
+        nil
+      end
+
+    hour ||=
       case id
       when /^ol/
         'readings'
@@ -94,14 +103,6 @@ class Antiphonale83Importer < BaseImporter
         'daytime'
       when /^v/
         'vespers'
-      else
-        nil
-      end
-
-    hour ||=
-      case path
-      when /^completorium/
-        'compline'
       else
         nil
       end
