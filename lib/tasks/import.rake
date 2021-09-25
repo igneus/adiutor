@@ -23,6 +23,7 @@ task create_books: [:environment] do
   Book.find_or_create_by!(system_name: 'olm', name: 'Mešní lekcionář')
   Book.find_or_create_by!(system_name: 'other', name: 'Jiné')
   Book.find_or_create_by!(system_name: 'br', name: 'Breviarium Romanum')
+  Book.find_or_create_by!(system_name: 'oco1983', name: 'Ordo cantus officii 1983')
 
   sources_path = Corpus.find_by_system_name!('in_adiutorium').sources_path
 
@@ -59,6 +60,7 @@ desc 'create Corpuses'
 task create_corpuses: [:environment] do
   Corpus.find_or_create_by!(system_name: 'in_adiutorium', name: 'In adiutorium')
   Corpus.find_or_create_by!(system_name: 'liber_antiphonarius', name: 'Liber antiphonarius 1960')
+  Corpus.find_or_create_by!(system_name: 'antiphonale83', name: 'Antiphonale 1983')
 end
 
 desc 'create SourceLanguages'

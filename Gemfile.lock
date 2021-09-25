@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/igneus/gly.git
+  revision: b8e838e8985fa5c898c89829a132acaa259e7800
+  specs:
+    gly (0.0.4)
+      thor
+
+GIT
   remote: https://github.com/igneus/lygre.git
   revision: cc1560a7143cf7042a8ad417f670abc4943dd2ce
   specs:
@@ -225,6 +232,7 @@ DEPENDENCIES
   calendarium-romanum
   diffy
   dotenv-rails
+  gly!
   jbuilder (~> 2.7)
   listen (~> 3.3)
   lygre!
