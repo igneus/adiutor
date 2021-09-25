@@ -1,7 +1,7 @@
 # Imports chants from the directory structure of Liber antiphonarius 1960
 # transcribed by Andrew Hinkley
 # https://github.com/ahinkley/liber-antiphonarius-1960
-class LiberAntiphonariusImporter
+class LiberAntiphonariusImporter < BaseImporter
   def call(path)
     %w(AN RE)
       .flat_map {|genre| Dir["#{path}/#{genre}/**/*.gabc"] }
@@ -24,7 +24,6 @@ class LiberAntiphonariusImporter
     page = page_from_header_book header['book']
 
     book = Book.find_by_system_name! 'br'
-    corpus = Corpus.find_by_system_name! 'la1960'
     language = SourceLanguage.find_by_system_name! 'gabc'
 
     cycle = cycle_by_page(page)

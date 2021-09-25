@@ -5,7 +5,7 @@ IMPORT_PREREQUISITES = [
 
 desc 'import chants from In-adiutorium sources'
 task import: IMPORT_PREREQUISITES do
-  InAdiutoriumImporter.new.call Adiutor::IN_ADIUTORIUM_SOURCES_PATH
+  Corpus.find_by_system_name!('in_adiutorium').import!
 end
 
 desc 'run import together with subsequent data-building tasks'
@@ -13,7 +13,8 @@ task refresh: %i[import update_parents compare_parents missing_images]
 
 desc 'import chants from a specified file'
 task :import_file, [:file] => IMPORT_PREREQUISITES do |task, args|
-  InAdiutoriumImporter.new.import_file File.join(Adiutor::IN_ADIUTORIUM_SOURCES_PATH, args.file)
+  sources_path = Corpus.find_by_system_name!('in_adiutorium').sources_path
+  InAdiutoriumImporter.new.import_file File.join(sources_path, args.file)
 end
 
 desc 'create Books'
@@ -23,7 +24,9 @@ task create_books: [:environment] do
   Book.find_or_create_by!(system_name: 'other', name: 'Jiné')
   Book.find_or_create_by!(system_name: 'br', name: 'Breviarium Romanum')
 
-  Dir[File.join(Adiutor::IN_ADIUTORIUM_SOURCES_PATH, 'reholni', '*')]
+  sources_path = Corpus.find_by_system_name!('in_adiutorium').sources_path
+
+  Dir[File.join(sources_path, 'reholni', '*')]
     .each {|f| p f }
     .select {|f| File.directory? f }
     .each do |f|
@@ -55,7 +58,7 @@ end
 desc 'create Corpuses'
 task create_corpuses: [:environment] do
   Corpus.find_or_create_by!(system_name: 'in_adiutorium', name: 'In adiutorium')
-  Corpus.find_or_create_by!(system_name: 'la1960', name: 'Liber antiphonarius 1960')
+  Corpus.find_or_create_by!(system_name: 'liber_antiphonarius', name: 'Liber antiphonarius 1960')
 end
 
 desc 'create SourceLanguages'

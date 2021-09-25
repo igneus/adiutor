@@ -1,5 +1,5 @@
 # Imports chants from the directory structure of the "In adiutorium" project sources
-class InAdiutoriumImporter
+class InAdiutoriumImporter < BaseImporter
   def call(path)
     Dir["#{path}/**/*.ly"].each {|f| import_file f }
   end
@@ -15,7 +15,6 @@ class InAdiutoriumImporter
     book = book_by_file_path(in_project_path)
     cycle = cycle_by_file_path(in_project_path)
     season = season_by_file_path(in_project_path)
-    corpus = Corpus.find_by_system_name! 'in_adiutorium'
     language = SourceLanguage.find_by_system_name! 'lilypond'
 
     scores =
