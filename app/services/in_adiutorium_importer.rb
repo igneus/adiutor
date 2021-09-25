@@ -63,6 +63,7 @@ class InAdiutoriumImporter
       chant.season = season
       chant.source_language = language
       chant.genre = detect_genre header, in_project_path
+      chant.hour = detect_hour header, in_project_path
       chant.parent = nil
       chant.source_code = score.text
       chant.lyrics = score.lyrics_readable
@@ -173,6 +174,36 @@ class InAdiutoriumImporter
       end
 
     Genre.find_by_system_name!(genre)
+  end
+
+  def detect_hour(header, path)
+    id = header['id']
+
+    hour =
+      case id
+      when /^mc/
+        'readings'
+      when /^rch/, 'aben'
+        'lauds'
+      when /^up/, 'tercie', 'sexta', 'nona'
+        'daytime'
+      when /^\d?ne/, 'amag'
+        'vespers'
+      when /komplet/
+        'compline'
+      else
+        nil
+      end
+
+    hour ||=
+      case path
+      when /^kompletar/, /^marianske_antifony/
+        'compline'
+      else
+        nil
+      end
+
+    hour && Hour.find_by_system_name!(hour)
   end
 
   def delete_image(chant)

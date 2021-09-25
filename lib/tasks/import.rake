@@ -1,6 +1,6 @@
 IMPORT_PREREQUISITES = [
   :environment,
-  :create_books, :create_cycles, :create_seasons, :create_corpuses, :create_source_languages, :create_genres
+  :create_books, :create_cycles, :create_seasons, :create_corpuses, :create_source_languages, :create_genres, :create_hours
 ]
 
 desc 'import chants from In-adiutorium sources'
@@ -74,6 +74,15 @@ task create_genres: [:environment] do
   Genre.find_or_create_by!(system_name: 'responsory_short', name: 'Short responsory')
   Genre.find_or_create_by!(system_name: 'responsory_nocturnal', name: 'Nocturnal responsory')
   Genre.find_or_create_by!(system_name: 'varia', name: 'Varia')
+end
+
+desc 'create Hours'
+task create_hours: [:environment] do
+  Hour.find_or_create_by!(system_name: 'readings', name: 'Office of Readings')
+  Hour.find_or_create_by!(system_name: 'lauds', name: 'Lauds')
+  Hour.find_or_create_by!(system_name: 'daytime', name: 'Daytime Prayer')
+  Hour.find_or_create_by!(system_name: 'vespers', name: 'Vespers')
+  Hour.find_or_create_by!(system_name: 'compline', name: 'Compline')
 end
 
 desc 'generate Volpiano for all scores'

@@ -10,5 +10,6 @@ class HomeController < ApplicationController
     @cycles = Cycle.all
     @seasons = Season.all
     @corpuses = Corpus.all
+    @hours = Hour.all
   end
 end

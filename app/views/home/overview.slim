@@ -6,6 +6,7 @@ h1 Overview
       = render 'listing', title: 'Genres', items: @genres, filter_param: :genre_id
       = render 'listing', title: 'Cycles', items: @cycles, filter_param: :cycle_id
       = render 'listing', title: 'Seasons', items: @seasons, filter_param: :season_id
+      = render 'listing', title: 'Hours', items: @hours, filter_param: :hour_id
     .column= render 'modes'
     .column
       = render 'listing', title: 'Books', items: @books, filter_param: :book_id
