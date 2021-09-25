@@ -1,15 +1,15 @@
 # Imports chants from the directory structure of the "In adiutorium" project sources
 class InAdiutoriumImporter < BaseImporter
   def call(path)
-    Dir["#{path}/**/*.ly"].each {|f| import_file f }
+    Dir["#{path}/**/*.ly"].each {|f| import_file f, path }
   end
 
-  def import_file(path)
+  def import_file(path, dir)
     return if path =~ /(antifonar|cizojazycne|hymny|nechoral|psalmodie|rytmicke|variationes|zalm\d+|kratkeverse)/
 
     in_project_path =
       path
-        .sub(Adiutor::IN_ADIUTORIUM_SOURCES_PATH, '') # TODO: importer should not know this constant
+        .sub(dir, '')
         .sub(%r{^/}, '')
 
     book = book_by_file_path(in_project_path)
