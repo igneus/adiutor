@@ -6,19 +6,20 @@ from .conversion import gabc2volpiano
     'gabc,volpiano',
     [
         ('(c3)', '1---'),
-        ('(c3) (a)', '1---c-'),
+        ('(c3) (a)', '1---c---'),
         ('(c3) lyr(a)', '1---c---'), # Why?
         ('(c3) ly(a)ric(b)', '1---c--d---'),
         ('(c3) ly(a) ric(b)', '1---c---d---'),
         ('(c3) ly(a)ric(b) ly(c)ric(d)', '1---c--d---e--f---'),
-        ('(c3) lyr(ab)', '1---c---d-'), # TODO: neume not handled as such
-        ('(c3) lyr(a b)', '1---c---d-'), # TODO: two neumes on he same syllable not handled as such
+        ('(c3) lyr(ab)', '1---cd---'),
+        # ('(c3) lyr(a b)', '1---c-d---'), # there doesn't seem to be any construct in gabc interpreted by chant21 as separating neumes on the same syllable
 
-        # divisiones
+        # ignore divisiones
         ('(c3) lyr(a) (,)', '1---c---'),
         ('(c3) lyr(a) (;)', '1---c---'),
-        ('(c3) lyr(a) (:)',  '1---c------3'),
-        ('(c3) lyr(a) (::)', '1---c------4'),
+        ('(c3) lyr(a) (:)',  '1---c---'),
+        ('(c3) lyr(a) (::)', '1---c---'),
+        ('(c3) lyr(a) (,) lyr(b) (,) (::)', '1---c---d---'),
 
         # clefs
         ('(c1) lyr(d)', '1---c---'),
@@ -29,6 +30,7 @@ from .conversion import gabc2volpiano
         ('(f2) lyr(d)', '1---c---'),
         ('(f3) lyr(d)', '1---b---'),
         ('(f4) lyr(d)', '1---9---'),
+        ('(c1) lyr(d) (c2) lyr(d)', '1---c---h---'),
     ]
 )
 def test_gabc2volpiano(gabc, volpiano):
