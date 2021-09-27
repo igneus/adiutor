@@ -40,7 +40,7 @@ from .conversion import gabc2volpiano
         ('(c3) ly(gxg)ric(g)', '1---ij--j---'),
         # TODO: in gabc flat/natural applies up to the cancel or end of the word,
         #   in Volpiano (at least in the CANTUS network) up to the cancel
-        # ('(c3) lyr(gxg) lyr(g)', '1---ij---Ij---'),
+        ('(c3) lyr(gxg) lyr(g)', '1---ij---Ij---'),
         # natural
         # TODO: this is unexpected - flat/natural in the middle of a neume
         #   breaks the neume in two
@@ -51,9 +51,11 @@ def test_gabc2volpiano(gabc, volpiano):
     assert gabc2volpiano(gabc) == volpiano
 
 def test_gabc2volpiano_unsupported_flat():
-    gabc = '(c4) lyr(dxd)'
+    # note: (dxd) or (gxg) would pass without notice, as chant21
+    # only generates flat accidentals for pitches B and E!
+    gabc = '(c4) lyr(exe)'
 
     with pytest.raises(RuntimeError) as excinfo:
         gabc2volpiano(gabc)
 
-    assert str(excinfo.value) == 'Flat on unsupported pitch D'
+    assert str(excinfo.value) == 'Flat on unsupported pitch E'

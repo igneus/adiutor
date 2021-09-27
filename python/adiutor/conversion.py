@@ -5,9 +5,9 @@ def gabc2volpiano(gabc):
     """convert gabc to Volpiano"""
     chant = converter.parse('gabc: ' + gabc)
 
-    return '1---' + chant21_to_volpiano(chant)
+    return '1---' + chant21_to_volpiano(chant)[0]
 
-def chant21_to_volpiano(score):
+def chant21_to_volpiano(score, bIsFlat = False):
     """convert Stream loaded using chant21 to Volpiano"""
     r = []
 
@@ -15,25 +15,34 @@ def chant21_to_volpiano(score):
         elClasses = el.classes
 
         if 'Note' in elClasses:
+            accidental = el.pitch.accidental
+            if accidental is None:
+                if el.pitch.step == 'B' and bIsFlat:
+                    bIsFlat = False
+                    r.append('I')
+            elif accidental.name == 'flat':
+                if el.pitch.step != 'B':
+                    raise RuntimeError('Flat on unsupported pitch {}'.format(el.pitch.step))
+                if not bIsFlat:
+                    bIsFlat = True
+                    r.append('i')
+            else:
+                raise RuntimeError("accidental {} unsupported".format(accidental.name))
+
             r.append(_note(el))
-        elif 'Flat' in elClasses:
-            if el.pitch.step != 'B':
-                raise RuntimeError('Flat on unsupported pitch {}'.format(el.pitch.step))
-            r.append('i')
-        elif 'Natural' in elClasses:
-            if el.pitch.step != 'B':
-                raise RuntimeError('Natural on unsupported pitch {}'.format(el.pitch.step))
-            r.append('I')
+        elif 'Flat' in elClasses or 'Natural' in elClasses:
+            continue
         else:
             if 'Word' in elClasses and _contains_no_notes(el):
                 continue
 
-            r.append(chant21_to_volpiano(el))
+            word_volpiano, bIsFlat = chant21_to_volpiano(el, bIsFlat)
+            r.append(word_volpiano)
 
             if 'Word' in elClasses or 'Syllable' in elClasses or 'Neume' in elClasses:
                 r.append('-')
 
-    return ''.join(r)
+    return ''.join(r), bIsFlat
 
 lastClef = clef.TrebleClef()
 def _note(n):
