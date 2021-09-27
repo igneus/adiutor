@@ -16,6 +16,14 @@ def chant21_to_volpiano(score):
 
         if 'Note' in elClasses:
             r.append(_note(el))
+        elif 'Flat' in elClasses:
+            if el.pitch.step != 'B':
+                raise RuntimeError('Flat on unsupported pitch {}'.format(el.pitch.step))
+            r.append('i')
+        elif 'Natural' in elClasses:
+            if el.pitch.step != 'B':
+                raise RuntimeError('Natural on unsupported pitch {}'.format(el.pitch.step))
+            r.append('I')
         else:
             if 'Word' in elClasses and _contains_no_notes(el):
                 continue

@@ -5,6 +5,7 @@ from .conversion import gabc2volpiano
 @pytest.mark.parametrize(
     'gabc,volpiano',
     [
+        # chant structure
         ('(c3)', '1---'),
         ('(c3) (a)', '1---c---'),
         ('(c3) lyr(a)', '1---c---'), # Why?
@@ -31,7 +32,28 @@ from .conversion import gabc2volpiano
         ('(f3) lyr(d)', '1---b---'),
         ('(f4) lyr(d)', '1---9---'),
         ('(c1) lyr(d) (c2) lyr(d)', '1---c---h---'),
+
+        # flat
+        ('(c4) lyr(ixi)', '1---ij---'),
+        ('(c3) lyr(gxg)', '1---ij---'),
+        ('(c3) lyr(gxghg)', '1---ijkj---'),
+        ('(c3) ly(gxg)ric(g)', '1---ij--j---'),
+        # TODO: in gabc flat/natural applies up to the cancel or end of the word,
+        #   in Volpiano (at least in the CANTUS network) up to the cancel
+        # ('(c3) lyr(gxg) lyr(g)', '1---ij---Ij---'),
+        # natural
+        # TODO: this is unexpected - flat/natural in the middle of a neume
+        #   breaks the neume in two
+        # ('(c4) lyr(ixiiyi)', '1---ijIj---'),
     ]
 )
 def test_gabc2volpiano(gabc, volpiano):
     assert gabc2volpiano(gabc) == volpiano
+
+def test_gabc2volpiano_unsupported_flat():
+    gabc = '(c4) lyr(dxd)'
+
+    with pytest.raises(RuntimeError) as excinfo:
+        gabc2volpiano(gabc)
+
+    assert str(excinfo.value) == 'Flat on unsupported pitch D'
