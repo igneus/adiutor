@@ -104,6 +104,7 @@ task volpiano: [:environment] do
     begin
       volpiano = c.source_language.volpiano_translator&.(c.source_code)
     rescue RuntimeError => e
+      STDERR.puts "Chant #{c.id}:"
       STDERR.puts e.message
       next
     end
