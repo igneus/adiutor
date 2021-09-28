@@ -11,8 +11,10 @@ def chant21_to_volpiano(score, bIsFlat = False):
     """convert Stream loaded using chant21 to Volpiano"""
     r = []
 
+    ignoredElements = set(['Flat', 'Natural', 'Pausa', 'Annotation'])
+
     for el in score:
-        elClasses = el.classes
+        elClasses = set(el.classes)
 
         if 'Note' in elClasses:
             accidental = el.pitch.accidental
@@ -30,12 +32,11 @@ def chant21_to_volpiano(score, bIsFlat = False):
                 raise RuntimeError("accidental {} unsupported".format(accidental.name))
 
             r.append(_note(el))
-        elif 'Flat' in elClasses or 'Natural' in elClasses:
+        elif ignoredElements.intersection(elClasses):
+            continue
+        elif 'Word' in elClasses and _contains_no_notes(el):
             continue
         else:
-            if 'Word' in elClasses and _contains_no_notes(el):
-                continue
-
             word_volpiano, bIsFlat = chant21_to_volpiano(el, bIsFlat)
             r.append(word_volpiano)
 
