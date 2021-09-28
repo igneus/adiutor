@@ -1,9 +1,11 @@
+import re
+
 from music21 import clef, converter, volpiano
 import chant21
 
 def gabc2volpiano(gabc):
     """convert gabc to Volpiano"""
-    chant = converter.parse('gabc: ' + gabc)
+    chant = converter.parse('gabc: ' + strip_gabc_header(gabc))
 
     return '1---' + chant21_to_volpiano(chant)[0]
 
@@ -44,6 +46,14 @@ def chant21_to_volpiano(score, bIsFlat = False):
                 r.append('-')
 
     return ''.join(r), bIsFlat
+
+
+GABC_HEADER_RE = re.compile(r'.*(?=%%)', re.MULTILINE|re.DOTALL)
+
+
+def strip_gabc_header(gabc_source):
+    """removes gabc header"""
+    return GABC_HEADER_RE.sub('', gabc_source)
 
 lastClef = clef.TrebleClef()
 def _note(n):

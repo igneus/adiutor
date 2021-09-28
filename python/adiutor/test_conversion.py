@@ -1,6 +1,6 @@
 import pytest
 
-from .conversion import gabc2volpiano
+from .conversion import *
 
 @pytest.mark.parametrize(
     'gabc,volpiano',
@@ -63,3 +63,14 @@ def test_gabc2volpiano_unsupported_flat():
         gabc2volpiano(gabc)
 
     assert str(excinfo.value) == 'Flat on unsupported pitch E'
+
+@pytest.mark.parametrize(
+    'given,expected',
+    [
+        ('', ''),
+        ('(c4) (c)', '(c4) (c)'),
+        ("header: value;\n%%", '%%'),
+    ]
+)
+def test_strip_gabc_header(given, expected):
+    assert strip_gabc_header(given) == expected
