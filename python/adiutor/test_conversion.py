@@ -87,6 +87,14 @@ def test_strip_gabc_header(given, expected):
         ("\\score { \\relative c' { c4 d e f g a b c } }", '1---c--d--e--f--g--h--j--k---'),
         ("\\score { \\relative c' { c4( d) } }", '1---cd---'),
         ("\\score { \\relative c' { c4( d e) } }", '1---cde---'),
+
+        ("\\score { \\relative c' { c4 c } }", '1---c--c---'),
+        ("\\score { \\relative c' { c4 c } \\addlyrics { a -- men } }", '1---c--c---'),
+        ("\\score { \\relative c' { c4 c } \\addlyrics { hic sum } }",  '1---c---c---'),
+        ("\\score { \\relative c' { c4 c c c } \\addlyrics { hic sum, a -- men } }",  '1---c---c---c--c---'),
+        ("\\score { \\relative c' { c4 c c c } \\addlyrics { a -- men, hic sum } }",  '1---c--c---c---c---'),
+        ("\\score { \\relative c' { c4 c c c } \\addlyrics { a -- men, a -- men } }",  '1---c--c---c--c---'),
+        ("\\score { \\relative c' { c4 c( d) c c } \\addlyrics { a -- men, a -- men } }",  '1---c--cd---c--c---'),
     ]
 )
 def test_lilypond2volpiano(lilypond, volpiano):

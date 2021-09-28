@@ -21,6 +21,9 @@ def parse(lilypond_source):
     music = ly.music.document(document)
     music_content = next(music.music_children())
 
+    syllables = lyrics_syllables(music)
+    word_lengths = lyrics_word_lengths(syllables)
+
     chant = Chant()
 
     section = Section()
@@ -34,6 +37,14 @@ def parse(lilypond_source):
     for i in music_content.iter_depth():
         if isinstance(i, ly.music.items.Note):
             if not in_slur:
+                if len(word_lengths) > 0:
+                    if word_lengths[0] == 0:
+                        word_lengths = word_lengths[1:]
+                        word = Word()
+                        section.append(word)
+
+                    word_lengths[0] -= 1
+
                 syllable = Syllable()
                 word.append(syllable)
 
@@ -41,6 +52,7 @@ def parse(lilypond_source):
                 syllable.append(neume)
 
             neume.append(_chant21_note(i))
+
         if isinstance(i, ly.music.items.Slur):
             if i.event == 'stop':
                 in_slur = False
@@ -61,3 +73,22 @@ def _chant21_pitch(ly_pitch):
         pitch.accidental = music21.pitch.Accidental('flat')
 
     return pitch
+
+def lyrics_syllables(ly_score):
+    r = []
+    word_continues = False
+    for i in ly_score.iter_depth():
+        if isinstance(i, ly.music.items.LyricText):
+            s = str(i.token)
+            if word_continues:
+                r[-1].append(s)
+            else:
+                r.append([s])
+            word_continues = False
+        elif isinstance(i, ly.music.items.LyricItem) and i.token == '--':
+            word_continues = True
+
+    return r
+
+def lyrics_word_lengths(syllables):
+    return [len(i) for i in syllables]
