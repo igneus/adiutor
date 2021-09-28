@@ -23,8 +23,12 @@ def cli():
 
 
 @cli.command(help='Generate Volpiano for all gabc chants')
-def volpiano():
+@click.argument('chant_id', required=False)
+def volpiano(chant_id=None):
     stmt = select(Chant).join(SourceLanguage).where(SourceLanguage.system_name == 'gabc')
+
+    if chant_id:
+        stmt = stmt.where(Chant.id == chant_id)
 
     with Session(model.engine) as session:
         for row in session.execute(stmt):
