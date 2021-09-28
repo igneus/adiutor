@@ -43,7 +43,8 @@ def parse(lilypond_source):
                         word = Word()
                         section.append(word)
 
-                    word_lengths[0] -= 1
+                    if len(word_lengths) >= 1:
+                        word_lengths[0] -= 1
 
                 syllable = Syllable()
                 word.append(syllable)
