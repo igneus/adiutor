@@ -45,6 +45,7 @@ from .conversion import gabc2volpiano
         # TODO: this is unexpected - flat/natural in the middle of a neume
         #   breaks the neume in two
         # ('(c4) lyr(ixiiyi)', '1---ijIj---'),
+        ('(c3) ly(gxg)ric(gyg)', '1---ij--Ij---'),
     ]
 )
 def test_gabc2volpiano(gabc, volpiano):

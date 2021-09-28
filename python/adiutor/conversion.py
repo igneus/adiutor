@@ -16,7 +16,7 @@ def chant21_to_volpiano(score, bIsFlat = False):
 
         if 'Note' in elClasses:
             accidental = el.pitch.accidental
-            if accidental is None:
+            if accidental is None or accidental.name == 'natural':
                 if el.pitch.step == 'B' and bIsFlat:
                     bIsFlat = False
                     r.append('I')
