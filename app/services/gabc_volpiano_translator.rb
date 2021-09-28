@@ -3,7 +3,8 @@ class GabcVolpianoTranslator
   def call(gabc_source)
     r = nil
     Open3.popen3('python3', 'python/bin/gabc2volpiano.py') do |stdin, stdout, stderr, wait_thread|
-      stdin.puts gabc_source
+      # chant21 crashes when parsing some headers and we don't really need them => strip them
+      stdin.puts strip_gabc_header gabc_source
       stdin.close
 
       wait_thread.join
@@ -16,5 +17,11 @@ class GabcVolpianoTranslator
     end
 
     r
+  end
+
+  private
+
+  def strip_gabc_header(gabc_source)
+    gabc_source.sub(/^.*(?=%%)/m, '')
   end
 end
