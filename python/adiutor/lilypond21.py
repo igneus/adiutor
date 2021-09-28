@@ -29,15 +29,23 @@ def parse(lilypond_source):
     word = Word()
     section.append(word)
 
+    in_slur = False
+
     for i in music_content.iter_depth():
         if isinstance(i, ly.music.items.Note):
-            syllable = Syllable()
-            word.append(syllable)
+            if not in_slur:
+                syllable = Syllable()
+                word.append(syllable)
 
-            neume = Neume()
-            syllable.append(neume)
+                neume = Neume()
+                syllable.append(neume)
 
             neume.append(_chant21_note(i))
+        if isinstance(i, ly.music.items.Slur):
+            if i.event == 'stop':
+                in_slur = False
+            else:
+                in_slur = True
 
     return chant
 

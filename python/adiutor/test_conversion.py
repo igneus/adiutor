@@ -85,6 +85,8 @@ def test_strip_gabc_header(given, expected):
         ("\\score { \\relative c'' { c4 } }", '1---k---'),
         ("\\score { \\relative c'' { bes4 } }", '1---ij---'),
         ("\\score { \\relative c' { c4 d e f g a b c } }", '1---c--d--e--f--g--h--j--k---'),
+        ("\\score { \\relative c' { c4( d) } }", '1---cd---'),
+        ("\\score { \\relative c' { c4( d e) } }", '1---cde---'),
     ]
 )
 def test_lilypond2volpiano(lilypond, volpiano):
