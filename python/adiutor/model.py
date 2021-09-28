@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine, Table, Column, Integer, String, ForeignKey
 from sqlalchemy.orm import declarative_base, relationship
 
+from . import conversion
+
 load_dotenv()
 db_url = os.getenv('APP_DATABASE_URL_PYTHON') or os.getenv('APP_DATABASE_URL')
 engine = create_engine(db_url, echo=True, future=True)
@@ -24,6 +26,9 @@ class Chant(Base):
     volpiano = Column(String)
 
     source_language = relationship('SourceLanguage', back_populates='chants')
+
+    def volpiano_convertor(self):
+        return getattr(conversion, self.source_language.system_name + '2volpiano')
 
 class SourceLanguage(Base):
     __tablename__ = 'source_languages'

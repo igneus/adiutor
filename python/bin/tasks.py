@@ -25,7 +25,7 @@ def cli():
 @cli.command(help='Generate Volpiano for all gabc chants')
 @click.argument('chant_id', required=False)
 def volpiano(chant_id=None):
-    stmt = select(Chant).join(SourceLanguage).where(SourceLanguage.system_name == 'gabc')
+    stmt = select(Chant, SourceLanguage).join(SourceLanguage)
 
     if chant_id:
         stmt = stmt.where(Chant.id == chant_id)
@@ -35,7 +35,8 @@ def volpiano(chant_id=None):
             chant = row[0]
             print(chant.id)
             try:
-                volpiano_code = conversion.gabc2volpiano(chant.source_code)
+                convertor = chant.volpiano_convertor()
+                volpiano_code = convertor(chant.source_code)
             except Exception as e:
                 print(e)
                 continue

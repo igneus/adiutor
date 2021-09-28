@@ -3,9 +3,17 @@ import re
 from music21 import clef, converter, volpiano
 import chant21
 
+from . import lilypond21
+
 def gabc2volpiano(gabc):
     """convert gabc to Volpiano"""
     chant = converter.parse('gabc: ' + strip_gabc_header(gabc))
+
+    return '1---' + chant21_to_volpiano(chant)[0]
+
+def lilypond2volpiano(lilypond):
+    """convert ('In adiutorium' subset of) LilyPond to Volpiano"""
+    chant = lilypond21.parse(lilypond)
 
     return '1---' + chant21_to_volpiano(chant)[0]
 
@@ -42,7 +50,7 @@ def chant21_to_volpiano(score, bIsFlat = False):
             word_volpiano, bIsFlat = chant21_to_volpiano(el, bIsFlat)
             r.append(word_volpiano)
 
-            if 'Word' in elClasses or 'Syllable' in elClasses or 'Neume' in elClasses:
+            if set(['Word', 'Syllable', 'Neume']).intersection(elClasses):
                 r.append('-')
 
     return ''.join(r), bIsFlat

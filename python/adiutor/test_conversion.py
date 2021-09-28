@@ -74,3 +74,18 @@ def test_gabc2volpiano_unsupported_flat():
 )
 def test_strip_gabc_header(given, expected):
     assert strip_gabc_header(given) == expected
+
+@pytest.mark.parametrize(
+    'lilypond,volpiano',
+    [
+        ("\\score { \\relative c' { c4 } }", '1---c---'),
+        ("\\score { \\relative c' { c2 } }", '1---c---'),
+        ("\\score { \\relative c' { c } }", '1---c---'),
+        ("\\score { \\relative c' { d4 } }", '1---d---'),
+        ("\\score { \\relative c'' { c4 } }", '1---k---'),
+        ("\\score { \\relative c'' { bes4 } }", '1---ij---'),
+        ("\\score { \\relative c' { c4 d e f g a b c } }", '1---c--d--e--f--g--h--j--k---'),
+    ]
+)
+def test_lilypond2volpiano(lilypond, volpiano):
+    assert lilypond2volpiano(lilypond) == volpiano
