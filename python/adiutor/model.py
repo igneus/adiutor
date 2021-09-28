@@ -24,6 +24,8 @@ class Chant(Base):
 
     source_code = Column(String)
     volpiano = Column(String)
+    pitch_series = Column(String)
+    interval_series = Column(String)
 
     source_language = relationship('SourceLanguage', back_populates='chants')
 
