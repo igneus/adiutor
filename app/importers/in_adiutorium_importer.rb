@@ -164,6 +164,8 @@ class InAdiutoriumImporter < BaseImporter
         else
           'responsory_short'
         end
+      elsif path =~ /^marianske/ || path =~ /velikonoce_pruvod/
+        'antiphon_standalone'
       elsif path =~ /^antifony\/(tyden|ferie|doplnovaci)/
         'antiphon_psalter'
       elsif quid =~ /ant(\.|ifona)/
