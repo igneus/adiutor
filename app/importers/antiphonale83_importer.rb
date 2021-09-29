@@ -53,7 +53,11 @@ class Antiphonale83Importer < BaseImporter
 
     last_annotation = header.each_value('annotation').to_a.last
     chant.modus, chant.differentia =
-      last_annotation.split(' ')
+      if chant.genre.system_name == 'responsory_short'
+        last_annotation.split(' ')[-1..-1]
+      else
+        last_annotation.split(' ')
+      end
 
     chant.syllable_count = lyrics.each_syllable.select {|i| i != '*' }.size
     chant.word_count = lyrics.each_word.select {|i| i.readable != '*' }.size

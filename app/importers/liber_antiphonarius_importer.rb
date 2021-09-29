@@ -49,6 +49,8 @@ class LiberAntiphonariusImporter < BaseImporter
         nil
       when /^\d+$/
         RomanNumerals.to_roman(header_mode.to_i)
+      when /^per/i
+        header_mode.downcase
       else
         header_mode
       end
