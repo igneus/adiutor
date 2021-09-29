@@ -41,8 +41,8 @@ from .conversion import *
         ('(c3) lyr(gxg)', '1---ij---'),
         ('(c3) lyr(gxghg)', '1---ijkj---'),
         ('(c3) ly(gxg)ric(g)', '1---ij--j---'),
-        # TODO: in gabc flat/natural applies up to the cancel or end of the word,
-        #   in Volpiano (at least in the CANTUS network) up to the cancel
+        # In gabc flat/natural applies up to the cancel or end of the word,
+        # in Volpiano (at least in the CANTUS network) up to the cancel
         ('(c3) lyr(gxg) lyr(g)', '1---ij---Ij---'),
         # natural
         # TODO: this is unexpected - flat/natural in the middle of a neume
@@ -87,6 +87,8 @@ def test_strip_gabc_header(given, expected):
         ("\\score { \\relative c' { c4 d e f g a b c } }", '1---c--d--e--f--g--h--j--k---'),
         ("\\score { \\relative c' { c4( d) } }", '1---cd---'),
         ("\\score { \\relative c' { c4( d e) } }", '1---cde---'),
+
+        ("\\score { \\relative c' { \\key f \\major c4 }", '1---c---'),
 
         ("\\score { \\relative c' { c4 c } }", '1---c--c---'),
         ("\\score { \\relative c' { c4 c } \\addlyrics { a -- men } }", '1---c--c---'),

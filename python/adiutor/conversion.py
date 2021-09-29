@@ -71,7 +71,7 @@ def _note(n):
     distanceFromLowestLine = dnn - lastClef.lowestLine
     indexInPitchString = distanceFromLowestLine + 5
     if indexInPitchString < 0 or indexInPitchString >= len(volpiano.normalPitches):
-        raise RuntimeError('pitch out of range')
+        raise RuntimeError('pitch {} out of range'.format(p))
 
     return volpiano.normalPitches[indexInPitchString]
 

@@ -34,6 +34,11 @@ def parse(lilypond_source):
 
     in_slur = False
 
+    # KeySignature contains a ly.music.items.Note, which would, due to
+    # iter_depth()-ing, appear in the output
+    for i in music_content.find_children(ly.music.items.KeySignature):
+        i.parent().remove(i)
+
     for i in music_content.iter_depth():
         if isinstance(i, ly.music.items.Note):
             if not in_slur:
