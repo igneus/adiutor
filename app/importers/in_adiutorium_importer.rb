@@ -65,7 +65,12 @@ class InAdiutoriumImporter < BaseImporter
       chant.hour = detect_hour header, in_project_path
       chant.parent = nil
       chant.source_code = score.text
-      chant.lyrics = score.lyrics_readable
+      chant.lyrics =
+        score
+          .lyrics_readable
+          .gsub(/\s*\\(Verse|Response|textRespDoxologie)\s*/, ' ')
+          .gsub('\textRespAleluja', 'Aleluja, aleluja.')
+          .strip
       chant.header = header_json header
 
       chant.modus = header['modus']&.sub(/\.$/, '')

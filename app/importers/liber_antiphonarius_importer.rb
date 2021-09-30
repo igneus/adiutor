@@ -39,7 +39,10 @@ class LiberAntiphonariusImporter < BaseImporter
     chant.genre = detect_genre header, cycle
 
     chant.source_code = source
-    chant.lyrics = LyricsHelper.normalize_initial score.music.lyrics_readable
+    chant.lyrics =
+      LyricsHelper
+        .normalize_initial(score.music.lyrics_readable)
+        .gsub(%r{\s*<sp>[VR]/</sp>\.?\s*}, ' ')
     chant.header = header
 
     header_mode = header['mode']
