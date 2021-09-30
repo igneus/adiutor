@@ -48,7 +48,7 @@ class Antiphonale83Importer < BaseImporter
     # (no need to add support for another source code language)
     chant.source_code = score_to_gabc score
 
-    chant.lyrics = lyrics.readable
+    chant.lyrics = LyricsHelper.normalize_initial lyrics.readable
     chant.header = header.instance_variable_get :@headers # only last value for each repeated key!
 
     last_annotation = header.each_value('annotation').to_a.last
