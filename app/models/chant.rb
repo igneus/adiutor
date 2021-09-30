@@ -13,12 +13,13 @@ class Chant < ApplicationRecord
     distinct.pluck(:quid).compact.sort
   end
 
+  # @return Hash<String => Array<Chant>>
+  #   the Chant instances have populated only properties modus, differentia and (ad hoc property) record_count
   def self.modi_and_differentiae
-    distinct
-      .pluck(:modus, :differentia)
-      .sort_by {|i| i[0].to_s }
-      .group_by {|i| i[0] }
-      .transform_values {|v| v.collect {|i| i[1] }.sort_by(&:to_s) }
+    select(:modus, :differentia, 'count(id) as record_count')
+      .group(:modus, :differentia)
+      .order(:modus, :differentia)
+      .group_by(&:modus)
   end
 
   def self.similar_by_structure_to(chant, limit=5)

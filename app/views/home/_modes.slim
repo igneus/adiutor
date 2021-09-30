@@ -4,6 +4,9 @@ ul
   - @modes.each_pair do |modus, differentiae|
     li
       = link_to((modus.blank? ? modus.inspect : modus), chants_path(modus: modus))
+      =< '(' + differentiae.sum {|d| d.record_count }.to_s + ')'
       ul
         - differentiae.each do |d|
-          li= link_to((d.blank? ? d.inspect : d), chants_path(modus: modus, differentia: d))
+          li
+            = link_to(d.differentia.then {|x| x.blank? ? x.inspect : x }, chants_path(modus: d.modus, differentia: d.differentia))
+            =< "(#{d.record_count})"
