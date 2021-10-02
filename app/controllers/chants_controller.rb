@@ -4,6 +4,11 @@ class ChantsController < ApplicationController
     if params[:lyrics]
       @chants = @chants.where("lyrics ILIKE ?", "%#{params[:lyrics]}%")
     end
+    %i[volpiano pitch_series interval_series].each do |attr|
+      if params[attr]
+        @chants = @chants.where("#{attr} LIKE ?", "%#{params[attr]}%")
+      end
+    end
 
     @display_music = @chants.count < 500
   end
