@@ -9,6 +9,9 @@ class ChantsController < ApplicationController
         @chants = @chants.where("#{attr} LIKE ?", "%#{params[attr]}%")
       end
     end
+    if params[:neume]
+      @chants = @chants.where("volpiano LIKE ?", "%-#{params[:neume]}-%")
+    end
 
     @display_music = @chants.count < 500
   end
