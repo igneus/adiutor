@@ -32,7 +32,7 @@
 /.env
 
 # Ignore editor files
-/.idea
+.idea
 *~
 
 # Ignore generated assets
