@@ -51,7 +51,7 @@ class Chant < ApplicationRecord
       # TODO invitatory
     end
 
-    r['Venite'] = grp.(joins(:hour).where(hour: {system_name: 'invitatory'}))
+    r['Venite'] = grp.(joins(:genre).where(genre: {system_name: 'invitatory'}))
 
     r
   end

@@ -15,5 +15,5 @@ table
         td= psalm
         td
           - tunes.each do |t|
-            => link_to "#{t.modus}.#{t.differentia}", chants_path(psalmus: psalm, modus: t.modus, differentia: t.differentia)
+            => link_to "#{t.modus}.#{t.differentia}", chants_path(modus: t.modus, differentia: t.differentia, **(psalm == 'Venite' ? {genre_id: @invitatory_genre.id} : {psalmus: psalm}))
             => "(#{t.record_count}x),"
