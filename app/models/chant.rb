@@ -33,8 +33,10 @@ class Chant < ApplicationRecord
       .limit(limit)
   end
 
-  def parental_tree_top
-    parent.nil? ? self : parent.parental_tree_top
+  def parental_tree_top(seen = [])
+    raise "cycle in tree of parents #{seen.collect(&:fial_of_self)}" if seen.include? self
+
+    parent.nil? ? self : parent.parental_tree_top(seen + [self])
   end
 
   def link_text
