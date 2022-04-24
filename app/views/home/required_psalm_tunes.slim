@@ -14,6 +14,7 @@ table
       tr
         td= psalm
         td
-          - tunes.each do |t|
-            => link_to "#{t.modus}.#{t.differentia}", chants_path(modus: t.modus, differentia: t.differentia, **(psalm == 'Venite' ? {genre_id: @invitatory_genre.id} : {psalmus: psalm}))
-            => "(#{t.record_count}x),"
+          - tunes.each_with_index do |t, ti|
+            = ', ' if ti > 0
+            => link_to "#{t.modus || '~'}.#{t.differentia || '~'}", chants_path(modus: t.modus, differentia: t.differentia, **(psalm == 'Venite' ? {genre_id: @invitatory_genre.id} : {psalmus: psalm}))
+            = "(#{t.record_count}x)"
