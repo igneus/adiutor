@@ -1,0 +1,19 @@
+h1 Required Psalm Tunes
+
+p
+  | For these psalms/canticles requiring proper tunes
+    these tunes are required (referenced by existing antiphons in the corpus):
+
+table
+  thead
+    tr
+      th Psalm/Canticle
+      th Required tunes
+  tbody
+    - @tunes.each_pair do |psalm, tunes|
+      tr
+        td= psalm
+        td
+          - tunes.each do |t|
+            => link_to "#{t.modus}.#{t.differentia}", chants_path(psalmus: psalm, modus: t.modus, differentia: t.differentia)
+            => "(#{t.record_count}x),"

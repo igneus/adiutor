@@ -33,6 +33,29 @@ class Chant < ApplicationRecord
       .limit(limit)
   end
 
+  def self.required_psalm_tunes
+    r = {}
+
+    grp = lambda do |query|
+      query
+        .select(:modus, :differentia, 'count(chants.id) as record_count')
+        .group(:modus, :differentia)
+        .order(:modus, :differentia)
+    end
+
+    [
+      'Zj 19',
+      '1 Tim 3'
+    ].each do |canticle|
+      r[canticle] = grp.(where("psalmus ILIKE '#{canticle}%'"))
+      # TODO invitatory
+    end
+
+    r['Venite'] = grp.(joins(:hour).where(hour: {system_name: 'invitatory'}))
+
+    r
+  end
+
   def parental_tree_top(seen = [])
     raise "cycle in tree of parents #{seen.collect(&:fial_of_self)}" if seen.include? self
 

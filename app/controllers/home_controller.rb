@@ -12,4 +12,8 @@ class HomeController < ApplicationController
     @corpuses = Corpus.all
     @hours = Hour.all
   end
+
+  def required_psalm_tunes
+    @tunes = Chant.required_psalm_tunes
+  end
 end

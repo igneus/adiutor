@@ -50,6 +50,7 @@ class ChantsController < ApplicationController
       :quid,
       :modus,
       :differentia,
+      :psalmus,
       :book_id,
       :corpus_id,
       :cycle_id,
