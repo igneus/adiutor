@@ -1,6 +1,13 @@
 class HomeController < ApplicationController
   def index
     @chants_count = Chant.count
+
+    @chant_to_fix =
+      Chant
+        .to_be_fixed
+        .order(Arel.sql('RANDOM()'))
+        .limit(1)
+        .first
   end
 
   def overview

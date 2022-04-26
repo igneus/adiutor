@@ -9,6 +9,8 @@ class Chant < ApplicationRecord
   belongs_to :parent, class_name: 'Chant', optional: true
   has_many :children, class_name: 'Chant', foreign_key: 'parent_id'
 
+  scope :to_be_fixed, -> { where.not(placet: [nil, '*']) }
+
   def self.genres
     distinct.pluck(:quid).compact.sort
   end

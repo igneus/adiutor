@@ -9,3 +9,15 @@ p
   ' There are currently
   strong>= @chants_count
   = link_to 'chants', chants_path
+
+hr
+
+h2 Random chant which needs to be fixed
+
+p
+  = link_to chant_path(@chant_to_fix) do
+    tt= @chant_to_fix.fial_of_self
+  | &nbsp; &nbsp; &nbsp;
+  em= @chant_to_fix.placet
+= link_to chant_path(@chant_to_fix) do
+  = render 'chants/image', chant: @chant_to_fix
