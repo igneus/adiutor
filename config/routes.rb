@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   get 'psalm_tunes', to: 'home#required_psalm_tunes'
 
   resources :chants do
+    collection do
+      get '/fial/:fial', action: :fial, constraints: {fial: /[^\/]+/}
+    end
+
     member do
       post 'open_in_editor', as: :open_in_editor
       get '/compare/:other_id', action: :compare, as: :compare

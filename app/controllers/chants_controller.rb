@@ -43,6 +43,19 @@ class ChantsController < ApplicationController
         FIAL.parse(@chant_b.fial).additional
   end
 
+  def fial
+    fial = params[:fial]
+    parsed = FIAL.parse fial
+    chant = Chant.find_by(source_file_path: parsed.path, chant_id: parsed.id)
+
+    if chant
+      redirect_to chant_path(chant)
+      return
+    end
+
+    raise "FIAL #{fial.inspect} not found"
+  end
+
   private
 
   def filter_params
