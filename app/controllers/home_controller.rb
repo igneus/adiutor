@@ -8,6 +8,7 @@ class HomeController < ApplicationController
         .order(Arel.sql('RANDOM()'))
         .limit(1)
         .first
+    @need_fix_total = Chant.to_be_fixed.count
   end
 
   def overview

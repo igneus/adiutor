@@ -21,3 +21,8 @@ p
   em= @chant_to_fix.placet
 = link_to chant_path(@chant_to_fix) do
   = render 'chants/image', chant: @chant_to_fix
+
+p
+  | There are
+  strong=<> @need_fix_total
+  | chants marked for revision
