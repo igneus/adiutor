@@ -43,4 +43,24 @@ describe GabcScoreStats do
       end
     end
   end
+
+  describe '#melody_section_count' do
+    [
+      ['', 0],
+      [' ', 0],
+      ['a(i)', 1],
+      ['a(i) a(i)', 1],
+      ['a(i) (::)', 1],
+      ['a(i) (,) a(i)', 2],
+      ['a(i) (,) a(i) (::)', 2],
+      ['a(i) <i>T. P.</i>(::) Al(fg)le(f)lu(e.)ia.(e.) (::)', 1, 'optional alleluia does not count'],
+    ].each do |given, expected, label|
+      it(label || "word count of '#{given}'") do
+        score = parser.parse("%%\n" + given).create_score
+        decorated = described_class.new score
+
+        expect(decorated.melody_section_count).to eq expected
+      end
+    end
+  end
 end

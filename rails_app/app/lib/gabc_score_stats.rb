@@ -9,6 +9,16 @@ class GabcScoreStats < SimpleDelegator
   end
 
   def melody_section_count
+    sections_enum =
+      music
+        .words
+        .flat_map(&:to_a)
+        .slice_after do |syllable|
+      syllable.notes.any? {|n| n.is_a? GabcDivisio } &&
+        syllable.lyrics !~ /T\.\s*P\./
+    end
+
+    sections_enum.to_a.size
   end
 
   private
