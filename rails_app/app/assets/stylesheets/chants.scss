@@ -30,6 +30,7 @@ pre {
 
   &.quality-notice { background-color: $attention-colour; }
   &.edited-lyrics { background-color: slateblue; }
+  &.mismatch { background-color: red; }
 }
 
 .tree-of-origin {

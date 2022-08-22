@@ -8,6 +8,7 @@ class Chant < ApplicationRecord
   belongs_to :hour, optional: true
   belongs_to :parent, class_name: 'Chant', optional: true
   has_many :children, class_name: 'Chant', foreign_key: 'parent_id'
+  has_many :mismatches, class_name: 'ParentChildMismatch', foreign_key: 'child_id'
 
   scope :to_be_fixed, -> { where.not(placet: [nil, '*']) }
 

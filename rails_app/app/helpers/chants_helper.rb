@@ -5,6 +5,7 @@ module ChantsHelper
     c << 'favourite' if chant.placet == '*'
     c << 'edited lyrics' if chant.lyrics_edited?
     c << 'copy' if chant.fial.present?
+    c << 'mismatch' if chant.mismatches.present?
 
     c
   end
