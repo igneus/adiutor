@@ -58,10 +58,10 @@ class LiberAntiphonariusImporter < BaseImporter
         header_mode
       end
 
-    lyrics = score.music.lyric_syllables.reject {|i| i == ['*'] }
-    chant.syllable_count = lyrics.flatten.size
-    chant.word_count = lyrics.size
-    # TODO: chant.melody_section_count
+    score_with_stats = GabcScoreStats.new score
+    %i[syllable_count word_count melody_section_count].each do |property|
+      chant.public_send "#{property}=", score_with_stats.public_send(property)
+    end
 
     chant.save!
   end
