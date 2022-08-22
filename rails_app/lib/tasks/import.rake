@@ -1,3 +1,4 @@
+# coding: utf-8
 IMPORT_PREREQUISITES = [
   :environment,
   :create_books, :create_cycles, :create_seasons, :create_corpuses, :create_source_languages, :create_genres, :create_hours
@@ -88,27 +89,4 @@ task create_hours: [:environment] do
   Hour.find_or_create_by!(system_name: 'daytime', name: 'Daytime Prayer')
   Hour.find_or_create_by!(system_name: 'vespers', name: 'Vespers')
   Hour.find_or_create_by!(system_name: 'compline', name: 'Compline')
-end
-
-desc 'generate Volpiano for all scores'
-task volpiano: [:environment] do
-  # we can only convert gabc pieces to Volpiano (yet)
-  supported_chants =
-    Chant
-      .joins(:source_language)
-      .where(source_languages: { system_name: 'gabc' })
-
-  supported_chants.find_each do |c|
-    p c.id
-
-    begin
-      volpiano = c.source_language.volpiano_translator&.(c.source_code)
-    rescue RuntimeError => e
-      STDERR.puts "Chant #{c.id}:"
-      STDERR.puts e.message
-      next
-    end
-
-    c.update!(volpiano: volpiano)
-  end
 end
