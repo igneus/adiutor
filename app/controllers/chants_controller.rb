@@ -28,8 +28,16 @@ class ChantsController < ApplicationController
     raise 'forbidden' unless Rails.env.development?
 
     chant = Chant.find params[:id]
-    EditorOpener.new.(chant, params[:line])
-    flash[:info] = "Chant #{chant.id} opened for editation"
+    result = EditorOpener.new.(chant, params[:line])
+
+    case result
+    when true
+      flash[:info] = "Chant #{chant.id} opened for editation"
+    when :timeout
+      flash[:error] = "Failed to call editor in time. You must have a Frescobaldi process running in order to use this functionality."
+    else
+      raise "Unexpected return value #{result.inspect}"
+    end
 
     redirect_back fallback_location: root_path
   end

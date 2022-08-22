@@ -1,3 +1,5 @@
+require 'timeout'
+
 # Knows how to open a Chant in an editor
 # (only makes sense when running on a local workstation)
 class EditorOpener
@@ -8,8 +10,16 @@ class EditorOpener
     fial = chant.fial_of_self
     fial += ":#{line}" if line
 
-    Dir.chdir(project_root) do
-      `ruby #{tool} #{fial}`
+    begin
+      Dir.chdir(project_root) do
+        Timeout.timeout(10) do
+          `ruby #{tool} #{fial}`
+        end
+      end
+
+      true
+    rescue Timeout::Error
+      :timeout
     end
   end
 end
