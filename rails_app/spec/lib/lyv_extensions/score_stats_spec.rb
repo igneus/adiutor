@@ -45,13 +45,13 @@ describe LyvExtensions::ScoreStats do
 
   describe '#melody_section_count' do
     [
-      ["\\relative {}", 1],
-      ["\\relative { a }", 1],
-      ["\\relative { a a a }", 1],
-      ["\\relative { a a a \\barFinalis }", 1],
-      ["\\relative { a a \\barFinalis a }", 2],
-      ["\\relative { a a \\barMin a }", 2],
-      ["\\relative { a a \\barMaior a }", 2],
+      ['\relative {}', 1],
+      ['\relative { a }', 1],
+      ['\relative { a a a }', 1],
+      ['\relative { a a a \barFinalis }', 1],
+      ['\relative { a a \barFinalis a }', 2],
+      ['\relative { a a \barMin a }', 2],
+      ['\relative { a a \barMaior a }', 2],
     ].each do |given, expected|
       it "melody section count of '#{given}'" do
         score = double(Lyv::LilyPondScore, music: given)
