@@ -10,8 +10,12 @@ from sqlalchemy.orm import declarative_base, relationship
 
 from . import conversion
 
+def db_url_rails_to_sqlalchemy(rails_db_url):
+    """Transform Rails db connection URL to the format expected by SQLAlchemy"""
+    return rails_db_url.replace('postgres://', 'postgresql+psycopg2://')
+
 load_dotenv()
-db_url = os.getenv('APP_DATABASE_URL_PYTHON') or os.getenv('APP_DATABASE_URL')
+db_url = db_url_rails_to_sqlalchemy(os.getenv('APP_DATABASE_URL'))
 engine = create_engine(db_url, echo=True, future=True)
 
 Base = declarative_base()
