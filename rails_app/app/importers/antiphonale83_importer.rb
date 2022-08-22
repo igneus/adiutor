@@ -46,7 +46,8 @@ class Antiphonale83Importer < BaseImporter
     # Import not the original gly source code, but transformed to gabc,
     # in order to make subsequent processing as simple as possible
     # (no need to add support for another source code language)
-    chant.source_code = score_to_gabc score
+    gabc = score_to_gabc score
+    chant.source_code = gabc
 
     chant.lyrics =
       LyricsHelper
@@ -62,9 +63,16 @@ class Antiphonale83Importer < BaseImporter
         last_annotation.split(' ')
       end
 
-    chant.syllable_count = lyrics.each_syllable.select {|i| i != '*' }.size
-    chant.word_count = lyrics.each_word.select {|i| i.readable != '*' }.size
-    # # TODO: chant.melody_section_count
+    begin
+      gabc_score = SimpleGabcParser.call(gabc)
+    rescue RuntimeError => e
+      STDERR.puts "failed to parse gabc for '#{in_project_path}' ##{chant.id}: #{e.message}"
+    else
+      score_with_stats = GabcScoreStats.new gabc_score
+      %i[syllable_count word_count melody_section_count].each do |property|
+        chant.public_send "#{property}=", score_with_stats.public_send(property)
+      end
+    end
 
     chant.save!
   rescue

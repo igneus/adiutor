@@ -67,8 +67,7 @@ class LiberAntiphonariusImporter < BaseImporter
   end
 
   def parse(source)
-    parser = GabcParser.new
-    parser.parse(source)&.create_score || raise(parser_failure_msg(parser))
+    SimpleGabcParser.call source
   end
 
   PageNumber = Struct.new(:number, :prefix, :suffix) do
@@ -142,9 +141,5 @@ class LiberAntiphonariusImporter < BaseImporter
       end
 
     Genre.find_by_system_name!(genre)
-  end
-
-  def parser_failure_msg(parser)
-    "'#{parser.failure_reason}' on line #{parser.failure_line} column #{parser.failure_column}"
   end
 end
