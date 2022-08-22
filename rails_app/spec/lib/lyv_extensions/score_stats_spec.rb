@@ -52,8 +52,9 @@ describe LyvExtensions::ScoreStats do
       ['\relative { a a \barFinalis a }', 2],
       ['\relative { a a \barMin a }', 2],
       ['\relative { a a \barMaior a }', 2],
-    ].each do |given, expected|
-      it "melody section count of '#{given}'" do
+      ['\relative { a a \barFinalis a^\markup\rubrVelikAleluja a \barFinalis }', 1, 'optional alleluia is not counted'],
+    ].each do |given, expected, label|
+      it(label || "melody section count of '#{given}'") do
         score = double(Lyv::LilyPondScore, music: given)
         decorated = described_class.new score
 

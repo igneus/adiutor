@@ -20,6 +20,7 @@ module LyvExtensions
       music
         .sub(/\\bar\w+\s*}\s*\Z/, '')
         .split(/\\bar\w+/)
+        .reject {|i| i.include? '\markup\rubrVelikAleluja' }
         .count
     end
   end
