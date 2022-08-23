@@ -18,6 +18,7 @@ services:
       - ~/In-adiutorium:/var/in-adiutorium-sources # TODO extract user-specific path to configuration
       - ./volumes/shared_data:/var/shared
       - ./volumes/gem_cache:/usr/local/bundle/gems
+      - ./volumes/pip_cache:/root/.cache/pip
     ports:
       - 3000:3000
     stdin_open: true
