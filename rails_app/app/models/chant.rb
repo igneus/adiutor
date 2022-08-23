@@ -12,6 +12,9 @@ class Chant < ApplicationRecord
 
   scope :to_be_fixed, -> { where.not(placet: [nil, '*']) }
 
+  # TODO: instead of hard equality condition really just prefer in ordering
+  scope :prefer_same_genre, ->(genre) { where(genre: genre) }
+
   def self.genres
     distinct.pluck(:quid).compact.sort
   end
@@ -26,13 +29,19 @@ class Chant < ApplicationRecord
   end
 
   def self.similar_by_structure_to(chant, limit=5)
-    where(melody_section_count: chant.melody_section_count)
+    prefer_same_genre(chant.genre)
+      .where(melody_section_count: chant.melody_section_count)
       .limit(limit)
   end
 
   def self.similar_by_lyrics_length_to(chant, limit=5)
-    where(word_count: chant.word_count)
-      .or(where(syllable_count: chant.syllable_count))
+    t = arel_table
+
+    prefer_same_genre(chant.genre)
+      .where(
+        t[:word_count].eq(chant.word_count)
+          .or(t[:syllable_count].eq(chant.syllable_count))
+      )
       .limit(limit)
   end
 
