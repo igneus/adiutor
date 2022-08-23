@@ -4,9 +4,8 @@ h1 Chants
   = text_field_tag :lyrics, nil, placeholder: 'search by lyrics'
   = submit_tag 'Search'
 
-p
-  => @chants.count
-  | results
+= paginate @chants
+p= page_entries_info @chants
 
 table
   tbody
@@ -17,9 +16,8 @@ table
         td= link_to c.modus, chants_path(modus: c.modus) if c.modus
         td= link_to c.differentia, chants_path(modus: c.modus, differentia: c.differentia) if c.differentia
         td= link_to c.link_text, chant_path(c)
-        - if @display_music
-          td
-            = link_to chant_path(c) do
-              = render 'image', chant: c
+        td
+          = link_to chant_path(c) do
+            = render 'image', chant: c
         td= c.source_file_path
         td= render 'tags', chant: c

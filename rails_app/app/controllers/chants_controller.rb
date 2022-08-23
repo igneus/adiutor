@@ -16,7 +16,7 @@ class ChantsController < ApplicationController
       @chants = @chants.where("volpiano LIKE ?", "%-#{params[:neume]}-%")
     end
 
-    @display_music = @chants.count < 500
+    @chants = @chants.page(params[:page] || 1)
   end
 
   def show
