@@ -30,6 +30,7 @@ class Chant < ApplicationRecord
 
   def self.similar_by_structure_to(chant, limit=5)
     prefer_same_genre(chant.genre)
+      .where.not(id: chant.id)
       .where(melody_section_count: chant.melody_section_count)
       .limit(limit)
   end
@@ -38,6 +39,7 @@ class Chant < ApplicationRecord
     t = arel_table
 
     prefer_same_genre(chant.genre)
+      .where.not(id: chant.id)
       .where(
         t[:word_count].eq(chant.word_count)
           .or(t[:syllable_count].eq(chant.syllable_count))
