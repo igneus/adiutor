@@ -97,6 +97,11 @@ GEM
     diffy (3.4.0)
     dotenv (2.7.6)
     erubi (1.10.0)
+    factory_bot (6.2.1)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
     ffi (1.15.3)
     globalid (0.5.2)
       activesupport (>= 5.0)
@@ -241,6 +246,7 @@ DEPENDENCIES
   calendarium-romanum
   diffy
   dotenv
+  factory_bot_rails
   gly!
   jbuilder (~> 2.7)
   kaminari
