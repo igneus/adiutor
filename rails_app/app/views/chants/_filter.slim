@@ -1,0 +1,16 @@
+.filter= form_with method: :get do |form|
+  = form.text_field :lyrics, placeholder: 'search by lyrics'
+
+  div= form.collection_check_boxes :genre_id, @genres, :id, :name, include_hidden: false
+  div= form.collection_check_boxes :cycle_id, @cycles, :id, :name, include_hidden: false
+  div= form.collection_check_boxes :season_id, @seasons, :id, :name, include_hidden: false
+  div= form.collection_check_boxes :hour_id, @hours, :id, :name, include_hidden: false
+  div
+    | Book
+    =< form.collection_check_boxes :book_id, @books, :id, :name, include_hidden: false
+  div
+    | Corpus
+    =< form.collection_check_boxes :corpus_id, @corpora, :id, :name, include_hidden: false
+  div= form.collection_check_boxes :source_language_id, @source_languages, :id, :name, include_hidden: false
+
+  = form.submit 'Search'

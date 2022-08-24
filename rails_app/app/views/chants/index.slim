@@ -1,8 +1,6 @@
 h1 Chants
 
-= form_tag nil, method: :get do
-  = text_field_tag :lyrics, nil, placeholder: 'search by lyrics'
-  = submit_tag 'Search'
+= render 'filter'
 
 = paginate @chants
 p= page_entries_info @chants

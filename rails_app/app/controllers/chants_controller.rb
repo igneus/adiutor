@@ -1,5 +1,14 @@
 class ChantsController < ApplicationController
   def index
+    @genres = Genre.all
+    #@modes = Chant.modi_and_differentiae
+    @books = Book.all
+    @cycles = Cycle.all
+    @seasons = Season.all
+    @corpora = Corpus.all
+    @hours = Hour.all
+    @source_languages = SourceLanguage.all
+
     @chants =
       Chant
         .where(filter_params)
@@ -75,15 +84,15 @@ class ChantsController < ApplicationController
       :modus,
       :differentia,
       :psalmus,
-      :book_id,
-      :corpus_id,
-      :cycle_id,
-      :season_id,
-      :genre_id,
-      :hour_id,
-      :source_language_id,
       :word_count,
-      :melody_section_count
+      :melody_section_count,
+      genre_id: [],
+      book_id: [],
+      corpus_id: [],
+      cycle_id: [],
+      season_id: [],
+      hour_id: [],
+      source_language_id: []
     )
   end
 end
