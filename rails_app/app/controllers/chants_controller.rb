@@ -22,14 +22,17 @@ class ChantsController < ApplicationController
       like = params[:case_sensitive] ? 'LIKE' : 'ILIKE'
       @chants = @chants.where("lyrics #{like} ?", "%#{params[:lyrics]}%")
     end
-    if params[:volpiano]
+    volpiano = params[:volpiano]
+    if volpiano
       attr = :volpiano
-      value = params[:volpiano]
+      value = volpiano
       case params[:music_search_type]
       when 'pitches'
-        raise 'not implemented'
+        attr = :pitch_series
+        value = VolpianoDerivates.pitch_series volpiano
       when 'intervals'
-        raise 'not implemented'
+        attr = :interval_series
+        value = VolpianoDerivates.snippet_to_interval_series volpiano
       end
       @chants = @chants.where("#{attr} LIKE ?", "%#{value}%")
     end

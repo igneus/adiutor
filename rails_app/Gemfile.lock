@@ -141,6 +141,7 @@ GEM
     polyglot (0.3.5)
     puma (5.4.0)
       nio4r (~> 2.0)
+    pycall (1.4.1)
     racc (1.5.2)
     rack (2.2.3)
     rack-mini-profiler (2.3.2)
@@ -255,6 +256,7 @@ DEPENDENCIES
   lyv!
   pg (~> 1.1)
   puma (~> 5.0)
+  pycall
   rack-mini-profiler (~> 2.0)
   rails (~> 6.1.4, >= 6.1.4.1)
   roman-numerals
