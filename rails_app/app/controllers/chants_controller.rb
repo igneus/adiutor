@@ -8,18 +8,30 @@ class ChantsController < ApplicationController
     @corpora = Corpus.all
     @hours = Hour.all
     @source_languages = SourceLanguage.all
+    @music_search_types = [
+      ['literal', 'Literal'],
+      ['pitches', 'Pitch series'],
+      ['intervals', 'Interval series'],
+    ]
 
     @chants =
       Chant
         .where(filter_params)
         .includes(:mismatches, :source_language)
     if params[:lyrics]
-      @chants = @chants.where("lyrics ILIKE ?", "%#{params[:lyrics]}%")
+      like = params[:case_sensitive] ? 'LIKE' : 'ILIKE'
+      @chants = @chants.where("lyrics #{like} ?", "%#{params[:lyrics]}%")
     end
-    %i[volpiano pitch_series interval_series].each do |attr|
-      if params[attr]
-        @chants = @chants.where("#{attr} LIKE ?", "%#{params[attr]}%")
+    if params[:volpiano]
+      attr = :volpiano
+      value = params[:volpiano]
+      case params[:music_search_type]
+      when 'pitches'
+        raise 'not implemented'
+      when 'intervals'
+        raise 'not implemented'
       end
+      @chants = @chants.where("#{attr} LIKE ?", "%#{value}%")
     end
     if params[:neume]
       @chants = @chants.where("volpiano LIKE ?", "%-#{params[:neume]}-%")

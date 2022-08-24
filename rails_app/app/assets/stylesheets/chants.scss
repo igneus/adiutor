@@ -53,5 +53,6 @@ pre {
 }
 
 .filter {
-  label { display: inline-block; margin: 3px 10px; }
+  label { display: inline-block; margin: 0 10px; font-size: small; }
+  #volpiano { font-family: Volpiano; font-size: 30pt; height: 70px; max-width: 800px; }
 }
