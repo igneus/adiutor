@@ -60,8 +60,8 @@ class InAdiutoriumImporter < BaseImporter
     chant.season = season
     chant.source_language = language
 
-    chant.genre = detect_genre header, in_project_path
     chant.hour = detect_hour header, in_project_path
+    chant.genre = detect_genre header, in_project_path, chant.hour
 
     if chant.source_code && chant.source_code != score.text
       delete_image chant
@@ -157,7 +157,7 @@ class InAdiutoriumImporter < BaseImporter
     season && Season.for_cr_season(season)
   end
 
-  def detect_genre(header, path)
+  def detect_genre(header, path, hour)
     id = header['id']
     quid = header['quid']
 
@@ -167,7 +167,7 @@ class InAdiutoriumImporter < BaseImporter
       elsif quid =~ /k (Benedictus|Magnificat)/
         'antiphon_gospel'
       elsif quid =~ /resp/
-        if id =~ /mc/
+        if hour&.system_name == 'readings'
           'responsory_nocturnal'
         else
           'responsory_short'
@@ -190,7 +190,7 @@ class InAdiutoriumImporter < BaseImporter
 
     hour =
       case id
-      when /^mc/
+      when /(mc|cte)/
         'readings'
       when /^rch/, 'aben'
         'lauds'
