@@ -27,7 +27,7 @@ table.chant-properties
         - if label.end_with?('_id') && label != 'chant_id' && label != 'parent_id'
           - relation = label.sub('_id', '')
           th= relation
-          td= link_to @chant.public_send(relation).name, chants_path(label => value)
+          td= link_to @chant.public_send(relation).name, chants_path("#{label}[]" => value)
         - else
           th= label
           td= value

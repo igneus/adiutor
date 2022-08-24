@@ -3,5 +3,5 @@ h2= title
 ul
   - items.each do |i|
     li
-      = link_to i.name, chants_path(filter_param => i.id)
+      = link_to i.name, chants_path("#{filter_param}[]" => i.id)
       =< "(#{i.chants.count})"
