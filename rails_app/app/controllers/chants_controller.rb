@@ -32,7 +32,7 @@ class ChantsController < ApplicationController
         value = VolpianoDerivates.pitch_series volpiano
       when 'intervals'
         attr = :interval_series
-        value = VolpianoDerivates.snippet_to_interval_series volpiano
+        value = VolpianoDerivates.snippet_interval_series volpiano
       end
       @chants = @chants.where("#{attr} LIKE ?", "%#{value}%")
     end

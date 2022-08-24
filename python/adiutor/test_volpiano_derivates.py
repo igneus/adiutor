@@ -32,3 +32,13 @@ def test_pitch_series(volpiano, expected):
 )
 def test_interval_series(volpiano, expected):
     assert interval_series(volpiano) == expected
+
+@pytest.mark.parametrize(
+    'volpiano,expected',
+    [
+        ('1---cd-dhij-h', '+2+5+2-2'),
+        ('cd-dhij-h', '+2+5+2-2'), # works without clef
+    ]
+)
+def test_snippet_interval_series(volpiano, expected):
+    assert snippet_interval_series(volpiano) == expected

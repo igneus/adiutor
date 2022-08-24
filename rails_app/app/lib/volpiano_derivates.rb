@@ -6,9 +6,3 @@ require 'pycall'
 PyCall.import_module('sys').path.append(File.expand_path('../python', Rails.root))
 
 VolpianoDerivates = PyCall.import_module('adiutor.volpiano_derivates')
-
-def VolpianoDerivates.snippet_to_interval_series(volpiano)
-  interval_series(
-    volpiano.start_with?('1') ? volpiano : '1---' + volpiano
-  )
-end

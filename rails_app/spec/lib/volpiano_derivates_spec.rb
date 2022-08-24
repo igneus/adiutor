@@ -19,11 +19,6 @@ describe VolpianoDerivates do
   end
 
   describe '.snippet_to_interval_series' do
-    it 'works with clef' do
-      expect(described_class.snippet_to_interval_series('1---cd-dhij-h'))
-        .to eq '+2+5+2-2'
-    end
-
     it 'works without clef' do
       expect(described_class.snippet_to_interval_series('cd-dhij-h'))
         .to eq '+2+5+2-2'

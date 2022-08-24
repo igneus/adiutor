@@ -38,3 +38,12 @@ def interval_series(volpiano):
     ]
 
     return ''.join(filter(lambda x: x != '+1', interval_codes))
+
+def snippet_interval_series(volpiano):
+    """
+    Series of intervals, also for snippets without clef.
+    """
+
+    return interval_series(
+        volpiano if volpiano.startswith('1') else '1---' + volpiano
+    )
