@@ -31,10 +31,6 @@
 # Ignore config
 /.env
 
-# Ignore editor files
-.idea
-*~
-
 # Ignore generated assets
 /app/assets/images/chants/*/*.svg
 
@@ -48,4 +44,3 @@
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
-__pycache__
