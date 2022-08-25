@@ -5,6 +5,7 @@ due to the libraries and tools available.
 
 from os.path import dirname, realpath
 import sys
+import logging
 
 import click
 from sqlalchemy import select
@@ -26,7 +27,12 @@ def cli():
 @click.argument('chant_id', required=False)
 @click.option('--missing', help='Only for Chants still missing Volpiano', is_flag=True)
 @click.option('--raise-exceptions', help='On exception just crash', is_flag=True)
-def volpiano(chant_id=None, missing=False, raise_exceptions=False):
+@click.option('--verbose', help='Print verbose log', is_flag=True)
+def volpiano(chant_id=None, missing=False, raise_exceptions=False, verbose=False):
+    if verbose:
+        logging.basicConfig()
+        logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
     stmt = select(Chant, SourceLanguage).join(SourceLanguage)
 
     if chant_id:

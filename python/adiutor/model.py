@@ -16,7 +16,7 @@ def db_url_rails_to_sqlalchemy(rails_db_url):
 
 load_dotenv()
 db_url = db_url_rails_to_sqlalchemy(os.getenv('APP_DATABASE_URL'))
-engine = create_engine(db_url, echo=True, future=True)
+engine = create_engine(db_url, future=True)
 
 Base = declarative_base()
 
