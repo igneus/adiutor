@@ -108,10 +108,10 @@ class InAdiutoriumImporter < BaseImporter
       :'invitatory'
     elsif quid =~ /k (Benedictus|Magnificat)/ || id == 'sim' || path =~ /mezidobi_nedele/ || %w(aben amag).include?(id)
       :'antiphon_gospel'
-    elsif quid =~ /ant(\.|ifona)/
-      :'antiphon'
     elsif quid =~ /resp/
-      if hour_name == :readings
+      if path =~ /pust_triduum/
+        :antiphon
+      elsif hour_name == :readings
         :'responsory_nocturnal'
       else
         :'responsory_short'
@@ -120,6 +120,8 @@ class InAdiutoriumImporter < BaseImporter
       :'antiphon_standalone'
     elsif path =~ /^(kompletar|antifony\/(tyden|ferie|doplnovaci))/
       :'antiphon_psalter'
+    elsif quid =~ /ant(\.|ifona)/
+      :'antiphon'
     else
       :'varia'
     end

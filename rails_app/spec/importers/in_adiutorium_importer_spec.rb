@@ -90,11 +90,12 @@ RSpec.describe InAdiutoriumImporter do
         ['ANY', 'ANY', 'antifony/tyden1_1nedele.ly', :any],
         ['ANY', 'ANY', 'antifony/ferie_kantevgant.ly', :any],
         ['ANY', 'ANY', 'antifony/doplnovaci.ly', :any],
+        ['ANY', '1. ant.', 'antifony/tyden1_1nedele.ly', :any],
       ],
       :antiphon => [
         ['ANY', '1. ant.', 'ANY', :any],
         ['ANY', 'ant.', 'ANY', :any],
-        ['ANY', 'ant. místo responsoria', 'ANY', :any],
+        ['PREFIX-resp', 'ant. místo responsoria', 'pust_triduum.ly', :any],
 
         # While it could be argued that the Eastertide Psalter antiphons are
         # "Psalter antiphons" functionally,
