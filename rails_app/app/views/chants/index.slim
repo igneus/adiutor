@@ -2,7 +2,7 @@ h1 Chants
 
 = render 'filter'
 
-= paginate @chants
+.tac= paginate @chants
 p= page_entries_info @chants
 
 table
@@ -19,3 +19,5 @@ table
             = render 'image', chant: c
         td= c.source_file_path
         td= render 'tags', chant: c
+
+.tac= paginate @chants
