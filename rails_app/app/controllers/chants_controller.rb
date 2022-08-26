@@ -39,6 +39,12 @@ class ChantsController < ApplicationController
     if params[:neume]
       @chants = @chants.where("volpiano LIKE ?", "%-#{params[:neume]}-%")
     end
+    if params[:quality_notice]
+      @chants = @chants.to_be_fixed
+    end
+    if params[:favourite]
+      @chants = @chants.favourite
+    end
 
     @chants = @chants.page(params[:page] || 1)
   end

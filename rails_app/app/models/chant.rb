@@ -11,6 +11,7 @@ class Chant < ApplicationRecord
   has_many :mismatches, class_name: 'ParentChildMismatch', foreign_key: 'child_id'
 
   scope :to_be_fixed, -> { where.not(placet: [nil, '*']) }
+  scope :favourite, -> { where("placet LIKE '*%'") }
 
   # TODO: instead of hard equality condition really just prefer in ordering
   scope :prefer_same_genre, ->(genre) { where(genre: genre) }
@@ -85,7 +86,7 @@ class Chant < ApplicationRecord
   end
 
   def marked_for_revision?
-    placet.present? && placet != '*'
+    placet.present? && !placet.start_with?('*')
   end
 
   def lyrics_edited?

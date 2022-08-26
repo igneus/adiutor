@@ -24,5 +24,10 @@
     | Corpus
     =< form.collection_check_boxes :corpus_id, @corpora, :id, :name, include_hidden: false
   div= form.collection_check_boxes :source_language_id, @source_languages, :id, :name, include_hidden: false
+  div
+    = form.check_box :quality_notice, include_hidden: false
+    = label_tag :quality_notice, 'Quality notice'
+    = form.check_box :favourite, include_hidden: false
+    = label_tag :favourite, 'Marked as favourite'
 
   = form.submit 'Search'
