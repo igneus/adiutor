@@ -60,8 +60,10 @@ class InAdiutoriumImporter < BaseImporter
     chant.season = season
     chant.source_language = language
 
-    chant.hour = detect_hour header, in_project_path
-    chant.genre = detect_genre header, in_project_path, chant.hour
+    hour = detect_hour header['id'], in_project_path
+    genre = detect_genre header['id'], header['quid'], in_project_path, hour
+    chant.hour = hour && Hour.find_by_system_name!(hour)
+    chant.genre = Genre.find_by_system_name!(genre)
 
     if chant.source_code && chant.source_code != score.text
       delete_image chant
@@ -99,6 +101,58 @@ class InAdiutoriumImporter < BaseImporter
     %i[syllable_count word_count melody_section_count].each do |property|
       chant.public_send "#{property}=", score_with_stats.public_send(property)
     end
+  end
+
+  def detect_genre(id, quid, path, hour_name)
+    if id =~ /invit/
+      :'invitatory'
+    elsif quid =~ /k (Benedictus|Magnificat)/ || id == 'sim' || path =~ /mezidobi_nedele/
+      :'antiphon_gospel'
+    elsif quid =~ /resp/
+      if hour_name == :readings
+        :'responsory_nocturnal'
+      else
+        :'responsory_short'
+      end
+    elsif path =~ /^marianske/ || path =~ /velikonoce_pruvod/
+      :'antiphon_standalone'
+    elsif path =~ /^(kompletar|antifony\/(tyden|ferie|doplnovaci))/
+      :'antiphon_psalter'
+    elsif quid =~ /ant(\.|ifona)/
+      :'antiphon'
+    else
+      :'varia'
+    end
+  end
+
+  def detect_hour(chant_id, path)
+    hour =
+      case path
+      when /^kompletar/, /^marianske_antifony/
+        :compline
+      when /knzkantikum/
+        :vespers
+      else
+        nil
+      end
+
+    hour ||=
+      case chant_id
+      when /(mc|cte)/
+        :'readings'
+      when /(^|-)rch/, /ben\d?$/, /predvanocni-zlm-/
+        :'lauds'
+      when /(^|-)up/, /tercie/, /sexta/, /nona/, 'prima', 'dopo', 'po', 'odpo'
+        :'daytime'
+      when /(^|-)\d?ne/, /mag(\d|i+)?$/, /^predvanocni-\d+-o$/
+        :'vespers'
+      when /komplet/
+        :'compline'
+      else
+        nil
+      end
+
+    hour
   end
 
   private
@@ -155,64 +209,6 @@ class InAdiutoriumImporter < BaseImporter
       end
 
     season && Season.for_cr_season(season)
-  end
-
-  def detect_genre(header, path, hour)
-    id = header['id']
-    quid = header['quid']
-
-    genre =
-      if id =~ /invit/
-        'invitatory'
-      elsif quid =~ /k (Benedictus|Magnificat)/
-        'antiphon_gospel'
-      elsif quid =~ /resp/
-        if hour&.system_name == 'readings'
-          'responsory_nocturnal'
-        else
-          'responsory_short'
-        end
-      elsif path =~ /^marianske/ || path =~ /velikonoce_pruvod/
-        'antiphon_standalone'
-      elsif path =~ /^antifony\/(tyden|ferie|doplnovaci)/
-        'antiphon_psalter'
-      elsif quid =~ /ant(\.|ifona)/
-        'antiphon'
-      else
-        'varia'
-      end
-
-    Genre.find_by_system_name!(genre)
-  end
-
-  def detect_hour(header, path)
-    id = header['id']
-
-    hour =
-      case id
-      when /(mc|cte)/
-        'readings'
-      when /^rch/, 'aben'
-        'lauds'
-      when /^up/, 'tercie', 'sexta', 'nona'
-        'daytime'
-      when /^\d?ne/, 'amag'
-        'vespers'
-      when /komplet/
-        'compline'
-      else
-        nil
-      end
-
-    hour ||=
-      case path
-      when /^kompletar/, /^marianske_antifony/
-        'compline'
-      else
-        nil
-      end
-
-    hour && Hour.find_by_system_name!(hour)
   end
 
   def delete_image(chant)
