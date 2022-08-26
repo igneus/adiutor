@@ -106,8 +106,10 @@ class InAdiutoriumImporter < BaseImporter
   def detect_genre(id, quid, path, hour_name)
     if id =~ /invit/
       :'invitatory'
-    elsif quid =~ /k (Benedictus|Magnificat)/ || id == 'sim' || path =~ /mezidobi_nedele/
+    elsif quid =~ /k (Benedictus|Magnificat)/ || id == 'sim' || path =~ /mezidobi_nedele/ || %w(aben amag).include?(id)
       :'antiphon_gospel'
+    elsif quid =~ /ant(\.|ifona)/
+      :'antiphon'
     elsif quid =~ /resp/
       if hour_name == :readings
         :'responsory_nocturnal'
@@ -118,8 +120,6 @@ class InAdiutoriumImporter < BaseImporter
       :'antiphon_standalone'
     elsif path =~ /^(kompletar|antifony\/(tyden|ferie|doplnovaci))/
       :'antiphon_psalter'
-    elsif quid =~ /ant(\.|ifona)/
-      :'antiphon'
     else
       :'varia'
     end
@@ -151,6 +151,8 @@ class InAdiutoriumImporter < BaseImporter
       else
         nil
       end
+
+    return nil if path =~ /zakladni_napevy/
 
     hour
   end

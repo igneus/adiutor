@@ -14,9 +14,9 @@ task unique_chant_ids: :environment do
       .find_by_system_name!('in_adiutorium')
       .chants
 
-  Hour.find_each do |hour|
+  (Hour.all + [nil]).each do |hour|
     puts
-    puts hour.name
+    puts hour&.name || hour.inspect
     Genre.find_each do |genre|
       ids = unique_chant_ids(
         corpus_chants.where(hour: hour, genre: genre)
@@ -30,6 +30,4 @@ task unique_chant_ids: :environment do
   puts
   puts 'No genre: ' +
        unique_chant_ids(corpus_chants.where(genre: nil)).join(' ')
-  puts 'No hour: ' +
-       unique_chant_ids(corpus_chants.where(hour: nil)).join(' ')
 end
