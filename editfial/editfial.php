@@ -7,8 +7,13 @@
  */
 
 
+$iaSources = getenv('IN_ADIUTORIUM_SOURCES_PATH');
+if (!$iaSources) {
+    die('The environment variable with In adiutorium sources path must be provided');
+}
+
 // environment setup
-chdir(getenv('HOME') . '/In-adiutorium'); // editfial.rb expects this
+chdir($iaSources); // editfial.rb expects this
 
 
 
