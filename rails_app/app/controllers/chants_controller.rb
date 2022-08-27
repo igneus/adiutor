@@ -59,20 +59,14 @@ class ChantsController < ApplicationController
 
   def open_in_editor
     raise 'forbidden' unless Rails.env.development?
+    raise 'URL of the external fial opener service not specified' unless Adiutor::EDIT_FIAL_URL
 
     chant = Chant.find params[:id]
-    result = EditorOpener.new.(chant, params[:line])
 
-    case result
-    when true
-      flash[:info] = "Chant #{chant.id} opened for editation"
-    when :timeout
-      flash[:error] = "Failed to call editor in time. You must have a Frescobaldi process running in order to use this functionality."
-    else
-      raise "Unexpected return value #{result.inspect}"
-    end
+    query = {fial: chant.fial_of_self, line: params[:line], redirectBack: chant_url(chant)}
+    target = Adiutor::EDIT_FIAL_URL + '?' + URI.encode_www_form(query)
 
-    redirect_back fallback_location: root_path
+    redirect_to target
   end
 
   def compare
