@@ -2,7 +2,7 @@
 
 FROM ruby:3.0.0-alpine
 
-ENV APP_PATH /var/app
+ENV APP_PATH /var/app/rails_app
 ENV BUNDLE_PATH /usr/local/bundle/gems
 ENV TMP_PATH /tmp/
 ENV RAILS_LOG_TO_STDOUT true
@@ -39,3 +39,5 @@ freetype-dev \
 WORKDIR $APP_PATH
 
 EXPOSE $RAILS_PORT
+
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
