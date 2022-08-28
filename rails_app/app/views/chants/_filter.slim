@@ -3,31 +3,42 @@
     .column.column-10
       = form.check_box :case_sensitive, include_hidden: false
       = label_tag :case_sensitive, 'Case-sensitive'
-    .column.column-80
+    .column.column-70
       =< form.text_field :lyrics, placeholder: 'search by lyrics'
+    .column.column-20
+      = form.submit 'Search'
 
   .row
     .column.column-20
-      div search by music
       = form.collection_radio_buttons :music_search_type, @music_search_types, :first, :last, include_hidden: false
     .column.column-70
-      = form.text_field :volpiano, title: 'insert music snippet encoded using the Volpiano font'
+      = form.text_field :volpiano, title: 'insert music snippet encoded using the Volpiano font', placeholder: 'search by music'
 
-  div
-    | Corpus
-    =< form.collection_check_boxes :corpus_id, @corpora, :id, :name, include_hidden: false
-  div= form.collection_check_boxes :genre_id, @genres, :id, :name, include_hidden: false
-  div= form.collection_check_boxes :cycle_id, @cycles, :id, :name, include_hidden: false
-  div= form.collection_check_boxes :season_id, @seasons, :id, :name, include_hidden: false
-  div= form.collection_check_boxes :hour_id, @hours, :id, :name, include_hidden: false
-  div
-    | Book
-    =< form.collection_check_boxes :book_id, @books, :id, :name, include_hidden: false
-  div= form.collection_check_boxes :source_language_id, @source_languages, :id, :name, include_hidden: false
-  div
-    = form.check_box :quality_notice, include_hidden: false
-    = label_tag :quality_notice, 'Quality notice'
-    = form.check_box :favourite, include_hidden: false
-    = label_tag :favourite, 'Marked as favourite'
+  .checkboxes
+    div
+      span.group-title Corpus
+      = form.collection_check_boxes :corpus_id, @corpora, :id, :name, include_hidden: false
+    div
+      span.group-title Genre
+      = form.collection_check_boxes :genre_id, @genres, :id, :name, include_hidden: false
+    div
+      span.group-title Cycle
+      = form.collection_check_boxes :cycle_id, @cycles, :id, :name, include_hidden: false
 
-  = form.submit 'Search'
+      span.group-title.tac Season
+      = form.collection_check_boxes :season_id, @seasons, :id, :name, include_hidden: false
+    div
+      span.group-title Hour
+      = form.collection_check_boxes :hour_id, @hours, :id, :name, include_hidden: false
+
+      span.group-title.tac Quality
+      = form.check_box :quality_notice, include_hidden: false
+      = label_tag :quality_notice, 'Quality notice'
+      = form.check_box :favourite, include_hidden: false
+      = label_tag :favourite, 'Marked as favourite'
+
+      span.group-title.tac Source language
+      = form.collection_check_boxes :source_language_id, @source_languages, :id, :name, include_hidden: false
+    div
+      span.group-title Book
+      =< form.collection_check_boxes :book_id, @books, :id, :name, include_hidden: false

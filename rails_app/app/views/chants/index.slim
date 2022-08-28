@@ -1,9 +1,8 @@
-h1 Chants
-
 = render 'filter'
 
-.tac= paginate @chants
-p= page_entries_info @chants
+.row
+  .column.column-20= page_entries_info @chants
+  .column.column-60.tac= paginate @chants
 
 table
   tbody

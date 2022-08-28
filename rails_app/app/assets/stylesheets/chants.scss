@@ -55,4 +55,7 @@ pre {
 .filter {
   label { display: inline-block; margin: 0 10px; font-size: small; }
   #volpiano { font-family: Volpiano; font-size: 30pt; height: 70px; max-width: 800px; }
+  #volpiano::placeholder { font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14pt; }
+  .checkboxes > div { border: 1px solid #ccc; padding: 6px 4px 0 4px; margin-bottom: -1px; }
+  .group-title { display: inline-block; min-width: 100px; padding: 0 10px; }
 }
