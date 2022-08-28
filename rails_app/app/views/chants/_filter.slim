@@ -1,18 +1,14 @@
 .filter= form_with method: :get do |form|
   .row
-    .column.column-10
+    .column.column-40
+      =< form.text_field :lyrics, placeholder: 'search by lyrics'
       = form.check_box :case_sensitive, include_hidden: false
       = label_tag :case_sensitive, 'Case-sensitive'
-    .column.column-70
-      =< form.text_field :lyrics, placeholder: 'search by lyrics'
+    .column.column-40
+      = form.text_field :volpiano, title: 'insert music snippet encoded using the Volpiano font', placeholder: 'search by music'
+      = form.collection_radio_buttons :music_search_type, @music_search_types, :first, :last, include_hidden: false
     .column.column-20
       = form.submit 'Search'
-
-  .row
-    .column.column-20
-      = form.collection_radio_buttons :music_search_type, @music_search_types, :first, :last, include_hidden: false
-    .column.column-70
-      = form.text_field :volpiano, title: 'insert music snippet encoded using the Volpiano font', placeholder: 'search by music'
 
   .checkboxes
     div
