@@ -1,5 +1,5 @@
 h1
-  => @corpus.name
+  em=> @corpus.name
   | Differentiae
 
 - @differentiae.each_pair do |modus, differentiae|
@@ -8,4 +8,6 @@ h1
     h3= differentia
     .row
       - incipits.each do |chant|
-        .column.column-10.volpiano_music= link_to chant.melody_incipit, chants_path(corpus_id: [@corpus.id], modus: modus, differentia: differentia, volpiano: chant.melody_incipit)
+        .column.column-10
+          span.volpiano_music= link_to chant.melody_incipit, chants_path(corpus_id: [@corpus.id], modus: modus, differentia: differentia, volpiano: chant.melody_incipit)
+          =< "(#{chant.occurrences})"

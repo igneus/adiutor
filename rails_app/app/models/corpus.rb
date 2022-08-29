@@ -26,8 +26,8 @@ class Corpus < ApplicationRecord
   def differentiae
     chants
       .all_antiphons
-      .select(:modus, :differentia, 'SUBSTRING(volpiano, 1, 10) as melody_incipit')
-      .distinct
+      .select(:modus, :differentia, 'SUBSTRING(volpiano, 1, 10) as melody_incipit', 'COUNT(differentia) as occurrences')
+      .group(:modus, :differentia, :melody_incipit)
       .group_by(&:modus)
       .transform_values {|v| v.group_by(&:differentia) }
   end
