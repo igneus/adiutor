@@ -6,6 +6,43 @@
  * not served by Apache or another webserver running as system service with its own UID.
  */
 
+function is_valid_fial($fial) {
+    return 1 === preg_match('/^[\w\d_\/]+\.ly#[\w\d-]+$/', $fial);
+}
+
+if ('test' === $argv[1]) {
+    $examples = [
+        [false, ''],
+        [false, 'a'],
+        [false, 'kompletar.ly'],
+        [false, 'kompletar.ly#'],
+        [true, 'kompletar.ly#id'],
+        [true, 'antifony/mezidobi_nedeleA_02_10.ly#ne10a-2ne-amag'],
+        [true, 'kompletar.ly#id2'],
+        [false, 'kompletar.ly#id '],
+        // make sure the code is not vulnerable to shell injection
+        [false, 'kompletar.ly#id ; rm -rf /'],
+        [false, 'kompletar.ly#id;ls'],
+    ];
+
+    $failures = 0;
+    foreach ($examples as $i => $data) {
+        [$expected, $given] = $data;
+        $result = is_valid_fial($given);
+        if ($result === $expected) {
+            echo '.';
+        } else {
+            echo "\nExample #$i: expected $expected, got $result\n";
+            ++$failures;
+        }
+    }
+
+    $total = count($examples);
+    echo "\n\n$failures failures, $total examples total\n";
+    exit($failures > 0 ? 1 : 0);
+}
+
+
 
 $iaSources = getenv('IN_ADIUTORIUM_SOURCES_PATH');
 if (!$iaSources) {
@@ -28,7 +65,7 @@ $debug = $_GET['debug'];
 if (!$fial) {
     die("Please specify the fial parameter");
 }
-if (1 !== preg_match('/^[\w\d_\/]+\.ly#[\w\d-]+/', $fial)) {
+if (!is_valid_fial($fial)) {
     die("Invalid fial $line");
 }
 if ($line && !is_numeric($line)) {
