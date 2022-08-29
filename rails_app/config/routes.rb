@@ -19,5 +19,11 @@ Rails.application.routes.draw do
       post 'resolve', as: :resolve
     end
   end
+
+  resources :corpora do
+    member do
+      get 'differentiae', as: :differentiae
+    end
+  end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

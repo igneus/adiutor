@@ -21,4 +21,14 @@ class Corpus < ApplicationRecord
       raise("Expected environment variable #{varname} to contain path of the directory" \
         " with source code of the #{system_name} corpus, but the variable wath not found")
   end
+
+  # Hash<mode => Hash<differentia => Array<String - unique melody incipits>>>
+  def differentiae
+    chants
+      .all_antiphons
+      .select(:modus, :differentia, 'SUBSTRING(volpiano, 1, 10) as melody_incipit')
+      .distinct
+      .group_by(&:modus)
+      .transform_values {|v| v.group_by(&:differentia) }
+  end
 end

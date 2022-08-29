@@ -16,6 +16,8 @@ class Chant < ApplicationRecord
   # TODO: instead of hard equality condition really just prefer in ordering
   scope :prefer_same_genre, ->(genre) { where(genre: genre) }
 
+  scope :all_antiphons, -> { joins("INNER JOIN genres ON chants.genre_id = genres.id AND system_name LIKE 'antiphon%'") }
+
   def self.genres
     distinct.pluck(:quid).compact.sort
   end
