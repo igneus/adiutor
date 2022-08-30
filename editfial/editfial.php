@@ -38,7 +38,7 @@ if ('test' === $argv[1]) {
     }
 
     $total = count($examples);
-    echo "\n\n$failures failures, $total examples total\n";
+    echo "\n\n$total examples, $failures failures\n";
     exit($failures > 0 ? 1 : 0);
 }
 
