@@ -10,6 +10,7 @@ class HomeController < ApplicationController
         .limit(1)
         .first
     @chant_to_fix_today =
+      @chant_to_fix_random &&
       Chant
         .to_be_fixed
         .order(:id)
