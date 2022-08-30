@@ -10,7 +10,7 @@ function is_valid_fial($fial) {
     return 1 === preg_match('/^[\w\d_\/]+\.ly#[\w\d-]+$/', $fial);
 }
 
-if ('test' === $argv[1]) {
+if (isset($argv) && 'test' === $argv[1]) {
     $examples = [
         [false, ''],
         [false, 'a'],
@@ -54,10 +54,10 @@ chdir($iaSources); // editfial.rb expects this
 
 
 
-$fial = $_GET['fial'];
-$line = $_GET['line'];
-$redirectBack = $_GET['redirectBack'];
-$debug = $_GET['debug'];
+$fial = $_GET['fial'] ?? null;
+$line = $_GET['line'] ?? null;
+$redirectBack = $_GET['redirectBack'] ?? null;
+$debug = $_GET['debug'] ?? null;
 
 
 
