@@ -61,7 +61,9 @@ class InAdiutoriumImporter < BaseImporter
     chant.source_language = language
 
     hour = detect_hour header['id'], in_project_path
-    genre = detect_genre header['id'], header['quid'], in_project_path, hour
+    genre =
+      header['adiutor_genre'] ||
+      detect_genre(header['id'], header['quid'], in_project_path, hour)
     chant.hour = hour && Hour.find_by_system_name!(hour)
     chant.genre = Genre.find_by_system_name!(genre)
 
@@ -116,7 +118,7 @@ class InAdiutoriumImporter < BaseImporter
       else
         :'responsory_short'
       end
-    elsif path =~ /^marianske/ || path =~ /velikonoce_pruvod/
+    elsif path =~ /^marianske/
       :'antiphon_standalone'
     elsif path =~ /^(kompletar|antifony\/(tyden|ferie|doplnovaci))/
       :'antiphon_psalter'
