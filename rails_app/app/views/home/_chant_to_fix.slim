@@ -1,0 +1,7 @@
+p
+  = link_to chant_path(chant) do
+    tt= chant.fial_of_self
+  | &nbsp; &nbsp; &nbsp;
+  em= chant.placet
+= link_to chant_path(chant) do
+  = render 'chants/image', chant: chant

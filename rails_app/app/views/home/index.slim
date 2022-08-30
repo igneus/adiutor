@@ -12,16 +12,16 @@ p
 
 hr
 
-- if @chant_to_fix
-  h2 Random chant which needs to be fixed
+- if @chant_to_fix_random
+  h2 Chants which need to be fixed
 
-  p
-    = link_to chant_path(@chant_to_fix) do
-      tt= @chant_to_fix.fial_of_self
-    | &nbsp; &nbsp; &nbsp;
-    em= @chant_to_fix.placet
-  = link_to chant_path(@chant_to_fix) do
-    = render 'chants/image', chant: @chant_to_fix
+  .row
+    .column.column-50
+      h3 Chant of the day
+      = render 'chant_to_fix', chant: @chant_to_fix_today
+    .column.column-50
+      h3 Random
+      = render 'chant_to_fix', chant: @chant_to_fix_random
 
 p
   | There are

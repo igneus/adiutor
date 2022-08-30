@@ -1,14 +1,21 @@
 class HomeController < ApplicationController
   def index
     @chants_count = Chant.count
+    @need_fix_total = Chant.to_be_fixed.count
 
-    @chant_to_fix =
+    @chant_to_fix_random =
       Chant
         .to_be_fixed
         .order(Arel.sql('RANDOM()'))
         .limit(1)
         .first
-    @need_fix_total = Chant.to_be_fixed.count
+    @chant_to_fix_today =
+      Chant
+        .to_be_fixed
+        .order(:id)
+        .offset(Date.tomorrow.jd % @need_fix_total)
+        .limit(1)
+        .first
   end
 
   def overview
