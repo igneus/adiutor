@@ -26,5 +26,9 @@ Rails.application.routes.draw do
       get 'differentiae', as: :differentiae
     end
   end
+
+  namespace :api do
+    post 'eantifonar/search', to: 'eantifonar#search'
+  end
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
