@@ -18,5 +18,6 @@ table
             = render 'image', chant: c
         td= c.source_file_path
         td= render 'tags', chant: c
+        td= edit_chant_button c, 'edit', render_if_unavailable: false, opts: {class: 'button button-outline'}
 
 .tac= paginate @chants

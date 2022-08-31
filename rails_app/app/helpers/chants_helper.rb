@@ -12,11 +12,13 @@ module ChantsHelper
     c
   end
 
-  def edit_chant_button(chant, label=nil, variationes: false)
+  def edit_chant_button(chant, label=nil, variationes: false, render_if_unavailable: true, opts: {})
     label ||= 'Open in editor' + (variationes ? ' (variationes)' : '')
-    opts = {method: :post, class: 'button'}
+    opts = {method: :post, class: 'button'}.update opts
     if chant.corpus.system_name != 'in_adiutorium'
       opts.update(disabled: true, title: 'only available for the In adiutorium corpus')
+
+      return '' unless render_if_unavailable
     end
 
     button_to(
