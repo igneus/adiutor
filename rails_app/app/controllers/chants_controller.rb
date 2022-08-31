@@ -68,7 +68,7 @@ class ChantsController < ApplicationController
         (params[:variationes] == 'true' ? 'variationes/' : '') +
         chant.fial_of_self,
       line: params[:line],
-      redirectBack: chant_url(chant)
+      redirectBack: params[:redirect_back] || request.referer || chant_url(chant)
     }
     target = Adiutor::EDIT_FIAL_URL + '?' + URI.encode_www_form(query)
 
