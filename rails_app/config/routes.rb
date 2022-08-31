@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root 'home#index'
   get 'overview', to: 'home#overview'
   get 'psalm_tunes', to: 'home#required_psalm_tunes'
+  get 'chant_of_the_day', to: 'home#chant_of_the_day'
 
   resources :chants do
     collection do

@@ -27,4 +27,11 @@ RSpec.describe 'Routes served by HomeController', type: :request do
       expect(response).to have_http_status :ok
     end
   end
+
+  describe 'GET /chant_of_the_day' do
+    it 'succeeds' do
+      get '/chant_of_the_day'
+      expect(response).to have_http_status :ok
+    end
+  end
 end

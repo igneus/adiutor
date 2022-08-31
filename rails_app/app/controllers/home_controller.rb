@@ -9,14 +9,7 @@ class HomeController < ApplicationController
         .order(Arel.sql('RANDOM()'))
         .limit(1)
         .first
-    @chant_to_fix_today =
-      @chant_to_fix_random &&
-      Chant
-        .to_be_fixed
-        .order(:id)
-        .offset(Date.tomorrow.jd % @need_fix_total)
-        .limit(1)
-        .first
+    @chant_to_fix_today = Chant.chant_of_the_day(Date.today)
   end
 
   def overview
@@ -32,5 +25,10 @@ class HomeController < ApplicationController
   def required_psalm_tunes
     @tunes = Chant.required_psalm_tunes
     @invitatory_genre = Genre.find_by!(system_name: 'invitatory')
+  end
+
+  def chant_of_the_day
+    @date = params[:date].then {|d| d && Date.parse(d) } || Date.today
+    @chant = Chant.chant_of_the_day(@date)
   end
 end

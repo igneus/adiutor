@@ -1,0 +1,13 @@
+h1
+  | Chant of the day
+  =< @date
+
+= form_with method: :get do |form|
+  .row
+    .column.column-10
+      =< date_field_tag :date, @date.to_s
+    .column.column-10
+      = form.submit 'Select'
+
+- if @chant
+  = render 'chant_to_fix', chant: @chant

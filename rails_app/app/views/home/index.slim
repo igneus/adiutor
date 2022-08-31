@@ -17,7 +17,7 @@ hr
 
   .row
     .column.column-50
-      h3 Chant of the day
+      h3= link_to 'Chant of the day', chant_of_the_day_path
       = render 'chant_to_fix', chant: @chant_to_fix_today
     .column.column-50
       h3 Random

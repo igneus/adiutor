@@ -73,6 +73,19 @@ class Chant < ApplicationRecord
     r
   end
 
+  # To each calendar date assigns a single Chant marked for revision.
+  def self.chant_of_the_day(date)
+    tbf = Chant.to_be_fixed
+    count = tbf.count
+    return nil if count == 0
+
+    tbf
+      .order(:id)
+      .offset(date.jd % count)
+      .limit(1)
+      .first
+  end
+
   def parental_tree_top(seen = [])
     raise "cycle in tree of parents #{seen.collect(&:fial_of_self)}" if seen.include? self
 
