@@ -17,7 +17,7 @@ class ChantsController < ApplicationController
     @chants =
       Chant
         .where(filter_params)
-        .includes(:mismatches, :source_language)
+        .includes(:mismatches, :source_language, :corpus)
     if params[:lyrics]
       like = params[:case_sensitive] ? 'LIKE' : 'ILIKE'
       @chants = @chants.where("lyrics #{like} ?", "%#{params[:lyrics]}%")

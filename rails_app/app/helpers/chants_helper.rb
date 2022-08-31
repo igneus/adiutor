@@ -6,8 +6,8 @@ module ChantsHelper
     c << 'edited lyrics' if chant.lyrics_edited?
     c << 'copy' if chant.fial.present?
     c << 'mismatch' if chant.mismatches.present?
-    c << 'hour missing' if chant.hour.nil?
-    c << 'genre missing' if chant.genre.nil?
+    c << 'hour missing' if chant.hour_id.nil?
+    c << 'genre missing' if chant.genre_id.nil?
 
     c
   end
