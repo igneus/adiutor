@@ -45,6 +45,9 @@ class ChantsController < ApplicationController
     if params[:favourite]
       @chants = @chants.favourite
     end
+    if params[:mismatch]
+      @chants = @chants.joins(:mismatches)
+    end
 
     @chants = @chants.page(params[:page] || 1)
   end

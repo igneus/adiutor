@@ -38,6 +38,8 @@
 
       span.group-title.tac Simple copy
       = form.collection_check_boxes :simple_copy, [true, false], :to_s, :to_s, include_hidden: false
+      => check_box :mismatch, 'true', include_hidden: false
+      = label_tag :mismatch, 'mismatch'
     div
       span.group-title Book
       =< form.collection_check_boxes :book_id, @books, :id, :name, include_hidden: false
