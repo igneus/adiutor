@@ -113,7 +113,8 @@ class ChantsController < ApplicationController
       cycle_id: [],
       season_id: [],
       hour_id: [],
-      source_language_id: []
+      source_language_id: [],
+      simple_copy: []
     )
   end
 end

@@ -10,16 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[6.1].define(version: 2021_09_28_184209) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_08_31_115104) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "books", force: :cascade do |t|
     t.string "name"
     t.string "system_name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "chants", force: :cascade do |t|
@@ -32,8 +31,8 @@ ActiveRecord::Schema[6.1].define(version: 2021_09_28_184209) do
     t.string "psalmus"
     t.string "chant_id"
     t.text "source_file_path"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "placet"
     t.text "textus_approbatus"
     t.string "fial"
@@ -51,6 +50,7 @@ ActiveRecord::Schema[6.1].define(version: 2021_09_28_184209) do
     t.bigint "hour_id"
     t.string "pitch_series"
     t.string "interval_series"
+    t.boolean "simple_copy", default: false, null: false
     t.index ["book_id"], name: "index_chants_on_book_id"
     t.index ["corpus_id"], name: "index_chants_on_corpus_id"
     t.index ["cycle_id"], name: "index_chants_on_cycle_id"
@@ -64,51 +64,51 @@ ActiveRecord::Schema[6.1].define(version: 2021_09_28_184209) do
   create_table "corpuses", force: :cascade do |t|
     t.string "name"
     t.string "system_name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "cycles", force: :cascade do |t|
     t.string "name"
     t.string "system_name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "genres", force: :cascade do |t|
     t.string "name"
     t.string "system_name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "hours", force: :cascade do |t|
     t.string "name"
     t.string "system_name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "parent_child_mismatches", force: :cascade do |t|
     t.bigint "child_id"
-    t.datetime "resolved_at"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "resolved_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["child_id"], name: "index_parent_child_mismatches_on_child_id"
   end
 
   create_table "seasons", force: :cascade do |t|
     t.string "name"
     t.string "system_name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "source_languages", force: :cascade do |t|
     t.string "name"
     t.string "system_name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_foreign_key "chants", "chants", column: "parent_id"
