@@ -12,6 +12,20 @@ module ChantsHelper
     c
   end
 
+  def edit_chant_button(chant, label=nil, variationes: false)
+    label ||= 'Open in editor' + (variationes ? ' (variationes)' : '')
+    opts = {method: :post, class: 'button'}
+    if chant.corpus.system_name != 'in_adiutorium'
+      opts.update(disabled: true, title: 'only available for the In adiutorium corpus')
+    end
+
+    button_to(
+      label,
+      open_in_editor_chant_path(chant, variationes: variationes),
+      opts
+    )
+  end
+
   def diff(a, b)
     Diffy::Diff
       .new(a, b)

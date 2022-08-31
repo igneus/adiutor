@@ -63,7 +63,13 @@ class ChantsController < ApplicationController
 
     chant = Chant.find params[:id]
 
-    query = {fial: chant.fial_of_self, line: params[:line], redirectBack: chant_url(chant)}
+    query = {
+      fial:
+        (params[:variationes] == 'true' ? 'variationes/' : '') +
+        chant.fial_of_self,
+      line: params[:line],
+      redirectBack: chant_url(chant)
+    }
     target = Adiutor::EDIT_FIAL_URL + '?' + URI.encode_www_form(query)
 
     redirect_to target

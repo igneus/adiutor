@@ -2,7 +2,9 @@ h1
   ' Chant:
   = @chant.link_text
 
-= button_to 'Open in editor', open_in_editor_chant_path(@chant), {method: :post, class: 'button'}.yield_self {|h| h.update(disabled: true, title: 'only available for the In adiutorium corpus') if @chant.corpus.system_name != 'in_adiutorium' }
+.row
+  .column.column-10= edit_chant_button @chant
+  .column.column-10= edit_chant_button @chant, variationes: true
 
 .chant-image
   = render 'image', chant: @chant
