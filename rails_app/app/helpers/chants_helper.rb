@@ -4,7 +4,11 @@ module ChantsHelper
     c << 'quality notice' if chant.marked_for_revision?
     c << 'favourite' if chant.placet == '*'
     c << 'edited lyrics' if chant.lyrics_edited?
-    c << 'copy' if chant.fial.present?
+    if chant.simple_copy?
+      c << 'copy simple'
+    elsif chant.fial.present?
+      c << 'copy'
+    end
     c << 'mismatch' if chant.mismatches.present?
     c << 'hour missing' if chant.hour_id.nil?
     c << 'genre missing' if chant.genre_id.nil?
