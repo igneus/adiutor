@@ -1,3 +1,4 @@
+# coding: utf-8
 # Imports chants from the directory structure of Antiphonale 1983
 # https://github.com/igneus/antiphonale83
 class Antiphonale83Importer < BaseImporter
@@ -53,6 +54,11 @@ class Antiphonale83Importer < BaseImporter
       LyricsHelper
         .normalize_initial(lyrics.readable)
         .gsub(%r{\s*<sp>V\.</sp>\s*}, ' ')
+    chant.lyrics_normalized =
+      lyrics.readable
+        .gsub(%r{\s*<sp>V\.</sp>\s*}, ' | ')
+        .yield_self {|l| l[0 ... l.rindex('| Glória Patri')] }
+        .yield_self {|l| LyricsNormalizer.new.normalize_latin l }
     chant.header = header.instance_variable_get :@headers # only last value for each repeated key!
 
     last_annotation = header.each_value('annotation').to_a.last

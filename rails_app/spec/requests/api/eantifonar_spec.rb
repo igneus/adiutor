@@ -13,7 +13,7 @@ RSpec.describe "Api::Eantifonar", type: :request do
     end
 
     it 'returns null if not found' do
-      post path, params: {my_id: {lyrics: 'unknown lyrics'}}
+      post path, params: {my_id: {lyrics: 'unknown lyrics', lang: 'cs'}}
 
       expect(response).to have_http_status :ok
       expect(response.body).to eq '{"my_id":null}'
@@ -27,10 +27,11 @@ RSpec.describe "Api::Eantifonar", type: :request do
         :chant,
         modus: 'I',
         differentia: 'D',
+        lyrics_normalized: 'lyrics',
         genre: create(:genre, system_name: 'antiphon'),
         source_language: create(:source_language, system_name: 'lilypond')
       )
-      post path, params: {my_id: {lyrics: chant.lyrics}}
+      post path, params: {my_id: {lyrics: chant.lyrics_normalized, lang: 'la'}}
 
       expect(response).to have_http_status :ok
       expect(response.body).to start_with '{"my_id":[{"id":'

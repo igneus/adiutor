@@ -1,3 +1,4 @@
+# coding: utf-8
 # Imports chants from the directory structure of Liber antiphonarius 1960
 # transcribed by Andrew Hinkley
 # https://github.com/ahinkley/liber-antiphonarius-1960
@@ -43,6 +44,11 @@ class LiberAntiphonariusImporter < BaseImporter
       LyricsHelper
         .normalize_initial(score.music.lyrics_readable)
         .gsub(%r{\s*<sp>[VR]/</sp>\.?\s*}, ' ')
+    chant.lyrics_normalized =
+      score.music.lyrics_readable
+        .gsub(%r{\s*<sp>([VR])/</sp>\.?\s*}) {|m| Regexp.last_match[1] == 'V' ? ' | ' : ' ' }
+        .yield_self {|l| l[0 ... l.rindex('Glória Patri')] }
+        .yield_self {|l| LyricsNormalizer.new.normalize_latin l }
     chant.header = header
 
     header_mode = header['mode']

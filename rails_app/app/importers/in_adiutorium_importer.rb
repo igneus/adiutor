@@ -88,14 +88,23 @@ class InAdiutoriumImporter < BaseImporter
     chant.lyrics =
       score
         .lyrics_readable
-        .gsub(/\s*\\(Verse|Response|textRespDoxologie)\s*/, ' ')
-        .gsub('\textRespAleluja', 'Aleluja, aleluja.')
+        .yield_self {|l| expand_responsory_variables(l) }
         .strip
     chant.header = header_json header
 
     chant.modus = header['modus']&.sub(/\.$/, '')
     chant.differentia = header['differentia']&.downcase
     chant.textus_approbatus = header['textus_approbatus']&.gsub(/\s+/, ' ')
+    chant.lyrics_normalized = LyricsNormalizer.new.normalize_czech(
+      (chant.textus_approbatus ||
+       expand_responsory_variables(
+         score
+           .lyrics_readable
+           .sub('\Verse', ' V. ')
+           .yield_self {|s| s.include?(' V. ') ? s[0..s.rindex('*')] : s } # cut responsories after the verse
+       ))
+        .sub(' V. ', ' | ')
+    )
     %w[quid psalmus placet fial].each do |key|
       chant.public_send "#{key}=", header[key]
     end
@@ -104,6 +113,12 @@ class InAdiutoriumImporter < BaseImporter
     %i[syllable_count word_count melody_section_count].each do |property|
       chant.public_send "#{property}=", score_with_stats.public_send(property)
     end
+  end
+
+  def expand_responsory_variables(lyrics)
+    lyrics
+      .gsub(/\s*\\(Verse|Response|textRespDoxologie)\s*/, ' ')
+      .gsub('\textRespAleluja', 'Aleluja, aleluja.')
   end
 
   def detect_genre(id, quid, path, hour_name)

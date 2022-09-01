@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_31_115104) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_01_163431) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,11 +51,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_31_115104) do
     t.string "pitch_series"
     t.string "interval_series"
     t.boolean "simple_copy", default: false, null: false
+    t.text "lyrics_normalized"
     t.index ["book_id"], name: "index_chants_on_book_id"
     t.index ["corpus_id"], name: "index_chants_on_corpus_id"
     t.index ["cycle_id"], name: "index_chants_on_cycle_id"
     t.index ["genre_id"], name: "index_chants_on_genre_id"
     t.index ["hour_id"], name: "index_chants_on_hour_id"
+    t.index ["lyrics_normalized"], name: "index_chants_on_lyrics_normalized"
     t.index ["parent_id"], name: "index_chants_on_parent_id"
     t.index ["season_id"], name: "index_chants_on_season_id"
     t.index ["source_language_id"], name: "index_chants_on_source_language_id"
