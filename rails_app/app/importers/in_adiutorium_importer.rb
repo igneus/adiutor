@@ -199,7 +199,7 @@ class InAdiutoriumImporter < BaseImporter
   def cycle_by_file_path(in_project_path)
     cycle_name =
       case in_project_path
-      when %r{^antifony/(tyden|doplnovaci|ferie_kantevgant|invitatoria)}
+      when %r{^antifony/(tyden|doplnovaci|ferie_kantevgant|invitatoria)}, 'responsoria.ly'
         'psalter'
       when %r{^(sanktoral|reholni)/}
         'sanctorale'
