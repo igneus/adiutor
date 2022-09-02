@@ -23,6 +23,10 @@
 
       span.group-title.tac Season
       = form.collection_check_boxes :season_id, @seasons, :id, :name, include_hidden: false
+
+      span.group-title.tac Varia
+      = form.check_box :alleluia_optional, include_hidden: false
+      = label_tag :alleluia_optional, 'optional alleluia'
     div
       span.group-title Hour
       = form.collection_check_boxes :hour_id, @hours, :id, :name, include_hidden: false

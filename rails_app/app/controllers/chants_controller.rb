@@ -110,6 +110,7 @@ class ChantsController < ApplicationController
       :psalmus,
       :word_count,
       :melody_section_count,
+      :alleluia_optional,
       genre_id: [],
       book_id: [],
       corpus_id: [],

@@ -57,8 +57,10 @@ class Antiphonale83Importer < BaseImporter
     chant.lyrics_normalized =
       lyrics.readable
         .gsub(%r{\s*<sp>V\.</sp>\s*}, ' | ')
+        .gsub(%r{\s*<i>.*?</i>\s*}, ' ')
         .yield_self {|l| l[0 ... l.rindex('| Glória Patri')] }
         .yield_self {|l| LyricsNormalizer.new.normalize_latin l }
+    chant.alleluia_optional = !!(lyrics.readable =~ /T\.\s*P\./)
     chant.header = header.instance_variable_get :@headers # only last value for each repeated key!
 
     last_annotation = header.each_value('annotation').to_a.last

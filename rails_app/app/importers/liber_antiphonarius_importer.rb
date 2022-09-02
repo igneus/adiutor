@@ -47,8 +47,10 @@ class LiberAntiphonariusImporter < BaseImporter
     chant.lyrics_normalized =
       score.music.lyrics_readable
         .gsub(%r{\s*<sp>([VR])/</sp>\.?\s*}) {|m| Regexp.last_match[1] == 'V' ? ' | ' : ' ' }
+        .gsub(%r{\s*<i>.*?</i>\s*}, ' ')
         .yield_self {|l| l[0 ... l.rindex('Glória Patri')] }
         .yield_self {|l| LyricsNormalizer.new.normalize_latin l }
+    chant.alleluia_optional = !!(score.music.lyrics_readable =~ /T\.\s*P\./)
     chant.header = header
 
     header_mode = header['mode']

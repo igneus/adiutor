@@ -105,6 +105,7 @@ class InAdiutoriumImporter < BaseImporter
        ))
         .sub(' V. ', ' | ')
     )
+    chant.alleluia_optional = !!(score.music =~ /\\rubr(VelikAleluja|MimoPust)/)
     %w[quid psalmus placet fial].each do |key|
       chant.public_send "#{key}=", header[key]
     end
