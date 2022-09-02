@@ -12,3 +12,8 @@
   top-margin = 0\cm
   bottom-margin = 0\cm
 }
+
+% responsories from responsoria.ly : generate doxology
+doxologieResponsoriumVI = \relative c'' {
+  \respVIdoxologie \barFinalis
+}
