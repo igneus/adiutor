@@ -128,7 +128,7 @@ class InAdiutoriumImporter < BaseImporter
     elsif quid =~ /k (Benedictus|Magnificat)/ || id == 'sim' || path =~ /mezidobi_nedele/ || %w(aben amag).include?(id)
       :'antiphon_gospel'
     elsif quid =~ /resp/
-      if path =~ /pust_triduum/
+      if %w(pust_triduum.ly velikonoce_velikonocnioktav.ly).include? path
         :antiphon
       elsif hour_name == :readings
         :'responsory_nocturnal'
