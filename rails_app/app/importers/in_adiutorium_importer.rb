@@ -101,7 +101,7 @@ class InAdiutoriumImporter < BaseImporter
          score
            .lyrics_readable
            .sub('\Verse', ' V. ')
-           .yield_self {|s| s.include?(' V. ') ? s[0..s.rindex('*')] : s } # cut responsories after the verse
+           .yield_self {|s| s.scan('\Response').size > 1 ? s[0...s.rindex('\Response')] : s } # cut responsories after the verse (but only those where R2 is repeated)
        ))
         .sub(' V. ', ' | ')
     )
