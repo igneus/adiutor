@@ -25,12 +25,28 @@ ARGF.each_with_index do |l, i|
     if genre == 'Rb'
       corpus_chants.where('lyrics LIKE ?', lyrics.sub(' V. ', ' ') + ' * %')
     else
-      corpus_chants.where(lyrics: lyrics)
+      t = Chant.arel_table
+      corpus_chants.where(
+        t[:lyrics].eq(lyrics)
+          .or(t[:textus_approbatus].eq(lyrics))
+          .or(t[:alleluia_optional].eq(true).and(t[:lyrics].eq(lyrics + ' Aleluja.')))
+      )
     end
   next if by_lyrics.present? # success, don't produce output and continue
 
   # 2. search less sensitive to minor differences
   by_normalized_lyrics = corpus_chants.where(lyrics_normalized: normalizer.normalize_czech(lyrics.sub(' V. ', ' | ')))
+
+  if genre == 'A' && by_normalized_lyrics.present?
+    they =
+      lyrics
+        .sub!(/, aleluja.$/, '. Aleluja.') # alleluia format deviating from the Czech printed breviary very frequent at breviar.sk - ignore it for now
+    us =
+      by_normalized_lyrics.first.lyrics
+        .sub(/\s*\*\s*/, ' ') # asterisks in antiphons are not part of the official text
+
+    next if they == us
+  end
 
   puts CSV.generate_line([genre, lyrics, by_normalized_lyrics&.first&.lyrics])
 end
