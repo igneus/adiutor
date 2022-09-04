@@ -16,6 +16,8 @@ corpus_chants = Chant.where(
   book: Book.find_by_system_name('dmc')
 )
 
+t = Chant.arel_table
+
 ARGF.each_with_index do |l, i|
   genre, lyrics, _ = CSV.parse_line l
   next if lyrics.nil? # TODO: this should not happen, investigate
@@ -25,7 +27,6 @@ ARGF.each_with_index do |l, i|
     if genre == 'Rb'
       corpus_chants.where('lyrics LIKE ?', lyrics.sub(' V. ', ' ') + ' * %')
     else
-      t = Chant.arel_table
       corpus_chants.where(
         t[:lyrics].eq(lyrics)
           .or(t[:textus_approbatus].eq(lyrics))
@@ -35,7 +36,11 @@ ARGF.each_with_index do |l, i|
   next if by_lyrics.present? # success, don't produce output and continue
 
   # 2. search less sensitive to minor differences
-  by_normalized_lyrics = corpus_chants.where(lyrics_normalized: normalizer.normalize_czech(lyrics.sub(' V. ', ' | ')))
+  normalized = normalizer.normalize_czech(lyrics.sub(' V. ', ' | '))
+  by_normalized_lyrics = corpus_chants.where(
+    t[:lyrics_normalized].eq(normalized)
+      .or(t[:alleluia_optional].eq(true).and(t[:lyrics_normalized].eq(normalized + ' aleluja')))
+  )
 
   if genre == 'A' && by_normalized_lyrics.present?
     they =
