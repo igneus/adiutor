@@ -46,9 +46,9 @@ ARGF.each_with_index do |l, i|
     they =
       lyrics
         .sub!(/, aleluja.$/, '. Aleluja.') # alleluia format deviating from the Czech printed breviary very frequent at breviar.sk - ignore it for now
-    us = by_normalized_lyrics.first.lyrics
+    us = by_normalized_lyrics.collect {|i| i.textus_approbatus || i.lyrics }
 
-    next if they == us
+    next if us.include? they
   end
 
   puts CSV.generate_line([genre, lyrics, by_normalized_lyrics&.first&.lyrics])
