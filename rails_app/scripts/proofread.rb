@@ -41,9 +41,7 @@ ARGF.each_with_index do |l, i|
     they =
       lyrics
         .sub!(/, aleluja.$/, '. Aleluja.') # alleluia format deviating from the Czech printed breviary very frequent at breviar.sk - ignore it for now
-    us =
-      by_normalized_lyrics.first.lyrics
-        .sub(/\s*\*\s*/, ' ') # asterisks in antiphons are not part of the official text
+    us = by_normalized_lyrics.first.lyrics
 
     next if they == us
   end

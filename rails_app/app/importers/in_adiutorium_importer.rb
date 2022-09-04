@@ -89,6 +89,7 @@ class InAdiutoriumImporter < BaseImporter
       score
         .lyrics_readable
         .yield_self {|l| expand_responsory_variables(l) }
+        .yield_self {|l| /^(antiphon|invitatory)/ =~ chant.genre.system_name ? l.gsub(/\s*\*\s*/, ' ') : l }
         .strip
     chant.header = header_json header
 
