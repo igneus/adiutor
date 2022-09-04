@@ -48,6 +48,9 @@ class ChantsController < ApplicationController
     if params[:mismatch]
       @chants = @chants.joins(:mismatches)
     end
+    if params[:lyrics_edited]
+      @chants = @chants.where('textus_approbatus IS NOT NULL')
+    end
 
     @chants = @chants.page(params[:page] || 1)
   end

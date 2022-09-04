@@ -27,6 +27,8 @@
       span.group-title.tac Varia
       = form.check_box :alleluia_optional, include_hidden: false
       = label_tag :alleluia_optional, 'optional alleluia'
+      = form.check_box :lyrics_edited, include_hidden: false
+      = label_tag :lyrics_edited, 'edited lyrics'
     div
       span.group-title Hour
       = form.collection_check_boxes :hour_id, @hours, :id, :name, include_hidden: false
