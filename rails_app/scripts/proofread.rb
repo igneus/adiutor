@@ -43,10 +43,12 @@ ARGF.each_with_index do |l, i|
   )
 
   if genre == 'A' && by_normalized_lyrics.present?
+    ignored = -> (x) { x.gsub('!', '.') } # difference considered insignificant for now
     they =
       lyrics
         .sub(/, aleluja.$/, '. Aleluja.') # alleluia format deviating from the Czech printed breviary very frequent at breviar.sk - ignore it for now
-    us = by_normalized_lyrics.collect {|i| i.textus_approbatus || i.lyrics }
+        .yield_self(&ignored)
+    us = by_normalized_lyrics.collect {|i| ignored.(i.textus_approbatus || i.lyrics) }
 
     next if us.include? they
   end
