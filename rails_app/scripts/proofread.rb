@@ -53,5 +53,5 @@ ARGF.each_with_index do |l, i|
     next if us.include? they
   end
 
-  puts CSV.generate_line([genre, lyrics, by_normalized_lyrics&.first&.lyrics])
+  puts CSV.generate_line([genre, lyrics, by_normalized_lyrics&.first&.yield_self {|i| i.textus_approbatus || i.lyrics }])
 end
