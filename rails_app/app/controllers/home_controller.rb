@@ -9,7 +9,7 @@ class HomeController < ApplicationController
         .order(Arel.sql('RANDOM()'))
         .limit(1)
         .first
-    @chant_to_fix_today = Chant.chant_of_the_day(Date.today)
+    @chant_to_fix_today = Chant.chant_of_the_day(Time.zone.today)
   end
 
   def overview
@@ -28,7 +28,7 @@ class HomeController < ApplicationController
   end
 
   def chant_of_the_day
-    @date = params[:date].then {|d| d && Date.parse(d) } || Date.today
+    @date = params[:date].then {|d| d && Date.parse(d) } || Time.zone.today
     @chant = Chant.chant_of_the_day(@date)
   end
 end
