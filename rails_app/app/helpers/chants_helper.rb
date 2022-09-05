@@ -53,4 +53,12 @@ module ChantsHelper
       .collect {|l, i| link_to(l.rstrip.html_safe, open_in_editor_chant_path(line: i), method: :post) + "\n" }
       .join
   end
+
+  def tree_item_classes(chant, highlighted_chant)
+    r = []
+    r << 'highlighted' if chant == highlighted_chant
+    r << 'simple_copy' if chant.simple_copy?
+
+    r.join ' '
+  end
 end

@@ -41,6 +41,9 @@ pre {
   .highlighted {
     border: 2px solid red;
   }
+  .simple_copy img {
+    filter: opacity(50%);
+  }
   .children {
     margin-left: 50px;
   }
