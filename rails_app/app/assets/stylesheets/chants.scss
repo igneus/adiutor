@@ -42,7 +42,10 @@ pre {
     border: 2px solid red;
   }
   .simple_copy img {
-    filter: opacity(50%);
+    filter: opacity(40%);
+  }
+  .copy img {
+    filter: opacity(60%);
   }
   .children {
     margin-left: 50px;

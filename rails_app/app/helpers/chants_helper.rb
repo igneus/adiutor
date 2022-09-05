@@ -57,7 +57,12 @@ module ChantsHelper
   def tree_item_classes(chant, highlighted_chant)
     r = []
     r << 'highlighted' if chant == highlighted_chant
-    r << 'simple_copy' if chant.simple_copy?
+
+    if chant.simple_copy?
+      r << 'simple_copy'
+    elsif chant.copy?
+      r << 'copy'
+    end
 
     r.join ' '
   end

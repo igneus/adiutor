@@ -110,7 +110,12 @@ class InAdiutoriumImporter < BaseImporter
     %w[quid psalmus placet fial].each do |key|
       chant.public_send "#{key}=", header[key]
     end
-    chant.simple_copy = !!header['fial'].yield_self {|f| f && FIAL.parse(f).additional.empty? }
+
+    fial = header['fial']&.yield_self {|f| FIAL.parse(f) }
+    chant.simple_copy = !!fial&.additional&.empty?
+    chant.copy = !!fial&.additional&.yield_self do |a|
+      a.size == 1 && %w(+aleluja -aleluja).include?(a.keys[0])
+    end
 
     %i[syllable_count word_count melody_section_count].each do |property|
       chant.public_send "#{property}=", score_with_stats.public_send(property)

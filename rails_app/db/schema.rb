@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_02_155026) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_05_162615) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -53,6 +53,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_02_155026) do
     t.boolean "simple_copy", default: false, null: false
     t.text "lyrics_normalized"
     t.boolean "alleluia_optional"
+    t.boolean "copy", default: false, null: false
     t.index ["book_id"], name: "index_chants_on_book_id"
     t.index ["corpus_id"], name: "index_chants_on_corpus_id"
     t.index ["cycle_id"], name: "index_chants_on_cycle_id"

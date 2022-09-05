@@ -13,7 +13,10 @@ class Chant < ApplicationRecord
   scope :to_be_fixed, -> { where.not(placet: [nil, '*']) }
   scope :favourite, -> { where("placet LIKE '*%'") }
   scope :copies_first, -> do
-    order(Arel.sql('CASE WHEN simple_copy IS TRUE THEN 1 ELSE 2 END'))
+    order(Arel.sql('CASE
+      WHEN simple_copy IS TRUE THEN 1
+      WHEN copy IS TRUE THEN 2
+      ELSE 3 END'))
   end
 
   # TODO: instead of hard equality condition really just prefer in ordering
