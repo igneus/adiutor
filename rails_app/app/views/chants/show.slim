@@ -9,7 +9,13 @@ h1
 .chant-image
   = render 'image', chant: @chant
 
-.tags= render 'tags', chant: @chant
+.tags
+  = render 'tags', chant: @chant
+
+- if @chant.has_related_chants?
+  a href='#tree'
+    => @chant.parental_tree_size - 1
+    | related chants
 
 table.chant-properties
   tbody
@@ -41,8 +47,8 @@ table.chant-properties
 
 pre.code-highlight== lilypond_syntax_highlight @chant.source_code
 
-- if @chant.parent.present? || @chant.children.present?
-  h2 Tree of origin
+- if @chant.has_related_chants?
+  h2#tree Tree of origin
   .tree-of-origin
     = render 'tree', parent: @chant.parental_tree_top, highlight: @chant
 

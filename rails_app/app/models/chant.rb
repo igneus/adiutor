@@ -98,6 +98,19 @@ class Chant < ApplicationRecord
     parent.nil? ? self : parent.parental_tree_top(seen + [self])
   end
 
+  def parental_tree_size
+    1 + parental_tree_top.posterity.size
+  end
+
+  def has_related_chants?
+    parent.present? || children.present?
+  end
+
+  # returns a flat Array of all levels of children
+  def posterity
+    children.flat_map {|c| [c] + c.posterity }
+  end
+
   def link_text
     lyrics.present? ? lyrics : fial_of_self
   end
