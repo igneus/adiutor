@@ -12,5 +12,5 @@
 
 - if parent.children.present?
   .children
-    - parent.children.each do |c|
+    - parent.children.copies_first.each do |c|
       = render 'tree', parent: c, highlight: highlight
