@@ -3,6 +3,10 @@ require 'rails_helper'
 # Smoke tests
 RSpec.describe 'Routes served by HomeController', type: :request do
   describe 'GET /' do
+    before :each do
+      create :corpus, system_name: 'in_adiutorium'
+    end
+
     it 'succeeds' do
       get '/'
       expect(response).to have_http_status :ok

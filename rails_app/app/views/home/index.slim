@@ -5,10 +5,31 @@ p
   a> href="https://github.com/igneus/In-adiutorium" In adiutorium
   | project
 
-p
-  ' There are currently
-  strong>= @chants_count
-  = link_to 'chants', chants_path
+h2
+  => @main_corpus.name
+  | corpus
+.row
+  .column.column-50
+    p
+      => @main_corpus.chants.size
+      | chants total
+    p
+      => @main_corpus.chants.unique.size
+      | unique chants
+    p
+      => @main_corpus.chants.all_antiphons.unique.size
+      | unique antiphons
+    p
+      => Chant.where.not(corpus: @main_corpus).size
+      | chants from other corpora for comparative purposes
+  .column.column-50
+    p
+      => @need_fix_total
+      = link_to 'chants awaiting revision', chants_path(quality_notice: true)
+    p
+      => ParentChildMismatch.count
+      = link_to 'parent mismatches awaiting review', mismatches_path
+
 
 hr
 

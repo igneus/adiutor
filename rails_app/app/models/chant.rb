@@ -12,6 +12,7 @@ class Chant < ApplicationRecord
 
   scope :to_be_fixed, -> { where.not(placet: [nil, '*']) }
   scope :favourite, -> { where("placet LIKE '*%'") }
+  scope :unique, -> { where(simple_copy: false, copy: false) }
   scope :copies_first, -> do
     order(Arel.sql('CASE
       WHEN simple_copy IS TRUE THEN 1

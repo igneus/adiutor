@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   def index
-    @chants_count = Chant.count
+    @main_corpus = Corpus.find_by_system_name 'in_adiutorium'
     @need_fix_total = Chant.to_be_fixed.count
 
     @chant_to_fix_random =
