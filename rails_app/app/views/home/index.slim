@@ -12,12 +12,14 @@ h2
   .column.column-50
     p
       => @main_corpus.chants.size
-      | chants total
+      | chants total /
+      =<> @main_corpus.chants.where(book: Book.find_by_system_name('dmc')).size
+      ' chants of
+      em Denní modlitba církve
     p
       => @main_corpus.chants.unique.size
-      | unique chants
-    p
-      => @main_corpus.chants.all_antiphons.unique.size
+      | unique chants /
+      =<> @main_corpus.chants.all_antiphons.unique.size
       | unique antiphons
     p
       => Chant.where.not(corpus: @main_corpus).size
