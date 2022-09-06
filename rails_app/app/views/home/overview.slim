@@ -2,12 +2,13 @@ h1 Overview
 
 .container
   .row
-    .column
+    .column.column-25
       = render 'listing', title: 'Genres', items: @genres, filter_param: :genre_id
+      = render 'listing', title: 'Hours', items: @hours, filter_param: :hour_id
+    .column.column-20
       = render 'listing', title: 'Cycles', items: @cycles, filter_param: :cycle_id
       = render 'listing', title: 'Seasons', items: @seasons, filter_param: :season_id
-      = render 'listing', title: 'Hours', items: @hours, filter_param: :hour_id
-    .column= render 'modes'
-    .column
+    .column.column-30= render 'modes'
+    .column.column-25
       = render 'listing', title: 'Books', items: @books, filter_param: :book_id
       = render 'listing', title: 'Corpora', items: @corpuses, filter_param: :corpus_id
