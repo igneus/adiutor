@@ -3,10 +3,11 @@ h2 Modi & Differentiae
 ul
   - @modes.each_pair do |modus, differentiae|
     li
-      = link_to((modus.blank? ? modus.inspect : modus), chants_path(modus: modus))
-      =< '(' + differentiae.sum {|d| d.record_count }.to_s + ')'
-      ul
+      strong= link_to((modus.blank? ? modus.inspect : modus), chants_path(modus: modus))
+      =<> '(' + differentiae.sum {|d| d.record_count }.to_s + ')'
+      strong= ":"
+      span
         - differentiae.each do |d|
-          li
+          span< style="white-space: nowrap"
             = link_to(d.differentia.then {|x| x.blank? ? x.inspect : x }, chants_path(modus: d.modus, differentia: d.differentia))
             =< "(#{d.record_count})"
