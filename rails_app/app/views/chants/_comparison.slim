@@ -26,6 +26,13 @@ h2 Lyrics
 - else
   == diff(chant_a.lyrics, chant_b.lyrics)
 
+h2 Music
+
+- if chant_a.volpiano == chant_b.volpiano
+  p Melody is (at least in the general contours) the same.
+- else
+  == diff(chant_a.volpiano, chant_b.volpiano)
+
 h2 Source code
 
 == diff chant_a.source_code, chant_b.source_code
