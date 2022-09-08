@@ -32,6 +32,7 @@ RSpec.describe LyricsNormalizer do
     (SHARED_EXAMPLES +
      [
        ['jJ', 'ii', 'converts J'],
+       ['yY', 'ii', 'converts Y'],
        ['áéíóúý', 'aeiouy', 'strips diacritics'],
        ['Ææ Ǽǽ Œœ', 'aeae aeae oeoe', 'normalizes digraphs'],
      ]).each do |given, expected, label|

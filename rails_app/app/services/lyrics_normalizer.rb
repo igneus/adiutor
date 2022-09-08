@@ -9,7 +9,7 @@ class LyricsNormalizer
 
   def normalize_latin(lyrics)
     normalize(lyrics)
-      .gsub('j', 'i')
+      .gsub(/[jy]/, 'i')
       .gsub(/[Ǽǽ]/, 'ae') # I18n.transliterate doesn't get accented digraphs right
       .yield_self(&I18n.method(:transliterate))
       .yield_self {|a| a.empty? ? nil : a }
