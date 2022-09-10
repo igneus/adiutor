@@ -71,11 +71,12 @@ class ChantsController < ApplicationController
 
     query = {
       fial:
-        (params[:variationes] == 'true' ? 'variationes/' : '') +
         chant.fial_of_self,
       line: params[:line],
       redirectBack: params[:redirect_back] || request.referer || chant_url(chant)
     }
+    query[:variationes] = 'true' if params[:variationes] == 'true'
+
     target = Adiutor::EDIT_FIAL_URL + '?' + URI.encode_www_form(query)
 
     redirect_to target

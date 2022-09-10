@@ -57,6 +57,7 @@ chdir($iaSources); // editfial.rb expects this
 $fial = $_GET['fial'] ?? null;
 $line = $_GET['line'] ?? null;
 $redirectBack = $_GET['redirectBack'] ?? null;
+$variationes = $_GET['variationes'] ?? null;
 $debug = $_GET['debug'] ?? null;
 
 
@@ -78,8 +79,10 @@ if ($line) {
 
 
 
+$options = $variationes ? '--variationes' : '';
+
 // exec() only captures stdout, redirect stderr there
-$command = "ruby nastroje/editfial.rb $fial 2>&1";
+$command = "ruby nastroje/editfial.rb $options $fial 2>&1";
 exec($command, $output, $status);
 
 if ($debug) {
