@@ -4,4 +4,4 @@ ul
   - items.each do |i|
     li
       = link_to i.name, chants_path("#{filter_param}[]" => i.id)
-      =< "(#{i.chants.count})"
+      span.small=< "(#{i.chants.count})"
