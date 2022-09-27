@@ -116,8 +116,9 @@ class Chant < ApplicationRecord
     lyrics.present? ? lyrics : fial_of_self
   end
 
-  def fial_of_self
-    "#{source_file_path}##{chant_id}"
+  def fial_of_self(scheme: false)
+    (scheme ? 'fial://' : '') +
+      "#{source_file_path}##{chant_id}"
   end
 
   def marked_for_revision?

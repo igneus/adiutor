@@ -4,7 +4,9 @@ h1
 
 .row
   .column.column-10= edit_chant_button @chant
-  .column.column-10= edit_chant_button @chant, variationes: true
+  .column.column-20= edit_chant_button @chant, variationes: true
+  .column.column-10
+    a.button.button-outline href=@chant.fial_of_self(scheme: true) Open FIAL
 
 .chant-image
   = render 'image', chant: @chant
