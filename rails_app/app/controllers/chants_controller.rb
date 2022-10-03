@@ -13,6 +13,11 @@ class ChantsController < ApplicationController
       ['pitches', 'Pitch series'],
       ['intervals', 'Interval series'],
     ]
+    @like_types = [
+      ['contain', 'Contains'],
+      ['beginning', 'Begins with'],
+      ['end', 'Ends with'],
+    ]
 
     @chants =
       Chant
@@ -20,7 +25,7 @@ class ChantsController < ApplicationController
         .includes(:mismatches, :source_language, :corpus)
     if params[:lyrics]
       like = params[:case_sensitive] ? 'LIKE' : 'ILIKE'
-      @chants = @chants.where("lyrics #{like} ?", "%#{params[:lyrics]}%")
+      @chants = @chants.where("lyrics #{like} ?", like_search_string(params[:lyrics], params[:lyrics_like_type]))
     end
     volpiano = params[:volpiano]
     if volpiano
@@ -34,7 +39,7 @@ class ChantsController < ApplicationController
         attr = :interval_series
         value = VolpianoDerivates.snippet_interval_series volpiano
       end
-      @chants = @chants.where("#{attr} LIKE ?", "%#{value}%")
+      @chants = @chants.where("#{attr} LIKE ?", like_search_string(value, params[:volpiano_like_type]))
     end
     if params[:neume]
       @chants = @chants.where("volpiano LIKE ?", "%-#{params[:neume]}-%")
@@ -124,5 +129,16 @@ class ChantsController < ApplicationController
       source_language_id: [],
       simple_copy: []
     )
+  end
+
+  def like_search_string(str, search_type)
+    case search_type
+    when 'beginning'
+      "#{str}%"
+    when 'end'
+      "%#{str}"
+    else
+      "%#{str}%"
+    end
   end
 end
