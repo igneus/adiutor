@@ -12,6 +12,7 @@ class ChantsController < ApplicationController
       ['literal', 'Literal'],
       ['pitches', 'Pitch series'],
       ['intervals', 'Interval series'],
+      ['neume', 'Neume'],
     ]
     @like_types = [
       ['contain', 'Contains'],
@@ -38,11 +39,10 @@ class ChantsController < ApplicationController
       when 'intervals'
         attr = :interval_series
         value = VolpianoDerivates.snippet_interval_series volpiano
+      when 'neume'
+        value = "-#{value}-"
       end
       @chants = @chants.where("#{attr} LIKE ?", like_search_string(value, params[:volpiano_like_type]))
-    end
-    if params[:neume]
-      @chants = @chants.where("volpiano LIKE ?", "%-#{params[:neume]}-%")
     end
     if params[:quality_notice]
       @chants = @chants.to_be_fixed
