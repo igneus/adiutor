@@ -49,11 +49,14 @@ if (!$iaSources) {
     die('The environment variable with In adiutorium sources path must be provided');
 }
 
+$secret = getenv('EDIT_FIAL_SECRET');
+
 // environment setup
 chdir($iaSources); // editfial.rb expects this
 
 
 
+$apiKey = $_GET['apiKey'] ?? null;
 $fial = $_GET['fial'] ?? null;
 $line = $_GET['line'] ?? null;
 $redirectBack = $_GET['redirectBack'] ?? null;
@@ -63,6 +66,9 @@ $debug = $_GET['debug'] ?? null;
 
 
 // input validation
+if ($secret && $apiKey !== $secret) {
+    die('apiKey invalid');
+}
 if (!$fial) {
     die("Please specify the fial parameter");
 }

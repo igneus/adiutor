@@ -75,6 +75,7 @@ class ChantsController < ApplicationController
     chant = Chant.find params[:id]
 
     query = {
+      apiKey: Adiutor::EDIT_FIAL_SECRET,
       fial:
         chant.fial_of_self,
       line: params[:line],
