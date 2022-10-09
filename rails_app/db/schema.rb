@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_05_162615) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_09_181631) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -54,12 +54,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_05_162615) do
     t.text "lyrics_normalized"
     t.boolean "alleluia_optional"
     t.boolean "copy", default: false, null: false
+    t.bigint "music_book_id"
     t.index ["book_id"], name: "index_chants_on_book_id"
     t.index ["corpus_id"], name: "index_chants_on_corpus_id"
     t.index ["cycle_id"], name: "index_chants_on_cycle_id"
     t.index ["genre_id"], name: "index_chants_on_genre_id"
     t.index ["hour_id"], name: "index_chants_on_hour_id"
     t.index ["lyrics_normalized"], name: "index_chants_on_lyrics_normalized"
+    t.index ["music_book_id"], name: "index_chants_on_music_book_id"
     t.index ["parent_id"], name: "index_chants_on_parent_id"
     t.index ["season_id"], name: "index_chants_on_season_id"
     t.index ["source_language_id"], name: "index_chants_on_source_language_id"
@@ -91,6 +93,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_05_162615) do
     t.string "system_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "music_books", force: :cascade do |t|
+    t.bigint "corpus_id", null: false
+    t.string "title"
+    t.string "publisher"
+    t.integer "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["corpus_id"], name: "index_music_books_on_corpus_id"
   end
 
   create_table "parent_child_mismatches", force: :cascade do |t|

@@ -2,6 +2,7 @@
 class Corpus < ApplicationRecord
   self.table_name = 'corpuses'
 
+  has_many :music_books
   has_many :chants
 
   def import!
