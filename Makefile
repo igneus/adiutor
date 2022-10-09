@@ -1,5 +1,9 @@
 # Shortcuts for executing all tests from the outside of the dockerized environment
 
+install-pkgs:
+	cd docker && docker-compose run -w '/var/app/rails_app' ruby bundle install
+	cd docker && docker-compose run -w '/var/app/python' ruby pip install -r requirements.txt
+
 test-rails:
 	cd docker && docker-compose run -w '/var/app/rails_app' ruby bundle exec rake spec
 

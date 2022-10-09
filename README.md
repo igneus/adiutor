@@ -24,7 +24,8 @@ Internal tool, not intended for public deployment.
 
 1. copy `.env.template` to `.env`, populate with required values (follow comments)
 1. `./dc.sh up`
-1. TODO: create databases, install Ruby and Python packages
+1. TODO: create databases
+1. `make install-pkgs`
 1. check that the application works:
   - `http://localhost:3000/` serves Adiutor homepage
   - `make test` succeeds (or at least `make test-rails test-python` succeeds)
