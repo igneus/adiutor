@@ -7,4 +7,10 @@
 # mostly for structuring corpora which contain transcriptions of multiple sources.)
 class MusicBook < ApplicationRecord
   belongs_to :corpus
+
+  # Neither alias, nor alias_method can be used to alias an ActiveRecord property -
+  # attempts to do so result in weird NameErrors
+  def name
+    title
+  end
 end
