@@ -1,7 +1,7 @@
 # coding: utf-8
 IMPORT_PREREQUISITES = [
   :environment,
-  :create_books, :create_cycles, :create_seasons, :create_corpuses, :create_source_languages, :create_genres, :create_hours
+  :create_books, :create_cycles, :create_seasons, :create_corpora, :create_source_languages, :create_genres, :create_hours
 ]
 
 desc 'import chants from In-adiutorium sources'
@@ -57,11 +57,12 @@ task create_seasons: [:environment] do
   end
 end
 
-desc 'create Corpuses'
-task create_corpuses: [:environment] do
+desc 'create Corpora'
+task create_corpora: [:environment] do
   Corpus.find_or_create_by!(system_name: 'in_adiutorium', name: 'In adiutorium')
   Corpus.find_or_create_by!(system_name: 'liber_antiphonarius', name: 'Liber antiphonarius 1960')
   Corpus.find_or_create_by!(system_name: 'antiphonale83', name: 'Antiphonale 1983')
+  Corpus.find_or_create_by!(system_name: 'gregobase', name: 'GregoBase')
 end
 
 desc 'create SourceLanguages'
