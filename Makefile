@@ -1,14 +1,17 @@
 # Shortcuts for executing all tests from the outside of the dockerized environment
 
+IN_RAILS_APP=cd docker && docker-compose run -w '/var/app/rails_app' ruby
+IN_PYTHON_APP=cd docker && docker-compose run -w '/var/app/python' ruby
+
 install-pkgs:
-	cd docker && docker-compose run -w '/var/app/rails_app' ruby bundle install
-	cd docker && docker-compose run -w '/var/app/python' ruby pip install -r requirements.txt
+	$(IN_RAILS_APP) bundle install
+	$(IN_PYTHON_APP) pip install -r requirements.txt
 
 test-rails:
-	cd docker && docker-compose run -w '/var/app/rails_app' ruby bundle exec rake spec
+	$(IN_RAILS_APP) bundle exec rake spec
 
 test-python:
-	cd docker && docker-compose run -w '/var/app/python' ruby /root/.local/bin/py.test
+	$(IN_PYTHON_APP) /root/.local/bin/py.test
 
 test-editfial:
 	php editfial/editfial.php test
