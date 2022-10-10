@@ -141,6 +141,7 @@ GEM
     mini_mime (1.1.2)
     minitest (5.16.3)
     msgpack (1.4.2)
+    mysql2 (0.5.4)
     net-imap (0.2.3)
       digest
       net-protocol
@@ -279,6 +280,7 @@ DEPENDENCIES
   listen (~> 3.3)
   lygre!
   lyv!
+  mysql2
   pg (~> 1.1)
   puma (~> 5.0)
   pycall

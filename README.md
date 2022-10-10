@@ -44,6 +44,7 @@ and execute code of the Rails application outside of Docker.
    (respective optional settings in `.env` must be set)
     - `bundle exec rake antiphonarius:import` to import chants from the 1960 Liber antiphonarius
     - `bundle exec rake antiphonale83:import` to import chants from the 1983 Ordo cantus officii
+    - `bundle exec rake gregobase:import` to import relevant chants from GregoBase
 1. `bundle exec rake images` to render each chant in notation (takes a lot of time to finish,
    requires LilyPond and Inkscape, for the gabc-based chant corpora also LuaLaTex and Gregorio)
 

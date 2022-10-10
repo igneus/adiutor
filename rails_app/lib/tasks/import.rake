@@ -24,7 +24,13 @@ task create_books: [:environment] do
   Book.find_or_create_by!(system_name: 'olm', name: 'Mešní lekcionář')
   Book.find_or_create_by!(system_name: 'other', name: 'Jiné')
   Book.find_or_create_by!(system_name: 'br', name: 'Breviarium Romanum')
+  Book.find_or_create_by!(system_name: 'bm', name: 'Breviarium Monasticum')
+  Book.find_or_create_by!(system_name: 'lhm', name: 'Liturgia horarum monastica')
+  Book.find_or_create_by!(system_name: 'bsop', name: 'Breviarium S.O.P.') # Sacri Ordinis Praedicatorum
+  Book.find_or_create_by!(system_name: 'bcist', name: 'Breviarium Cisterciense')
   Book.find_or_create_by!(system_name: 'oco1983', name: 'Ordo cantus officii 1983')
+  Book.find_or_create_by!(system_name: 'oco2015', name: 'Ordo cantus officii 2015') # promulgation decree dated 2014, but book published 2015
+  Book.find_or_create_by!(system_name: 'gs', name: 'Graduale simplex')
 
   sources_path = Corpus.find_by_system_name!('in_adiutorium').sources_path
 

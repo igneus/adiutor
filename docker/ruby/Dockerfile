@@ -14,6 +14,8 @@ build-base \
 git \
 postgresql-dev \
 postgresql-client \
+mariadb-dev \
+mariadb-client \
 libxml2-dev \
 libxslt-dev \
 nodejs \

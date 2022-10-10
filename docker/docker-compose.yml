@@ -11,6 +11,18 @@ services:
     ports:
       - 5432:5432
 
+  mariadb:
+    image: mariadb:10.7 # 10.7 because of https://serverfault.com/questions/1103333/mariadb-10-8-3-in-docker-cant-initialize-timers
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: db2rootpass
+      MARIADB_USER: db2user
+      MARIADB_PASSWORD: db2pass
+    volumes:
+      - ./volumes/mariadb_data:/var/lib/mysql
+    ports:
+      - 3306:3306
+
   ruby:
     build: ruby
     volumes:

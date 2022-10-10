@@ -1,7 +1,7 @@
 class Chant < ApplicationRecord
   belongs_to :book
-  belongs_to :music_book
-  belongs_to :cycle
+  belongs_to :music_book, optional: true
+  belongs_to :cycle, optional: true
   belongs_to :season, optional: true
   belongs_to :corpus
   belongs_to :source_language
