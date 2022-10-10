@@ -55,6 +55,7 @@ class GregobaseImporter < BaseImporter
     fake_path = "#{chant_source.source}/#{gchant.id}"
 
     chant = corpus.chants.find_or_initialize_by(chant_id: '1', source_file_path: fake_path)
+    chant.gregobase_chant_id = gchant.id
 
     chant.book = Book.find_by_system_name! detect_book music_book
     chant.music_book = music_book

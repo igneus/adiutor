@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_09_181631) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_10_203113) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -55,6 +55,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_09_181631) do
     t.boolean "alleluia_optional"
     t.boolean "copy", default: false, null: false
     t.bigint "music_book_id"
+    t.integer "gregobase_chant_id"
     t.index ["book_id"], name: "index_chants_on_book_id"
     t.index ["corpus_id"], name: "index_chants_on_corpus_id"
     t.index ["cycle_id"], name: "index_chants_on_cycle_id"

@@ -32,6 +32,14 @@ module ChantsHelper
     )
   end
 
+  def chant_gregobase_link(chant)
+    chant
+      .gregobase_chant_id
+      &.yield_self do |gid|
+      link_to "GregoBase #{gid}", "https://gregobase.selapa.net/chant.php?id=#{gid}"
+    end
+  end
+
   def diff(a, b)
     Diffy::Diff
       .new(a, b)
