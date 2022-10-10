@@ -128,6 +128,7 @@ class ChantsController < ApplicationController
       season_id: [],
       hour_id: [],
       source_language_id: [],
+      music_book_id: [],
       simple_copy: []
     )
   end

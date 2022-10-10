@@ -7,6 +7,9 @@
 # mostly for structuring corpora which contain transcriptions of multiple sources.)
 class MusicBook < ApplicationRecord
   belongs_to :corpus
+  has_many :chants
+
+  scope :nonempty, -> { where('EXISTS (:chants)', chants: Chant.select('1').where('chants.music_book_id = music_books.id').limit(1)) }
 
   # Neither alias, nor alias_method can be used to alias an ActiveRecord property -
   # attempts to do so result in weird NameErrors

@@ -11,4 +11,15 @@ h1 Overview
     .column.column-30= render 'modes'
     .column.column-25
       = render 'listing', title: 'Books', items: @books, filter_param: :book_id
-      = render 'listing', title: 'Corpora', items: @corpuses, filter_param: :corpus_id
+
+      h2 Corpora
+      ul
+        - @corpuses.each do |corpus|
+          li
+            = link_to corpus.name, chants_path('corpus_id[]' => corpus.id)
+            span.small=< "(#{corpus.chants.count})"
+            ul
+              - corpus.music_books.nonempty.each do |music_book|
+                li
+                  = link_to music_book.name, chants_path('music_book_id[]' => music_book.id)
+                  span.small=< "(#{music_book.chants.count})"
