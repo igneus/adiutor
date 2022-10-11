@@ -8,14 +8,14 @@ import sys
 import logging
 
 import click
-from sqlalchemy import select
+from sqlalchemy import and_, select
 from sqlalchemy.orm import Session
 
 my_python_root = dirname(dirname(realpath(__file__)))
 sys.path.append(my_python_root)
 
 from adiutor import conversion, model, volpiano_derivates
-from adiutor.model import Chant, SourceLanguage
+from adiutor.model import Chant, Corpus, SourceLanguage
 
 
 @click.group()
@@ -26,9 +26,10 @@ def cli():
 @cli.command(help='Generate Volpiano (and related fields) for all chants')
 @click.argument('chant_id', required=False)
 @click.option('--missing', help='Only for Chants still missing Volpiano', is_flag=True)
+@click.option('--corpus', help='Only for the specified Corpus')
 @click.option('--raise-exceptions', help='On exception just crash', is_flag=True)
 @click.option('--verbose', help='Print verbose log', is_flag=True)
-def volpiano(chant_id=None, missing=False, raise_exceptions=False, verbose=False):
+def volpiano(chant_id=None, missing=False, corpus=None, raise_exceptions=False, verbose=False):
     if verbose:
         logging.basicConfig()
         logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
@@ -40,6 +41,9 @@ def volpiano(chant_id=None, missing=False, raise_exceptions=False, verbose=False
 
     if missing:
         stmt = stmt.where(Chant.volpiano == None)
+
+    if corpus:
+        stmt = stmt.join(Corpus, and_(Chant.corpus_id == Corpus.id, Corpus.system_name == corpus))
 
     with Session(model.engine) as session:
         for row in session.execute(stmt):

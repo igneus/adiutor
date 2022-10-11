@@ -24,6 +24,7 @@ class Chant(Base):
     __tablename__ = 'chants'
 
     id = Column(Integer, primary_key=True)
+    corpus_id = Column(Integer, ForeignKey('corpuses.id'))
     source_language_id = Column(Integer, ForeignKey('source_languages.id'))
 
     source_code = Column(String)
@@ -31,10 +32,19 @@ class Chant(Base):
     pitch_series = Column(String)
     interval_series = Column(String)
 
+    corpus = relationship('Corpus', back_populates='chants')
     source_language = relationship('SourceLanguage', back_populates='chants')
 
     def volpiano_convertor(self):
         return getattr(conversion, self.source_language.system_name + '2volpiano')
+
+class Corpus(Base):
+    __tablename__ = 'corpuses'
+
+    id = Column(Integer, primary_key=True)
+    system_name = Column(String)
+
+    chants = relationship('Chant', back_populates='corpus')
 
 class SourceLanguage(Base):
     __tablename__ = 'source_languages'
