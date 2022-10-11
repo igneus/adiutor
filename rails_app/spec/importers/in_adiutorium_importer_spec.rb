@@ -88,7 +88,7 @@ RSpec.describe InAdiutoriumImporter do
       :antiphon_psalter => [
         ['ANY', 'ANY', 'kompletar.ly', :any],
         ['ANY', 'ANY', 'antifony/tyden1_1nedele.ly', :any],
-        ['ANY', 'ANY', 'antifony/ferie_kantevgant.ly', :any],
+        ['ANY', 'ANY', 'antifony/ferie_kantevgant.ly', :any], # TODO this never happens in the real world, the antiphons (correctly) end up as :antiphon_gospel
         ['ANY', 'ANY', 'antifony/doplnovaci.ly', :any],
         ['ANY', '1. ant.', 'antifony/tyden1_1nedele.ly', :any],
       ],
