@@ -1,9 +1,5 @@
 class GabcImageGenerator
-  # Takes isolated gabc code of a single score,
-  # returns a complete LuaLaTex document which can be compiled
-  def self.buildable_code(chant_code)
-    music = chant_code.sub(/\A.*?%%/m, '') # strip header
-
+  DOCUMENT =
     <<~EOS
       \\documentclass[12pt, a4paper]{article}
       \\usepackage{fullpage}
@@ -13,10 +9,10 @@ class GabcImageGenerator
 
       \\begin{document}
       \\pagestyle{empty}
-      \\gabcsnippet{#{music}}
+      \\gregorioscore{chant.gabc}
       \\end{document}
     EOS
-  end
+    .freeze
 
   def self.image_path(chant, with_extension: true)
     "app/assets/images/chants/gabc/#{chant.id}" + (with_extension ? '.svg' : '')
@@ -27,8 +23,10 @@ class GabcImageGenerator
   def call(chant)
     output_file_full = image_path chant
 
+    File.write 'chant.gabc', chant.source_code
+
     File.open('chant.tex', 'w') do |f|
-      f.puts self.class.buildable_code chant.source_code
+      f.puts DOCUMENT
       f.flush
 
       output, status =
