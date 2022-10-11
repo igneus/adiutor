@@ -86,8 +86,8 @@ RSpec.describe InAdiutoriumImporter do
       .each_pair do |expected, examples|
       examples.each do |args|
         it args do
-          expect(subject.detect_genre(*args))
-            .to eq expected
+          _, genre = subject.detect_hour_and_genre(*args)
+          expect(genre).to eq expected
         end
       end
     end

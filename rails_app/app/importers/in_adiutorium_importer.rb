@@ -64,10 +64,9 @@ class InAdiutoriumImporter < BaseImporter
     chant.season = season
     chant.source_language = language
 
-    hour = detect_hour header['id'], in_project_path
-    genre =
-      header['adiutor_genre'] ||
-      detect_genre(header['id'], header['quid'], in_project_path, hour)
+    hour, genre = detect_hour_and_genre(header['id'], header['quid'], in_project_path)
+    genre = header['adiutor_genre'] if header['adiutor_genre']
+
     chant.hour = hour && Hour.find_by_system_name!(hour)
     chant.genre = Genre.find_by_system_name!(genre)
 
@@ -132,8 +131,14 @@ class InAdiutoriumImporter < BaseImporter
       .gsub('\textRespAleluja', 'Aleluja, aleluja.')
   end
 
+  def detect_hour_and_genre(id, quid, path)
+    hour = detect_hour(id, path)
+
+    [hour, detect_genre(id, quid, path, hour)]
+  end
+
   def detect_genre(id, quid, path, hour_name)
-    @detect_genre_examples&.delete [id, quid, path, hour_name]
+    @detect_genre_examples&.delete [id, quid, path]
 
     if id =~ /invit/
       :'invitatory'
