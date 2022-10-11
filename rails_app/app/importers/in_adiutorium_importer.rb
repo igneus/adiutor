@@ -140,7 +140,7 @@ class InAdiutoriumImporter < BaseImporter
   def detect_genre(id, quid, path, hour_name)
     @detect_genre_examples&.delete [id, quid, path]
 
-    if id =~ /invit/
+    if id =~ /invit/ || path =~ /invitatoria/
       :'invitatory'
     elsif quid =~ /k (Benedictus|Magnificat)/ || id == 'sim' || path =~ /mezidobi_nedele/ || %w(aben amag).include?(id)
       :'antiphon_gospel'

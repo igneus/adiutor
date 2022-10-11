@@ -6,7 +6,7 @@ module InAdiutoriumImporterExampleData
       ['invit2', 'ant.', 'pust_antifony.ly'],
       ['vden-invit', 'ant.', 'vanoce_narozenipane.ly'],
       ['spol-invit3', 'ant.', 'advent_antifony.ly'],
-      # TODO: ['t1po', 'ant.', 'antifony/invitatoria.ly'], # invitatories from the Psalter are not considered Psalter antiphons genre-wise
+      ['t1po', 'ant.', 'antifony/invitatoria.ly'], # invitatories from the Psalter are not considered Psalter antiphons genre-wise
     ],
     :antiphon_psalter => [
       ['po', 'pondělí - ant.', 'kompletar.ly'],
