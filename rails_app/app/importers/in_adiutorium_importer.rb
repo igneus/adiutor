@@ -1,7 +1,11 @@
+require_relative '../../spec/importers/in_adiutorium_importer_example_data'
+
 # Imports chants from the directory structure of the "In adiutorium" project sources
 class InAdiutoriumImporter < BaseImporter
   def call(path)
-    Dir["#{path}/**/*.ly"].each {|f| import_file f, path }
+    detect_genre_examples_check do
+      Dir["#{path}/**/*.ly"].each {|f| import_file f, path }
+    end
   end
 
   def import_file(path, dir)
@@ -129,6 +133,8 @@ class InAdiutoriumImporter < BaseImporter
   end
 
   def detect_genre(id, quid, path, hour_name)
+    @detect_genre_examples&.delete [id, quid, path, hour_name]
+
     if id =~ /invit/
       :'invitatory'
     elsif quid =~ /k (Benedictus|Magnificat)/ || id == 'sim' || path =~ /mezidobi_nedele/ || %w(aben amag).include?(id)
@@ -257,5 +263,24 @@ class InAdiutoriumImporter < BaseImporter
         h[fial_key] = FIAL.parse(h[fial_key]).as_json
       end
     end
+  end
+
+  # Checks if code in the block meets all examples of #detect_genre tests
+  # in the real world data, prints results.
+  def detect_genre_examples_check
+    examples = @detect_genre_examples = Set.new(
+      InAdiutoriumImporterExampleData.detect_genre_argument_sets
+    )
+
+    yield
+
+    unless examples.empty?
+      STDERR.puts "#{examples.size} #detect_genre test examples not encountered in real world data:"
+      examples.to_a.each do |a|
+        STDERR.puts a.inspect
+      end
+    end
+
+    @detect_genre_examples = nil
   end
 end
