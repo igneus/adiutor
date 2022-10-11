@@ -72,6 +72,7 @@ class InAdiutoriumImporter < BaseImporter
 
     if chant.source_code && chant.source_code != score.text
       delete_image chant
+      chant.delete_volpiano!
     end
 
     update_chant_from_score(chant, score)

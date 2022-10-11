@@ -26,6 +26,13 @@ class Chant < ApplicationRecord
 
   scope :all_antiphons, -> { joins("INNER JOIN genres ON chants.genre_id = genres.id AND system_name LIKE 'antiphon%'") }
 
+  # Properties containing music encoded in Volpiano and other related encoding systems
+  VOLPIANO_PROPERTIES = [
+    :volpiano,
+    :pitch_series,
+    :interval_series,
+  ].freeze
+
   def self.genres
     distinct.pluck(:quid).compact.sort
   end
@@ -132,5 +139,11 @@ class Chant < ApplicationRecord
 
   def lyv_score
     Lyv::LilyPondScore.new(source_code)
+  end
+
+  def delete_volpiano!
+    VOLPIANO_PROPERTIES.each do |prop|
+      public_send "#{prop}=", nil
+    end
   end
 end
