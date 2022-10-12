@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/igneus/lygre.git
-  revision: cc1560a7143cf7042a8ad417f670abc4943dd2ce
+  revision: 4a57c80c051e105f331a586681d80cba5d641537
   specs:
     lygre (0.0.3)
       polyglot (~> 0.3)
