@@ -23,7 +23,7 @@ class GregobaseImporter < BaseImporter
     source
       .gregobase_chant_sources
       .joins(:gregobase_chant)
-      .where(gregobase_chants: {'office-part': %w(an rb re)})
+      .where(gregobase_chants: {'office-part': GENRES.keys})
       .where.not(gregobase_chants: {gabc: ''})
       .each {|i| import_chant music_book, i }
   end
