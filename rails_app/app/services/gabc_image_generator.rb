@@ -1,5 +1,5 @@
 class GabcImageGenerator
-  DOCUMENT =
+  def self.latex_document(gabc_filename)
     <<~EOS
       \\documentclass[12pt, a4paper]{article}
       \\usepackage{fullpage}
@@ -9,10 +9,10 @@ class GabcImageGenerator
 
       \\begin{document}
       \\pagestyle{empty}
-      \\gregorioscore{chant.gabc}
+      \\gregorioscore{#{gabc_filename}}
       \\end{document}
     EOS
-    .freeze
+  end
 
   def self.image_path(chant, with_extension: true)
     "app/assets/images/chants/gabc/#{chant.id}" + (with_extension ? '.svg' : '')
@@ -23,10 +23,12 @@ class GabcImageGenerator
   def call(chant)
     output_file_full = image_path chant
 
-    File.write 'chant.gabc', chant.source_code
+    gabc_filename = "#{chant.id}.gabc"
+    File.write gabc_filename, chant.source_code
 
-    File.open('chant.tex', 'w') do |f|
-      f.puts DOCUMENT
+    tex_filename = "#{chant.id}.tex"
+    File.open(tex_filename, 'w') do |f|
+      f.puts self.class.latex_document gabc_filename
       f.flush
 
       output, status =
@@ -40,5 +42,8 @@ class GabcImageGenerator
       `pdftocairo -svg #{pdf_path} #{output_file_full}`
       `inkscape --verb=FitCanvasToDrawing --verb=FileSave --verb=FileQuit #{output_file_full}` if File.exist? output_file_full
     end
+
+    File.unlink gabc_filename
+    File.unlink tex_filename
   end
 end

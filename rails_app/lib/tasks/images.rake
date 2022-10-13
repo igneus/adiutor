@@ -1,22 +1,38 @@
+generate_image = lambda do |c|
+  generator = c.source_language.image_generator
+
+  puts c.id
+
+  begin
+    generator.(c)
+  rescue => e
+    STDERR.puts "Generating image for Chant #{c.id} failed:"
+    STDERR.puts e
+  end
+end
+
 desc '(re-)generate images for all Chants'
 task images: [:environment] do
-  Chant.find_each {|c| puts c.id; c.source_language.image_generator.(c) }
+  pc = Concurrent.processor_count
+  executor = Concurrent::ThreadPoolExecutor.new(min_threads: pc, max_threads: pc)
+
+  Chant.includes(:source_language).find_in_batches(batch_size: 100) do |batch|
+    futures = batch.collect {|c| Concurrent::Future.execute { generate_image.(c) } }
+    futures.each(&:value)
+  end
 end
 
 desc 'generate images for Chants missing them'
 task missing_images: [:environment] do
-  Chant.find_each do |c|
-    generator = c.source_language.image_generator
-    next if File.exist? generator.image_path c
+  pc = Concurrent.processor_count
+  executor = Concurrent::ThreadPoolExecutor.new(min_threads: pc, max_threads: pc)
 
-    puts c.id
-
-    begin
-      generator.(c)
-    rescue => e
-      STDERR.puts "Generating image for Chant #{c.id} failed:"
-      STDERR.puts e
-    end
+  Chant.includes(:source_language).find_in_batches(batch_size: 100) do |batch|
+    futures =
+      batch
+        .reject {|c| File.exist? c.source_language.image_generator.image_path c }
+        .collect {|c| Concurrent::Future.execute(executor: executor) { generate_image.(c) } }
+    futures.each(&:value)
   end
 end
 
