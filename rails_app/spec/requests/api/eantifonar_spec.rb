@@ -23,15 +23,16 @@ RSpec.describe "Api::Eantifonar", type: :request do
     # that these tests only pass if there are images with matching names
     # in the development asset pipeline, which is really unfortunate
     it 'returns chant details if found' do
+      lyrics = 'lyrics'
       chant = create(
         :chant,
         modus: 'I',
         differentia: 'D',
-        lyrics_normalized: 'lyrics',
+        lyrics_normalized: LyricsNormalizer.new.normalize_latin(lyrics),
         genre: create(:genre, system_name: 'antiphon'),
         source_language: create(:source_language, system_name: 'lilypond')
       )
-      post path, params: {my_id: {lyrics: chant.lyrics_normalized, lang: 'la'}}
+      post path, params: {my_id: {lyrics: lyrics, lang: 'la'}}
 
       expect(response).to have_http_status :ok
       expect(response.body).to start_with '{"my_id":[{"id":'
