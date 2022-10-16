@@ -24,12 +24,12 @@ class ChantsController < ApplicationController
       Chant
         .where(filter_params)
         .includes(:mismatches, :source_language, :corpus)
-    if params[:lyrics]
+    if params[:lyrics].present?
       like = params[:case_sensitive] ? 'LIKE' : 'ILIKE'
       @chants = @chants.where("lyrics #{like} ?", like_search_string(params[:lyrics], params[:lyrics_like_type]))
     end
     volpiano = params[:volpiano]
-    if volpiano
+    if volpiano.present?
       attr = :volpiano
       value = volpiano
       case params[:music_search_type]
