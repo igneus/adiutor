@@ -46,6 +46,8 @@ def chant21_to_volpiano(score, bIsFlat = False):
             continue
         elif 'Word' in elClasses and _contains_no_notes(el):
             continue
+        elif 'Section' in elClasses and _is_euouae(el):
+            continue
         else:
             word_volpiano, bIsFlat = chant21_to_volpiano(el, bIsFlat)
             r.append(word_volpiano)
@@ -77,3 +79,9 @@ def _note(n):
 
 def _contains_no_notes(stream):
     return len(stream.recurse().notes) == 0
+
+EUOUAE_RE = re.compile(r'^euouae\.?$', re.IGNORECASE)
+
+def _is_euouae(section):
+    lyrics_ignore_spaces = ''.join([i.flatLyrics for i in section.words if i.flatLyrics is not None])
+    return EUOUAE_RE.match(lyrics_ignore_spaces) or '<eu>' in lyrics_ignore_spaces

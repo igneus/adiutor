@@ -49,6 +49,13 @@ from .conversion import *
         #   breaks the neume in two
         # ('(c4) lyr(ixiiyi)', '1---ijIj---'),
         ('(c3) ly(gxg)ric(gyg)', '1---ij--Ij---'),
+
+        # euouae
+        ('(c4) A(h)men.(h) (::) E(h) u(h) o(f) u(gh) a(g) e.(f.) (::)', '1---h--h---'),
+        ('(c4) A(h)men.(h) (::) E(h) u(h) o(f) u(gh) a(g) e(f.) (::)', '1---h--h---'),
+        ('(c4) A(h)men.(h) (::) E(h) U(h) O(f) U(gh) A(g) E.(f.) (::)', '1---h--h---'),
+        ('(c4) A(h)men.(h) (::) E(h)u(h)o(f)u(gh)a(g)e.(f.) (::)', '1---h--h---'),
+        ('(c4) A(h)men.(h) (::) <eu>any(i) text(i)</eu> (::)', '1---h--h---'),
     ]
 )
 def test_gabc2volpiano(gabc, volpiano):
