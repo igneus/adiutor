@@ -101,7 +101,8 @@ def test_strip_gabc_header(given, expected):
         ("\\score { \\relative c' { c4 c c } \\addlyrics { a -- men } }", '1---c--c---c---'),
         # TODO: missing features to implement
         pytest.param("\\score { \\relative c' { \\[ c4( d \\] \\[ c b) \\] c } \\addlyrics { a -- men } }", '1---cd-cb--c---', marks=pytest.mark.xfail),
-        pytest.param("\\score { \\relative c' { \\neviditelna c c4 } }", '1---c---', marks=pytest.mark.xfail),
+        ("\\score { \\relative c' { \\neviditelna c c4 } }", '1---c---'),
+        ("\\score { \\relative c' { a \\neviditelna c a \\neviditelna d a } }", '1---a--a--a---'),
     ]
 )
 def test_lilypond2volpiano(lilypond, volpiano):

@@ -39,6 +39,14 @@ def parse(lilypond_source):
     for i in music_content.find_children(ly.music.items.KeySignature):
         i.parent().remove(i)
 
+    # invisible notes are a merely graphical hack solving lyrics alignment
+    # issues, they have no musical meaning
+    for i in music_content.find_children(ly.music.items.UserCommand):
+        if i.name() == 'neviditelna':
+            parent = i.parent()
+            parent.remove(i.next_sibling())
+            parent.remove(i)
+
     for i in music_content.iter_depth():
         if isinstance(i, ly.music.items.Note):
             if not in_slur:
