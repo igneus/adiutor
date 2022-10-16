@@ -35,7 +35,8 @@ class GregobaseImporter < BaseImporter
     return if gchant.gabc.start_with? '['
 
     nabc_lines = gchant.gabc.include?('|') ? "nabc-lines: 1;\n" : ''
-    source = nabc_lines + "%%\n" + JSON.parse(gchant.gabc)
+    source = JSON.parse(gchant.gabc)
+    source = nabc_lines + "%%\n" + source unless source =~ /^%%\r?$/
 
     return if source.scan('(::)').size > 8
 
