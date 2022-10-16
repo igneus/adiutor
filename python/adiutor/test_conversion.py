@@ -61,11 +61,16 @@ from .conversion import *
 def test_gabc2volpiano(gabc, volpiano):
     assert gabc2volpiano(gabc) == volpiano
 
-def test_gabc2volpiano_unsupported_flat():
-    # note: (dxd) or (gxg) would pass without notice, as chant21
-    # only generates flat accidentals for pitches B and E!
-    gabc = '(c4) lyr(exe)'
-
+@pytest.mark.parametrize(
+    'gabc',
+    [
+        ( '(c4) lyr(exe)'),
+        # TODO: chant21 only generates flat accidentals for pitches B and E!
+        pytest.param( '(c4) lyr(dxd)', marks=pytest.mark.xfail),
+        pytest.param( '(c4) lyr(gxg)', marks=pytest.mark.xfail),
+    ]
+)
+def test_gabc2volpiano_unsupported_flat(gabc):
     with pytest.raises(RuntimeError) as excinfo:
         gabc2volpiano(gabc)
 
