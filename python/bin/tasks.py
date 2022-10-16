@@ -27,9 +27,10 @@ def cli():
 @click.argument('chant_id', required=False)
 @click.option('--missing', help='Only for Chants still missing Volpiano', is_flag=True)
 @click.option('--corpus', help='Only for the specified Corpus')
+@click.option('--source-language', help='Only for the specified SourceLanguage')
 @click.option('--raise-exceptions', help='On exception just crash', is_flag=True)
 @click.option('--verbose', help='Print verbose log', is_flag=True)
-def volpiano(chant_id=None, missing=False, corpus=None, raise_exceptions=False, verbose=False):
+def volpiano(chant_id=None, missing=False, corpus=None, source_language=None, raise_exceptions=False, verbose=False):
     if verbose:
         logging.basicConfig()
         logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
@@ -44,6 +45,9 @@ def volpiano(chant_id=None, missing=False, corpus=None, raise_exceptions=False, 
 
     if corpus:
         stmt = stmt.join(Corpus, and_(Chant.corpus_id == Corpus.id, Corpus.system_name == corpus))
+
+    if source_language:
+        stmt = stmt.where(SourceLanguage.system_name == source_language)
 
     with Session(model.engine) as session:
         for row in session.execute(stmt):
