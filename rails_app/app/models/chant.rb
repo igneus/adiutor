@@ -120,6 +120,12 @@ class Chant < ApplicationRecord
     children.flat_map {|c| [c] + c.posterity }
   end
 
+  # returns a flat Array of all levels of relatives
+  def relatives
+    t = parental_tree_top
+    [t] + t.posterity
+  end
+
   def link_text
     lyrics.present? ? lyrics : fial_of_self
   end
