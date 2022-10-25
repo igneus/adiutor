@@ -128,6 +128,8 @@ class GregobaseImporter < BaseImporter
       {title: /Antiphon. et Responsoria/} |
       {title: /Les Heures Grégoriennes/} # LHG don't match the OCO2015 (by far) 100%, but I don't want to introduce a new Book just for them
       'oco2015'
+    in {title: 'Liber Hymnarius', publisher: 'Solesmes'}
+      'oco1983'
     in {title: 'Graduale simplex'}
       'gs'
     end
@@ -138,7 +140,7 @@ class GregobaseImporter < BaseImporter
     Gregobase::GregobaseSource
       .all
       .collect do |s|
-      import = s.title =~ /(antiphonale|antiphonarium|antiphonarius|hebdomad|les heures|nocturnale|nocturnalis|psalterium|semaine|usualis|graduale simplex|et responsoria)/i
+      import = s.title =~ /(antiphonale|antiphonarium|antiphonarius|completorium|hebdomad|les heures|liber hymnarius|matutinum|nocturnale|nocturnalis|psalterium|semaine|usualis|graduale simplex|et responsoria)/i
       puts "#{import ? '+' : '-'} #{s.title} (#{s.year})"
 
       import ? s : nil
