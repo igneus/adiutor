@@ -15,7 +15,7 @@ class LiberAntiphonariusImporter < BaseImporter
 
     source = File.read path
     begin
-      score = parse source
+      score = SimpleGabcParser.call source
     rescue RuntimeError => e
       STDERR.puts "failed to parse '#{path}': #{e.message}"
       return # just skip the failed score
@@ -72,10 +72,6 @@ class LiberAntiphonariusImporter < BaseImporter
     end
 
     chant.save!
-  end
-
-  def parse(source)
-    SimpleGabcParser.call source
   end
 
   PageNumber = Struct.new(:number, :prefix, :suffix) do
