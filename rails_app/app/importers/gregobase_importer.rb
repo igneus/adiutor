@@ -66,8 +66,29 @@ class GregobaseImporter < BaseImporter
     chant.genre = Genre.find_by_system_name! GENRES[gchant.public_send('office-part')]
 
     chant.source_code = source
-    chant.lyrics = score.music.lyrics_readable
-    chant.lyrics_normalized = LyricsNormalizer.new.normalize_latin score.music.lyrics_readable
+
+    lyrics_common_base =
+      score.music.lyrics_readable
+        .strip
+        .gsub(%r{\s*<eu>.*?</eu>}, '')
+        .then(&LyricsHelper.method(:remove_euouae))
+        .gsub(%r{<sp>[*+]</sp>}, '')
+        .gsub(%r{<sp>([ao]e)</sp>}) { Regexp.last_match[1] }
+        .gsub(%r{<sp>'([ao])e</sp>}) { Regexp.last_match[1] + 'é' }
+        .gsub("<sp>'æ</sp>", 'aé')
+        .gsub("<sp>'œ</sp>", 'oé')
+        .gsub('<sp>\P</sp>', '')
+        .gsub(%r{<v>.*?</v>}, '')
+    chant.lyrics =
+      lyrics_common_base
+        .then(&LyricsHelper.method(:normalize_initial))
+        .gsub(%r{\s*<sp>[VR]/</sp>\.?\s*}, ' ')
+    chant.lyrics_normalized =
+      lyrics_common_base
+        .gsub(%r{\s*<sp>([VR])/</sp>\.?\s*}) {|m| Regexp.last_match[1] == 'V' ? ' | ' : ' ' }
+        .gsub(%r{\s*<i>.*?</i>\s*}, ' ')
+        .yield_self {|l| l[0 ... l.rindex('Glória Patri')] }
+        .yield_self {|l| LyricsNormalizer.new.normalize_latin l }
     chant.alleluia_optional = false # TODO
     chant.header = {}
 

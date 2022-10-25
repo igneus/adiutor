@@ -6,4 +6,8 @@ module LyricsHelper
   def normalize_initial(lyrics)
     lyrics.sub(/^[[:upper:]]{2,}/, &:titlecase)
   end
+
+  def remove_euouae(lyrics)
+    lyrics.sub(/\s*e u o u a e\.?$/i, '')
+  end
 end
