@@ -56,6 +56,9 @@ class ChantsController < ApplicationController
     if params[:lyrics_edited]
       @chants = @chants.where('textus_approbatus IS NOT NULL')
     end
+    if params[:ids]
+      @chants = @chants.where(id: params[:ids].split(',').collect(&:to_i))
+    end
 
     @chants = @chants.page(params[:page] || 1)
   end
