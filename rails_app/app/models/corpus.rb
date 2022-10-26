@@ -1,4 +1,5 @@
-# Represents a corpus of chants.
+# Corpus is a collection of Chants imported from a single (data) source
+# by a single importer.
 class Corpus < ApplicationRecord
   self.table_name = 'corpuses'
 
