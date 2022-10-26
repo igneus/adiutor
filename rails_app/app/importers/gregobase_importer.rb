@@ -9,10 +9,14 @@ class GregobaseImporter < BaseImporter
   def call(_)
     @source_language = SourceLanguage.find_by_system_name! 'gabc'
 
-    sources.each(&method(:import_source))
+    corpus.imports.build.do! do |import|
+      sources.each {|source| import_source(source, import) }
+    end
+
+    report_unseen_chants
   end
 
-  def import_source(source)
+  def import_source(source, import)
     music_book = MusicBook.find_or_create_by!(
       corpus: corpus,
       title: source.title,
@@ -25,10 +29,10 @@ class GregobaseImporter < BaseImporter
       .joins(:gregobase_chant)
       .where(gregobase_chants: {'office-part': GENRES.keys})
       .where.not(gregobase_chants: {gabc: ''})
-      .each {|i| import_chant music_book, i }
+      .each {|i| import_chant music_book, i, import }
   end
 
-  def import_chant(music_book, chant_source)
+  def import_chant(music_book, chant_source, import)
     gchant = chant_source.gregobase_chant
     p gchant
 
@@ -58,6 +62,7 @@ class GregobaseImporter < BaseImporter
 
     chant = corpus.chants.find_or_initialize_by(chant_id: '1', source_file_path: fake_path)
     chant.corpus = corpus # not a duplicate, find_or_initialize_by doesn't infer any values from the relation when initializing
+    chant.import = import
     chant.gregobase_chant_id = gchant.id
 
     chant.book = Book.find_by_system_name! detect_book music_book

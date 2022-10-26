@@ -4,12 +4,16 @@
 # https://github.com/ahinkley/liber-antiphonarius-1960
 class LiberAntiphonariusImporter < BaseImporter
   def call(path)
-    %w(AN RE)
-      .flat_map {|genre| Dir["#{path}/#{genre}/**/*.gabc"] }
-      .each {|f| import_file f, path }
+    corpus.imports.build.do! do |import|
+      %w(AN RE)
+        .flat_map {|genre| Dir["#{path}/#{genre}/**/*.gabc"] }
+        .each {|f| import_file f, path, import }
+    end
+
+    report_unseen_chants
   end
 
-  def import_file(path, dir)
+  def import_file(path, dir, import)
     p path
     in_project_path = path.sub(dir, '').sub(/^\//, '')
 
@@ -33,6 +37,7 @@ class LiberAntiphonariusImporter < BaseImporter
     chant = Chant.find_or_initialize_by(chant_id: '1', source_file_path: in_project_path)
 
     chant.corpus = corpus
+    chant.import = import
     chant.book = book
     chant.cycle = cycle
     chant.season = season

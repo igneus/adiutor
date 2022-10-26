@@ -4,6 +4,7 @@ class Chant < ApplicationRecord
   belongs_to :cycle, optional: true
   belongs_to :season, optional: true
   belongs_to :corpus
+  belongs_to :import, optional: true
   belongs_to :source_language
   belongs_to :genre
   belongs_to :hour, optional: true

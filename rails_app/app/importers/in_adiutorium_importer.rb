@@ -3,12 +3,16 @@ require_relative '../../spec/importers/in_adiutorium_importer_example_data'
 # Imports chants from the directory structure of the "In adiutorium" project sources
 class InAdiutoriumImporter < BaseImporter
   def call(path)
-    detect_genre_examples_check do
-      Dir["#{path}/**/*.ly"].each {|f| import_file f, path }
+    corpus.imports.build.do! do |import|
+      detect_genre_examples_check do
+        Dir["#{path}/**/*.ly"].each {|f| import_file f, path, import }
+      end
     end
+
+    report_unseen_chants
   end
 
-  def import_file(path, dir)
+  def import_file(path, dir, import)
     return if path =~ /(antifonar|cizojazycne|hymny|nechoral|psalmodie|rytmicke|variationes|zalm\d+|kratkeverse)/
 
     in_project_path =
@@ -38,7 +42,7 @@ class InAdiutoriumImporter < BaseImporter
 
       triduum_scores.each do |s|
         puts s
-        import_score s, in_project_path, book, cycle, season_triduum, corpus, language
+        import_score s, in_project_path, book, cycle, season_triduum, corpus, language, import
       end
     end
 
@@ -50,15 +54,16 @@ class InAdiutoriumImporter < BaseImporter
         next
       end
 
-      import_score s, in_project_path, book, cycle, season, corpus, language
+      import_score s, in_project_path, book, cycle, season, corpus, language, import
     end
   end
 
-  def import_score(score, in_project_path, book, cycle, season, corpus, language)
+  def import_score(score, in_project_path, book, cycle, season, corpus, language, import)
     header = score.header.transform_values {|v| v == '' ? nil : v }
     chant = Chant.find_or_initialize_by(chant_id: header['id'], source_file_path: in_project_path)
 
     chant.corpus = corpus
+    chant.import = import
     chant.book = book
     chant.cycle = cycle
     chant.season = season

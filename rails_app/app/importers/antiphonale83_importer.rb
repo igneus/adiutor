@@ -3,11 +3,15 @@
 # https://github.com/igneus/antiphonale83
 class Antiphonale83Importer < BaseImporter
   def call(path)
-    # only import Psalter antiphons, the rest is too small to be worth importing
-    Dir["#{path}/psalterium/*.gly"].each {|f| import_file f, path }
+    corpus.imports.build.do! do |import|
+      # only import Psalter antiphons, the rest is too small to be worth importing
+      Dir["#{path}/psalterium/*.gly"].each {|f| import_file f, path, import }
+    end
+
+    report_unseen_chants
   end
 
-  def import_file(path, dir)
+  def import_file(path, dir, import)
     in_project_path =
       path
         .sub(dir, '')
@@ -27,17 +31,18 @@ class Antiphonale83Importer < BaseImporter
 
       puts in_project_path + '#' + s.headers['id']
 
-      import_score s, in_project_path, book, cycle, corpus, language
+      import_score s, in_project_path, book, cycle, corpus, language, import
     end
   end
 
-  def import_score(score, in_project_path, book, cycle, corpus, language)
+  def import_score(score, in_project_path, book, cycle, corpus, language, import)
     header = score.headers # TODO: .transform_values {|v| v == '' ? nil : v }
     lyrics = score.lyrics
 
     chant = Chant.find_or_initialize_by(chant_id: header['id'], source_file_path: in_project_path)
 
     chant.corpus = corpus
+    chant.import = import
     chant.book = book
     chant.cycle = cycle
     chant.hour = detect_hour header, in_project_path

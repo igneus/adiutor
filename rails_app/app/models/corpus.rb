@@ -5,6 +5,7 @@ class Corpus < ApplicationRecord
 
   has_many :music_books
   has_many :chants
+  has_many :imports
 
   def import!
     importer.(sources_path)
@@ -33,5 +34,9 @@ class Corpus < ApplicationRecord
       .group(:modus, :differentia, :melody_incipit)
       .group_by(&:modus)
       .transform_values {|v| v.group_by(&:differentia) }
+  end
+
+  def chants_unseen_by_last_import
+    chants.where.not(import: imports.last_started)
   end
 end

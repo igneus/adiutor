@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_25_095629) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_26_081628) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -56,11 +56,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_25_095629) do
     t.boolean "copy", default: false, null: false
     t.bigint "music_book_id"
     t.integer "gregobase_chant_id"
+    t.bigint "import_id"
     t.index ["book_id"], name: "index_chants_on_book_id"
     t.index ["corpus_id"], name: "index_chants_on_corpus_id"
     t.index ["cycle_id"], name: "index_chants_on_cycle_id"
     t.index ["genre_id"], name: "index_chants_on_genre_id"
     t.index ["hour_id"], name: "index_chants_on_hour_id"
+    t.index ["import_id"], name: "index_chants_on_import_id"
     t.index ["lyrics_normalized"], name: "index_chants_on_lyrics_normalized"
     t.index ["music_book_id"], name: "index_chants_on_music_book_id"
     t.index ["parent_id"], name: "index_chants_on_parent_id"
@@ -96,6 +98,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_25_095629) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "imports", force: :cascade do |t|
+    t.bigint "corpus_id", null: false
+    t.datetime "started_at", precision: nil, null: false
+    t.datetime "finished_at", precision: nil
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["corpus_id"], name: "index_imports_on_corpus_id"
+  end
+
   create_table "music_books", force: :cascade do |t|
     t.bigint "corpus_id", null: false
     t.string "title"
@@ -129,4 +140,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_25_095629) do
   end
 
   add_foreign_key "chants", "chants", column: "parent_id"
+  add_foreign_key "chants", "imports"
+  add_foreign_key "imports", "corpuses", column: "corpus_id"
 end
