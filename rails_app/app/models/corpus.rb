@@ -36,7 +36,11 @@ class Corpus < ApplicationRecord
       .transform_values {|v| v.group_by(&:differentia) }
   end
 
+  def last_import
+    imports.order(started_at: :desc).limit(1).first
+  end
+
   def chants_unseen_by_last_import
-    chants.where.not(import: imports.last_started)
+    chants.where.not(import: last_import)
   end
 end

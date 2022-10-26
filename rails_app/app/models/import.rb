@@ -2,8 +2,6 @@ class Import < ApplicationRecord
   belongs_to :corpus
   has_many :chants
 
-  scope :last_started, -> { order(started_at: :desc).limit(1).first }
-
   def do!
     start!
 
