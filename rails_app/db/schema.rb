@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_26_081628) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_26_135901) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -139,7 +139,17 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_26_081628) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "chants", "books"
   add_foreign_key "chants", "chants", column: "parent_id"
+  add_foreign_key "chants", "corpuses", column: "corpus_id"
+  add_foreign_key "chants", "cycles"
+  add_foreign_key "chants", "genres"
+  add_foreign_key "chants", "hours"
   add_foreign_key "chants", "imports"
+  add_foreign_key "chants", "music_books"
+  add_foreign_key "chants", "seasons"
+  add_foreign_key "chants", "source_languages"
   add_foreign_key "imports", "corpuses", column: "corpus_id"
+  add_foreign_key "music_books", "corpuses", column: "corpus_id"
+  add_foreign_key "parent_child_mismatches", "chants", column: "child_id"
 end
