@@ -41,6 +41,11 @@ class Corpus < ApplicationRecord
   end
 
   def chants_unseen_by_last_import
-    chants.where.not(import: last_import)
+    i = last_import
+    return [] if i.nil?
+
+    chants
+      .where(import: nil)
+      .or(chants.where.not(import: i))
   end
 end
