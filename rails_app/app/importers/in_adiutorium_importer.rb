@@ -3,9 +3,15 @@ require_relative '../../spec/importers/in_adiutorium_importer_example_data'
 # Imports chants from the directory structure of the "In adiutorium" project sources
 class InAdiutoriumImporter < BaseImporter
   def call(path)
+    files =
+      Dir
+        .chdir(path) { `git ls-files -z`.split("\x0") }
+        .select {|x| x.end_with? '.ly' }
+        .collect {|x| File.join path, x }
+
     corpus.imports.build.do! do |import|
       detect_genre_examples_check do
-        Dir["#{path}/**/*.ly"].each {|f| import_file f, path, import }
+        files.each {|f| import_file f, path, import }
       end
     end
 
