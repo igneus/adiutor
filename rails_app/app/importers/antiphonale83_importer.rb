@@ -2,6 +2,8 @@
 # Imports chants from the directory structure of Antiphonale 1983
 # https://github.com/igneus/antiphonale83
 class Antiphonale83Importer < BaseImporter
+  include GabcImporter
+
   def call(path)
     corpus.imports.build.do! do |import|
       # only import Psalter antiphons, the rest is too small to be worth importing
@@ -81,10 +83,7 @@ class Antiphonale83Importer < BaseImporter
     rescue RuntimeError => e
       STDERR.puts "failed to parse gabc for '#{in_project_path}' ##{chant.id}: #{e.message}"
     else
-      score_with_stats = GabcScoreStats.new gabc_score
-      %i[syllable_count word_count melody_section_count].each do |property|
-        chant.public_send "#{property}=", score_with_stats.public_send(property)
-      end
+      extract_stats(chant, gabc_score)
     end
 
     chant.save!

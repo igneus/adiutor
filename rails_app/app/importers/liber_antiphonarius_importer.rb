@@ -3,6 +3,8 @@
 # transcribed by Andrew Hinkley
 # https://github.com/ahinkley/liber-antiphonarius-1960
 class LiberAntiphonariusImporter < BaseImporter
+  include GabcImporter
+
   def call(path)
     corpus.imports.build.do! do |import|
       %w(AN RE)
@@ -71,10 +73,7 @@ class LiberAntiphonariusImporter < BaseImporter
         header_mode
       end
 
-    score_with_stats = GabcScoreStats.new score
-    %i[syllable_count word_count melody_section_count].each do |property|
-      chant.public_send "#{property}=", score_with_stats.public_send(property)
-    end
+    extract_stats(chant, score)
 
     chant.save!
   end

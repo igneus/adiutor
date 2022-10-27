@@ -1,5 +1,7 @@
 # coding: utf-8
 class GregobaseImporter < BaseImporter
+  include GabcImporter
+
   GENRES = {
     'an' => 'antiphon',
     're' => 'responsory_nocturnal',
@@ -99,7 +101,7 @@ class GregobaseImporter < BaseImporter
 
     chant.modus, chant.differentia = modus_differentia gchant
 
-    p chant
+    extract_stats(chant, score)
     chant.save!
   end
 
