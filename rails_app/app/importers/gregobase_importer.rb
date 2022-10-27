@@ -70,7 +70,10 @@ class GregobaseImporter < BaseImporter
     chant.book = Book.find_by_system_name! detect_book music_book
     chant.music_book = music_book
     chant.source_language = @source_language
-    chant.genre = Genre.find_by_system_name! GENRES[gchant.public_send('office-part')]
+
+    genre = GENRES[gchant.public_send('office-part')]
+    genre = 'antiphon_standalone' if genre == 'antiphon' && source.include?('<sp>V/</sp>')
+    chant.genre = Genre.find_by_system_name! genre
 
     chant.source_code = source
 
