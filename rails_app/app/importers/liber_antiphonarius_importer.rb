@@ -68,7 +68,9 @@ class LiberAntiphonariusImporter < BaseImporter
       when /^\d+$/
         RomanNumerals.to_roman(header_mode.to_i)
       when /^per/i
-        header_mode.downcase
+        header_mode
+          .sub(/\.$/, '')
+          .downcase
       else
         header_mode
       end

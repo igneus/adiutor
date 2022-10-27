@@ -110,8 +110,12 @@ class GregobaseImporter < BaseImporter
 
     mode =
       case gchant.mode
+      when '0'
+        nil
       when /^\d+$/
         RomanNumerals.to_roman gchant.mode.to_i
+      when 'p'
+        'per'
       when nil, ''
         if gchant.mode_var =~ /^[IV]+/
           mode, diff = gchant.mode_var.split(' ', 2)
@@ -125,6 +129,10 @@ class GregobaseImporter < BaseImporter
       end
 
     mode&.sub!(/^t.\s+/, '')
+    mode&.sub!(/^per$/i, &:downcase)
+    mode&.sub!(/^[cde]$/i, &:upcase)
+    mode&.sub!(/^(irreg)\.$/, '\1')
+
     diff&.sub!(/trans(p(os)?)?/i, 'tr')
 
     [mode, diff]

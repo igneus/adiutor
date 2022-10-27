@@ -77,6 +77,7 @@ class Antiphonale83Importer < BaseImporter
       else
         last_annotation.split(' ')
       end
+    chant.modus&.sub!(/^(per)\.$/, '\1')
 
     begin
       gabc_score = SimpleGabcParser.call(gabc)
