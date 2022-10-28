@@ -37,7 +37,10 @@ class Antiphonale83Importer < BaseImporter
   end
 
   def import_score(score, in_project_path, book, cycle, corpus, language, import)
-    chant = Chant.find_or_initialize_by(chant_id: score.headers['id'], source_file_path: in_project_path)
+    chant = corpus.chants.find_or_initialize_by(
+      chant_id: score.headers['id'],
+      source_file_path: in_project_path
+    )
 
     chant.corpus = corpus
     chant.import = import
