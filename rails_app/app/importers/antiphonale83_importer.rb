@@ -2,8 +2,6 @@
 # Imports chants from the directory structure of Antiphonale 1983
 # https://github.com/igneus/antiphonale83
 class Antiphonale83Importer < BaseImporter
-  include GabcImporter
-
   def call(path)
     corpus.imports.build.do! do |import|
       # only import Psalter antiphons, the rest is too small to be worth importing
@@ -11,6 +9,7 @@ class Antiphonale83Importer < BaseImporter
     end
 
     report_unseen_chants
+    report_unimplemented_attributes
   end
 
   def import_file(path, dir, import)
@@ -38,54 +37,26 @@ class Antiphonale83Importer < BaseImporter
   end
 
   def import_score(score, in_project_path, book, cycle, corpus, language, import)
-    header = score.headers # TODO: .transform_values {|v| v == '' ? nil : v }
-    lyrics = score.lyrics
-
-    chant = Chant.find_or_initialize_by(chant_id: header['id'], source_file_path: in_project_path)
+    chant = Chant.find_or_initialize_by(chant_id: score.headers['id'], source_file_path: in_project_path)
 
     chant.corpus = corpus
     chant.import = import
-    chant.book = book
-    chant.cycle = cycle
-    chant.hour = detect_hour header, in_project_path
     chant.source_language = language
-    chant.genre = detect_genre header, in_project_path
 
     # Import not the original gly source code, but transformed to gabc,
     # in order to make subsequent processing as simple as possible
     # (no need to add support for another source code language)
     gabc = score_to_gabc score
-    chant.source_code = gabc
 
-    chant.lyrics =
-      LyricsHelper
-        .normalize_initial(lyrics.readable)
-        .gsub(%r{\s*<sp>V\.</sp>\s*}, ' ')
-    chant.lyrics_normalized =
-      lyrics.readable
-        .gsub(%r{\s*<sp>V\.</sp>\s*}, ' | ')
-        .gsub(%r{\s*<i>.*?</i>\s*}, ' ')
-        .yield_self {|l| l[0 ... l.rindex('| Glória Patri')] }
-        .yield_self {|l| LyricsNormalizer.new.normalize_latin l }
-    chant.alleluia_optional = !!(lyrics.readable =~ /T\.\s*P\./)
-    chant.header = header.instance_variable_get :@headers # only last value for each repeated key!
-
-    last_annotation = header.each_value('annotation').to_a.last
-    chant.modus, chant.differentia =
-      if chant.genre.system_name == 'responsory_short'
-        last_annotation.split(' ')[-1..-1]
-      else
-        last_annotation.split(' ')
-      end
-    chant.modus&.sub!(/^(per)\.$/, '\1')
-
+    gabc_score = nil
     begin
       gabc_score = SimpleGabcParser.call(gabc)
     rescue RuntimeError => e
       STDERR.puts "failed to parse gabc for '#{in_project_path}' ##{chant.id}: #{e.message}"
-    else
-      extract_stats(chant, gabc_score)
     end
+
+    adapter = Adapter.new score, gabc_score, gabc, in_project_path, book, cycle
+    update_chant_from_adapter chant, adapter
 
     chant.save!
   rescue
@@ -95,59 +66,123 @@ class Antiphonale83Importer < BaseImporter
 
   private
 
-  def detect_genre(header, path)
-    annotation = header['annotation']
-
-    genre =
-      if path =~ /responsoria/
-        'responsory_short'
-      elsif annotation =~ /ad (Ben|Mag)/
-        'antiphon_gospel'
-      else
-        'antiphon'
-      end
-
-    Genre.find_by_system_name!(genre)
-  end
-
-  def detect_hour(header, path)
-    id = header['id']
-
-    hour =
-      case path
-      when /completorium/
-        'compline'
-      else
-        nil
-      end
-
-    hour ||=
-      case id
-      when /^ol/
-        'readings'
-      when /^l/
-        'lauds'
-      when /^m/
-        'daytime'
-      when /^v/
-        'vespers'
-      else
-        nil
-      end
-
-    hour && Hour.find_by_system_name!(hour)
-  end
-
-  def delete_image(chant)
-    puts "deleting image of #{chant.fial_of_self}"
-    path = LilypondImageGenerator.image_path chant
-    File.delete path if File.exist? path
-  end
-
   def score_to_gabc(gly_score)
     Gly::GabcConvertor
       .new
       .convert(gly_score)
       .string
+  end
+
+  class Adapter < BaseImportDataAdapter
+    def initialize(score, gabc_score, gabc, in_project_path, book, cycle)
+      @score = score
+      @gabc_score = gabc_score
+      @in_project_path = in_project_path
+      @book = book
+      @cycle = cycle
+
+      @score_with_stats = gabc_score && GabcScoreStats.new(gabc_score)
+      @gabc = gabc
+    end
+
+    attr_reader :score, :in_project_path, :gabc
+
+    # overriding parent methods
+    attr_reader :book, :cycle
+    alias source_code gabc
+
+    def hour
+      id = score.headers['id']
+
+      hour =
+        case in_project_path
+        when /completorium/
+          'compline'
+        else
+          nil
+        end
+
+      hour ||=
+        case id
+        when /^ol/
+          'readings'
+        when /^l/
+          'lauds'
+        when /^m/
+          'daytime'
+        when /^v/
+          'vespers'
+        else
+          nil
+        end
+
+      hour && Hour.find_by_system_name!(hour)
+    end
+
+    def genre
+      @genre ||=
+        begin
+          annotation = score.headers['annotation']
+
+          genre =
+            if in_project_path =~ /responsoria/
+              'responsory_short'
+            elsif annotation =~ /ad (Ben|Mag)/
+              'antiphon_gospel'
+            else
+              'antiphon'
+            end
+
+          Genre.find_by_system_name!(genre)
+        end
+    end
+
+    def lyrics
+      LyricsHelper
+        .normalize_initial(score.lyrics.readable)
+        .gsub(%r{\s*<sp>V\.</sp>\s*}, ' ')
+    end
+
+    def lyrics_normalized
+      score.lyrics.readable
+        .gsub(%r{\s*<sp>V\.</sp>\s*}, ' | ')
+        .gsub(%r{\s*<i>.*?</i>\s*}, ' ')
+        .yield_self {|l| l[0 ... l.rindex('| Glória Patri')] }
+        .yield_self {|l| LyricsNormalizer.new.normalize_latin l }
+    end
+
+    def alleluia_optional
+      !!(score.lyrics.readable =~ /T\.\s*P\./)
+    end
+
+    def header
+      score.headers.instance_variable_get :@headers # only last value for each repeated key!
+    end
+
+    def modus
+      modus_differentia[0]
+        &.sub(/^(per)\.$/, '\1')
+    end
+
+    def differentia
+      modus_differentia[1]
+    end
+
+    %i(syllable_count word_count melody_section_count).each do |m|
+      define_method m do
+        @score_with_stats&.public_send(m)
+      end
+    end
+
+    private
+
+    def modus_differentia
+      last_annotation = score.headers.each_value('annotation').to_a.last
+      if genre.system_name == 'responsory_short'
+        last_annotation.split(' ')[-1..-1]
+      else
+        last_annotation.split(' ')
+      end
+    end
   end
 end
