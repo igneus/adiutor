@@ -171,6 +171,7 @@ class Antiphonale83Importer < BaseImporter
       modus_differentia[1]
     end
 
+    # Forwardable cannot be used, because @score_with_stats may be unavailable
     %i(syllable_count word_count melody_section_count).each do |m|
       define_method m do
         @score_with_stats&.public_send(m)
