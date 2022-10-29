@@ -66,29 +66,6 @@ class Chant < ApplicationRecord
       .limit(limit)
   end
 
-  def self.required_psalm_tunes
-    r = {}
-
-    grp = lambda do |query|
-      query
-        .select(:modus, :differentia, 'count(chants.id) as record_count')
-        .group(:modus, :differentia)
-        .order(:modus, :differentia)
-    end
-
-    [
-      'Zj 19',
-      '1 Tim 3'
-    ].each do |canticle|
-      r[canticle] = grp.(where("psalmus ILIKE '#{canticle}%'"))
-      # TODO invitatory
-    end
-
-    r['Venite'] = grp.(joins(:genre).where(genre: {system_name: 'invitatory'}))
-
-    r
-  end
-
   # To each calendar date assigns a single Chant marked for revision.
   def self.chant_of_the_day(date)
     tbf = Chant.to_be_fixed

@@ -23,7 +23,7 @@ class HomeController < ApplicationController
   end
 
   def required_psalm_tunes
-    @tunes = Chant.required_psalm_tunes
+    @tunes = SpecialPsalmTones.call
     @invitatory_genre = Genre.find_by!(system_name: 'invitatory')
   end
 

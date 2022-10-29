@@ -4,7 +4,7 @@ require 'rails_helper'
 RSpec.describe 'Routes served by HomeController', type: :request do
   describe 'GET /' do
     before :each do
-      create :corpus, system_name: 'in_adiutorium'
+      create :in_adiutorium_corpus
     end
 
     it 'succeeds' do
@@ -24,6 +24,7 @@ RSpec.describe 'Routes served by HomeController', type: :request do
   describe 'GET /psalm_tunes' do
     before :each do
       Genre.create!(system_name: 'invitatory')
+      create :in_adiutorium_corpus
     end
 
     it 'succeeds' do
