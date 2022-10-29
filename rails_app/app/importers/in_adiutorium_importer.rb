@@ -19,12 +19,12 @@ class InAdiutoriumImporter < BaseImporter
   end
 
   def import_file(path, dir, import)
-    return if path =~ /(antifonar|cizojazycne|hymny|nechoral|psalmodie|rytmicke|variationes|zalm\d+|kratkeverse)/
-
     in_project_path =
       path
         .sub(dir, '')
         .sub(%r{^/}, '')
+
+    return if in_project_path =~ /(antifonar|cizojazycne|hymny|nechoral|psalmodie|rytmicke|variationes|^zalm\d+|kratkeverse)/
 
     book = book_by_file_path(in_project_path)
     cycle = cycle_by_file_path(in_project_path)
