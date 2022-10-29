@@ -14,6 +14,9 @@ module ChantsHelper
     c << 'genre missing' if chant.genre_id.nil?
     c << corpus_shortcut(chant.corpus.name)
 
+    c << 'OP' if chant.book.system_name == 'bsop'
+    c << 'OSB' if %w(bm lhm).include? chant.book.system_name
+
     c
   end
 
