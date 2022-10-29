@@ -4,9 +4,7 @@
 class SpecialPsalmTones
   Config = Struct.new(:chants_query_method, :psalm_tone_source_files)
 
-  RequiredTone = Struct.new(:modus, :differentia, :record_count, :available) do
-    alias available? available
-  end
+  RequiredTone = Struct.new(:modus, :differentia, :record_count, :available?)
 
   TEXTS = {
     'Zj 19' => Config.new(:psalmus_query, %w(kantikum-Zj19.ly kantikum-Zj19_kosate.ly)),
