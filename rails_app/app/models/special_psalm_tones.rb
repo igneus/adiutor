@@ -40,7 +40,7 @@ class SpecialPsalmTones
 
   # Find invitatory antiphons
   def invitatory_query(_)
-    chants.joins(:genre).where(genre: {system_name: 'invitatory'})
+    chants.joins("INNER JOIN genres ON chants.genre_id = genres.id AND genres.system_name = 'invitatory'")
   end
 
   def grp(query, source_files)
