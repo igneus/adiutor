@@ -1,4 +1,4 @@
 .psalm-tone {
-  &.available::after { content: ' ✔️'; color: green; }
-  &.missing::after { content: ' ❌'; color: red; }
+  &.available::before { content: '✔️ '; color: green; }
+  &.missing::before { content: '❌ '; color: red; }
 }
