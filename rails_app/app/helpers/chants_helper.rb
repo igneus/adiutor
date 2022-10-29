@@ -12,8 +12,17 @@ module ChantsHelper
     c << 'mismatch' if chant.mismatches.present?
     c << 'hour missing' if chant.hour_id.nil?
     c << 'genre missing' if chant.genre_id.nil?
+    c << corpus_shortcut(chant.corpus.name)
 
     c
+  end
+
+  def corpus_shortcut(name)
+    name
+      .split(/[^\w]+/)
+      .collect {|i| i =~ /^\d+$/ ? i : i[0] }
+      .join
+      .upcase
   end
 
   def edit_chant_button(chant, label=nil, variationes: false, render_if_unavailable: true, opts: {})

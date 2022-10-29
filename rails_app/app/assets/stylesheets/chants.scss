@@ -31,6 +31,12 @@ pre {
   &.quality-notice { background-color: $attention-colour; }
   &.edited-lyrics { background-color: slateblue; }
   &.mismatch { background-color: red; }
+
+  // corpora shortcuts
+  &.IA { background-color: blue; }
+  &.A1983 { background-color: lightblue; }
+  &.LA1960 { background-color: fuchsia; }
+  &.G { background-color: green; }
 }
 
 .tree-of-origin {
