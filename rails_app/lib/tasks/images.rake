@@ -42,3 +42,21 @@ task :image, [:chant_id] => [:environment] do |task, args|
     .find(args.chant_id)
     .then {|c| c.source_language.image_generator.(c) }
 end
+
+desc 'list images of chants which no longer exist in the database'
+task orphaned_images: :environment do
+  paths = Dir[Rails.root + 'app/assets/images/chants/*/*.svg']
+
+  count = 0
+  paths.each do |path|
+    id = File.basename(path).to_i
+    unless Chant.exists? id
+      puts path
+      count += 1
+    end
+  end
+
+  # print to stderr so stdout contains only paths
+  # and can be directly piped e.g. to `xargs rm`
+  STDERR.puts "#{count} orphaned images total"
+end
