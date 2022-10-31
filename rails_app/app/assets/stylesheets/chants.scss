@@ -29,6 +29,8 @@ pre {
   color: white;
   font-weight: bold;
 
+  &[title] { cursor: help; }
+
   &.quality-notice { background-color: $attention-colour; }
   &.edited-lyrics { background-color: slateblue; }
   &.mismatch { background-color: red; }

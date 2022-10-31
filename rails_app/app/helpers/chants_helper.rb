@@ -1,21 +1,23 @@
 module ChantsHelper
+  Tag = Struct.new(:text, :long_desc)
+
   def chant_tags(chant)
     c = []
-    c << 'quality notice' if chant.marked_for_revision?
-    c << 'favourite' if chant.placet == '*'
-    c << 'edited lyrics' if chant.lyrics_edited?
+    c << Tag.new('quality notice', chant.placet) if chant.marked_for_revision?
+    c << Tag.new('favourite') if chant.placet == '*'
+    c << Tag.new('edited lyrics') if chant.lyrics_edited?
     if chant.simple_copy?
-      c << 'copy simple'
+      c << Tag.new('copy simple')
     elsif chant.fial.present?
-      c << 'copy'
+      c << Tag.new('copy')
     end
-    c << 'mismatch' if chant.mismatches.present?
-    c << 'hour missing' if chant.hour_id.nil?
-    c << 'genre missing' if chant.genre_id.nil?
-    c << corpus_shortcut(chant.corpus.name)
+    c << Tag.new('mismatch') if chant.mismatches.present?
+    c << Tag.new('hour missing') if chant.hour_id.nil?
+    c << Tag.new('genre missing') if chant.genre_id.nil?
+    c << Tag.new(corpus_shortcut(chant.corpus.name), chant.corpus.name)
 
-    c << 'OP' if chant.book.system_name == 'bsop'
-    c << 'OSB' if %w(bm lhm).include? chant.book.system_name
+    c << Tag.new('OP') if chant.book.system_name == 'bsop'
+    c << Tag.new('OSB') if %w(bm lhm).include? chant.book.system_name
 
     c
   end

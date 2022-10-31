@@ -1,2 +1,2 @@
 - chant_tags(chant).each do |tag|
-  .tag class=tag.gsub(' ', '-') = tag
+  .tag class=tag.text.gsub(' ', '-') title=tag.long_desc = tag.text
