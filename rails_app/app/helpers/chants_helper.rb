@@ -7,9 +7,9 @@ module ChantsHelper
     c << Tag.new('favourite') if chant.placet == '*'
     c << Tag.new('edited lyrics') if chant.lyrics_edited?
     if chant.simple_copy?
-      c << Tag.new('copy simple')
+      c << Tag.new('copy simple', chant.fial)
     elsif chant.fial.present?
-      c << Tag.new('copy')
+      c << Tag.new('copy', chant.fial)
     end
     c << Tag.new('mismatch') if chant.mismatches.present?
     c << Tag.new('hour missing') if chant.hour_id.nil?
