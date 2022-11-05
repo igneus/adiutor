@@ -26,6 +26,10 @@
       <%= link_to 'Overview', overview_path %>
     </nav>
 
+    <% flash.each do |name, msg| -%>
+      <%= content_tag :div, msg, class: "flash flash-#{name}" %>
+    <% end -%>
+
     <%= yield %>
   </body>
 </html>
