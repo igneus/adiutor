@@ -99,6 +99,11 @@ if ($debug) {
     exit;
 }
 
+if ($status !== 0) {
+    $arg = 'editfialError=' . urlencode(implode("\n", $output));
+    $redirectBack .= (false !== strpos($redirectBack, '?') ? '&' : '?') . $arg;
+}
+
 if ($redirectBack) {
     header("Location: $redirectBack", TRUE, 302);
 } else {
