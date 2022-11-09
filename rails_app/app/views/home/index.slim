@@ -38,7 +38,7 @@ hr
 - if @chant_to_fix_random
   h2 Chants which need to be fixed
 
-  .row
+  .row.chants-to-fix
     .column.column-50
       h3= link_to 'Chant of the day', chant_of_the_day_path
       = render 'chant_to_fix', chant: @chant_to_fix_today

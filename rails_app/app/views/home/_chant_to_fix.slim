@@ -1,10 +1,11 @@
 .row
   .column.column-20= edit_chant_button(chant, opts: {class: 'button button-outline'})
   .column.column-20= edit_chant_button(chant, variationes: true, opts: {class: 'button button-outline'})
-p
+div
   = link_to chant_path(chant) do
     tt= chant.fial_of_self
   | &nbsp; &nbsp; &nbsp;
   em= chant.placet
+.tags= render 'chants/tags', chant: chant, options: {children: true, corpus: false}
 = link_to chant_path(chant) do
   = render 'chants/image', chant: chant

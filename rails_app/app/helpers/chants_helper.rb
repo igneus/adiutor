@@ -1,7 +1,7 @@
 module ChantsHelper
   Tag = Struct.new(:text, :long_desc)
 
-  def chant_tags(chant)
+  def chant_tags(chant, corpus: true,  children: false)
     c = []
     c << Tag.new('quality notice', chant.placet) if chant.marked_for_revision?
     c << Tag.new('favourite') if chant.placet == '*'
@@ -11,13 +11,22 @@ module ChantsHelper
     elsif chant.fial.present?
       c << Tag.new('copy', chant.fial)
     end
+
+    if children
+      # not done by default, as it requires eager-loaded children or a separate query
+      c << Tag.new('has children') unless chant.children.empty?
+    end
+
     c << Tag.new('mismatch') if chant.mismatches.present?
     c << Tag.new('hour missing') if chant.hour_id.nil?
     c << Tag.new('genre missing') if chant.genre_id.nil?
-    c << Tag.new(corpus_shortcut(chant.corpus.name), chant.corpus.name)
 
-    c << Tag.new('OP') if chant.book.system_name == 'bsop'
-    c << Tag.new('OSB') if %w(bm lhm).include? chant.book.system_name
+    if corpus
+      c << Tag.new(corpus_shortcut(chant.corpus.name), chant.corpus.name)
+
+      c << Tag.new('OP') if chant.book.system_name == 'bsop'
+      c << Tag.new('OSB') if %w(bm lhm).include? chant.book.system_name
+    end
 
     c
   end
