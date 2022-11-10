@@ -85,7 +85,9 @@ if ($line) {
 
 
 
-$options = $variationes ? '--variationes' : '';
+$options =
+    ' --require-running-frescobaldi'
+    . ($variationes ? ' --variationes' : '');
 
 // exec() only captures stdout, redirect stderr there
 $command = "ruby nastroje/editfial.rb $options $fial 2>&1";
