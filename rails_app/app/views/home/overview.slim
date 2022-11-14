@@ -12,7 +12,7 @@ h1 Overview
     .column.column-25
       = render 'listing', title: 'Books', items: @books, filter_param: :book_id
 
-      h2 Corpora
+      h2= link_to 'Corpora', corpora_path
       ul
         - @corpuses.each do |corpus|
           li
