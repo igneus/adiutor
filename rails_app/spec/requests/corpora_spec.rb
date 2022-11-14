@@ -11,4 +11,13 @@ RSpec.describe 'Corpora', type: :request do
       expect(response.body).to include chant.volpiano
     end
   end
+
+  describe 'GET /corpora/:id/overview' do
+    it 'works' do
+      corpus = create :corpus
+
+      get "/corpora/#{corpus.id}/overview"
+      expect(response).to have_http_status :ok
+    end
+  end
 end

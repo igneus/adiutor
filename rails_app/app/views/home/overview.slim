@@ -1,16 +1,19 @@
-h1 Overview
+h1
+  - if @corpus
+    => @corpus.name
+  | Overview
 
 .container
   .row
     .column.column-25
-      = render 'listing', title: 'Genres', items: @genres, filter_param: :genre_id
-      = render 'listing', title: 'Hours', items: @hours, filter_param: :hour_id
+      = render 'home/listing', title: 'Genres', items: @genres, filter_param: :genre_id
+      = render 'home/listing', title: 'Hours', items: @hours, filter_param: :hour_id
     .column.column-20
-      = render 'listing', title: 'Cycles', items: @cycles, filter_param: :cycle_id
-      = render 'listing', title: 'Seasons', items: @seasons, filter_param: :season_id
-    .column.column-30= render 'modes'
+      = render 'home/listing', title: 'Cycles', items: @cycles, filter_param: :cycle_id
+      = render 'home/listing', title: 'Seasons', items: @seasons, filter_param: :season_id
+    .column.column-30= render 'home/modes'
     .column.column-25
-      = render 'listing', title: 'Books', items: @books, filter_param: :book_id
+      = render 'home/listing', title: 'Books', items: @books, filter_param: :book_id
 
       h2= link_to 'Corpora', corpora_path
       ul

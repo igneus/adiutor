@@ -4,6 +4,7 @@ ul
   - @corpora.each do |corpus|
     li
       = corpus.name
+      =< link_to '[Overview]', overview_corpus_path(id: [corpus.id])
       =< link_to '[Chants]', chants_path(corpus_id: [corpus.id])
       =< link_to '[Differentiae]', differentiae_corpus_path(corpus)
 

@@ -23,6 +23,7 @@ Rails.application.routes.draw do
 
   resources :corpora do
     member do
+      get 'overview', as: :overview
       get 'differentiae', as: :differentiae
     end
   end
