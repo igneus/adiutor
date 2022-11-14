@@ -1,13 +1,17 @@
 h2 Modi & Differentiae
 
-ul
+ul.modes
   - @modes.each_pair do |modus, differentiae|
-    li
-      strong= link_to((modus.blank? ? modus.inspect : modus), chants_path(modus: modus))
-      span.small=<> '(' + differentiae.sum {|d| d.record_count }.to_s + ')'
+    - name = modus.blank? ? modus.inspect : modus
+    - count = differentiae.sum {|d| d.record_count }
+    li data-name=name data-count=count
+      strong= link_to(name, chants_path(modus: modus))
+      span.small=<> '(' + count.to_s + ')'
       strong= ":"
       span
         - differentiae.each do |d|
           span< style="white-space: nowrap"
             = link_to(d.differentia.then {|x| x.blank? ? x.inspect : x }, chants_path(modus: d.modus, differentia: d.differentia))
             span.small=< "(#{d.record_count})"
+
+= render 'home/modes_chart'

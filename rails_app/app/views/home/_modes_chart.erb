@@ -1,0 +1,17 @@
+<canvas id="modesChart"></canvas>
+
+<script>
+const ctx = document.getElementById('modesChart').getContext('2d');
+const data = Array.from(document.querySelectorAll('.modes li')).map((i) => i.dataset );
+
+const myChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: data.map((i) => i.name),
+        datasets: [{
+            data: data.map((i) => i.count),
+            backgroundColor: chroma.scale('Spectral').colors(data.length, null).map((i) => i.hex()),
+        }],
+    }
+});
+</script>
