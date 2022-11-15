@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :chants do
     collection do
       get '/fial/:fial', action: :fial, constraints: {fial: /[^\/]+/}
+      get 'resp-atyp', action: :atypical_responsories
     end
 
     member do

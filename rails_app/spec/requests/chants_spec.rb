@@ -43,4 +43,12 @@ RSpec.describe 'Chants', type: :request do
       expect(response.body).to include ',"volpiano":null,'
     end
   end
+
+  describe 'GET /chants/resp-atyp' do
+    it 'succeeds' do
+      get '/chants/resp-atyp'
+      expect(response).to have_http_status :ok
+      expect(response.body).to include 'Atypical Responsories'
+    end
+  end
 end

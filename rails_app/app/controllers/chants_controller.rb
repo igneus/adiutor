@@ -63,6 +63,18 @@ class ChantsController < ApplicationController
     @chants = @chants.page(params[:page] || 1)
   end
 
+  def atypical_responsories
+    @chants =
+      Chant
+        .where(
+          corpus: Corpus.find_by_system_name('in_adiutorium'),
+          genre: Genre.find_by_system_name('responsory_short')
+        )
+        .where.not("modus = 'VI' AND (source_code LIKE ? OR source_code LIKE ? OR source_code LIKE ?)", '%respVIdoxologie%', '%respVIalelujaDoxologie%', '%doxologieResponsoriumVI%')
+        .order(:source_file_path, :id)
+        .page(params[:page] || 1)
+  end
+
   def show
     @chant = Chant.find params[:id]
     @properties = @chant.attributes.except(*%w(id source_code header lyrics textus_approbatus))
