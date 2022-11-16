@@ -98,6 +98,22 @@ class ChantsController < ApplicationController
     }
     query[:variationes] = 'true' if params[:variationes] == 'true'
 
+    session[:last_open_in_editor] = query
+
+    target = Adiutor::EDIT_FIAL_URL + '?' + URI.encode_www_form(query)
+
+    redirect_to target
+  end
+
+  def open_in_editor_retry
+    query = session[:last_open_in_editor]
+
+    if query.nil?
+      flash[:error] = 'No previous "open in editor" found.'
+      redirect_back fallback_location: root_path
+      return
+    end
+
     target = Adiutor::EDIT_FIAL_URL + '?' + URI.encode_www_form(query)
 
     redirect_to target

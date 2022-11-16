@@ -7,7 +7,9 @@ class ApplicationController < ActionController::Base
     # receiving redirect back from the "editfial" external service
     # with an error message - display it as a flash message
     if params[:editfialError]
-      flash[:error] = params[:editfialError]
+      flash[:error] =
+        params[:editfialError] + ' ' +
+        view_context.link_to('Retry', retry_open_in_editor_chants_path, method: :post)
       redirect_to request.params.except(:editfialError)
     end
   end
