@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     # with an error message - display it as a flash message
     if params[:editfialError]
       flash[:error] =
-        params[:editfialError] +
+        ERB::Util.html_escape(params[:editfialError]) +
         ' ' + view_context.link_to('Retry', retry_open_in_editor_chants_path, method: :post) +
         session.dig(:last_open_in_editor, 'fial')&.yield_self do |fial|
           # hardcoded path, because using the `fial_chants_path` routing helper results in

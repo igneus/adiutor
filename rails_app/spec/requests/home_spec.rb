@@ -47,5 +47,13 @@ RSpec.describe 'Routes served by HomeController', type: :request do
       expect(response.body).to include '<div class="flash flash-error">My error message'
       expect(request.url).to end_with '/overview?not=harmed&otherParams=are'
     end
+
+    it 'escapes HTML from the error message' do
+      script = '<script>while (true) { alert(1); }</script>'
+      get '/overview?editfialError=' + URI.encode_www_form_component(script)
+      follow_redirect!
+      expect(response.body).not_to include script
+      expect(response.body).to include '&lt;script&gt;while (true)'
+    end
   end
 end
