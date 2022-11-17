@@ -11,7 +11,10 @@ class ApplicationController < ActionController::Base
         params[:editfialError] +
         ' ' + view_context.link_to('Retry', retry_open_in_editor_chants_path, method: :post) +
         session.dig(:last_open_in_editor, 'fial')&.yield_self do |fial|
-          ' ' + view_context.link_to('Visit', fial_chants_path(fial), method: :post)
+          # hardcoded path, because using the `fial_chants_path` routing helper results in
+          # broken constraint error (when passing fial unescaped and it contains a slash)
+          # or generates a URL with double-escaped fial (when passing fial already escaped)
+          ' ' + view_context.link_to('Visit', '/chants/fial/' + URI.encode_www_form_component(fial))
         end.to_s
       redirect_to request.params.except(:editfialError)
     end
