@@ -12,8 +12,10 @@ class Chant < ApplicationRecord
   has_many :children, class_name: 'Chant', foreign_key: 'parent_id'
   has_many :mismatches, class_name: 'ParentChildMismatch', foreign_key: 'child_id'
 
-  scope :to_be_fixed, -> { where.not(placet: [nil, '*']) }
-  scope :favourite, -> { where("placet LIKE '*%'") }
+  IS_FAVOURITE_COND = "placet LIKE '*%'"
+  scope :to_be_fixed, -> { where.not(placet: nil).where.not(IS_FAVOURITE_COND) }
+  scope :favourite, -> { where(IS_FAVOURITE_COND) }
+
   scope :unique, -> { where(simple_copy: false, copy: false) }
   scope :copies_first, -> do
     order(Arel.sql('CASE
