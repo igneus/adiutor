@@ -32,8 +32,6 @@ jpeg-dev \
 zlib-dev \
 tiff-dev \
 freetype-dev \
-&& pip install 'jinja2<3.0' \
-&& pip install chant21 \
 && rm -rf /var/cache/apk/* \
 && mkdir -p $APP_PATH
 
