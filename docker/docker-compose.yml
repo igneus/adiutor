@@ -37,4 +37,8 @@ services:
     stdin_open: true
     tty: true
     environment:
+      APP_DATABASE_URL: postgres://postgres:dbpass@db/adiutor_development
+      APP_TEST_DATABASE_URL: postgres://postgres:dbpass@db/adiutor_test
+      IN_ADIUTORIUM_SOURCES_PATH: /var/in-adiutorium-sources
+
       PIP_USER: 'true' # make `pip install` install to ~/.local
