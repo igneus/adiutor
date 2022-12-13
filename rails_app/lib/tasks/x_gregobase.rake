@@ -15,4 +15,13 @@ namespace :gregobase do
   task import: IMPORT_PREREQUISITES do
     Corpus.find_by_system_name!('gregobase').import!
   end
+
+  desc 'export all GregoBase scores as gabc files grouped by source(book) and genre'
+  task :export, [:path] => [:environment] do |t, args|
+    raise 'path must be specified' if args[:path].blank?
+
+    GregobaseExporter.call args[:path]
+
+    `tar -czf "#{args[:path]}.tar.gz" #{args[:path]}`
+  end
 end
