@@ -64,16 +64,22 @@ class ChantsController < ApplicationController
   end
 
   def atypical_responsories
+    @corpus = Corpus.find_by_system_name('in_adiutorium')
+    @genre = Genre.find_by_system_name('responsory_short')
+
     @chants =
       Chant
         .where(
-          corpus: Corpus.find_by_system_name('in_adiutorium'),
-          genre: Genre.find_by_system_name('responsory_short')
+          corpus: @corpus,
+          genre: @genre
         )
         .where.not(modus: nil)
         .where.not("modus = 'VI' AND (source_code LIKE ? OR source_code LIKE ? OR source_code LIKE ?)", '%respVIdoxologie%', '%respVIalelujaDoxologie%', '%doxologieResponsoriumVI%')
         .order(:source_file_path, :id)
         .page(params[:page] || 1)
+
+    @count_total = Chant.where(corpus: @corpus, genre: @genre).count
+    @count_atyp = @chants.total_count
   end
 
   def show

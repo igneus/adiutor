@@ -1,3 +1,10 @@
 h1 Atypical Responsories
 
+p
+  strong=<> @count_atyp
+  | atypical responsories in
+  strong=<> @count_total
+  => link_to 'short responsories', chants_path(corpus_id: [@corpus.id], genre_id: [@genre.id])
+  | total
+
 = render 'listing'
