@@ -25,6 +25,9 @@ table.chant-properties
     tr
       th lyrics
       td= @chant.lyrics
+    tr
+      th fial_of_self
+      td= @chant.fial_of_self
     - if @chant.lyrics_edited?
       tr
         th textus_approbatus
