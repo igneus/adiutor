@@ -1,4 +1,11 @@
-h1 Parent mismatch
+= page_title 'Parent mismatch'
+
+/ Note: this must be done *after* page_title, otherwise it will be overwritten
+- content_for(:title) do
+  | Parent mismatch
+  = "##{@mismatch.child.id}"
+  | &lt;
+  = "##{@mismatch.parent.id}"
 
 = link_to 'Resolve', resolve_mismatch_path(@mismatch), class: 'button', method: :post
 - if @next
