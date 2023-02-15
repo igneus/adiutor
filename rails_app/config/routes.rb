@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   root 'home#index'
   get 'overview', to: 'home#overview'
   get 'psalm_tunes', to: 'home#required_psalm_tunes'
