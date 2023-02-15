@@ -56,6 +56,9 @@ class ChantsController < ApplicationController
     if params[:lyrics_edited]
       @chants = @chants.where('textus_approbatus IS NOT NULL')
     end
+    if params[:fons_externus]
+      @chants = @chants.have_fons_externus
+    end
     if params[:ids]
       @chants = @chants.where(id: params[:ids].split(',').collect(&:to_i))
     end

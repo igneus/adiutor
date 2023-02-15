@@ -37,6 +37,8 @@
       = label_tag :alleluia_optional, 'optional alleluia'
       = form.check_box :lyrics_edited, include_hidden: false
       = label_tag :lyrics_edited, 'edited lyrics'
+      = form.check_box :fons_externus, include_hidden: false
+      = label_tag :fons_externus, 'fons externus', title: 'adaptations of Latin pieces or melodies taken from other sources'
     div
       span.group-title Hour
       = form.collection_check_boxes :hour_id, @hours, :id, :name, include_hidden: false

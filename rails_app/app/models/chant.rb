@@ -29,6 +29,8 @@ class Chant < ApplicationRecord
 
   scope :all_antiphons, -> { joins("INNER JOIN genres ON chants.genre_id = genres.id AND system_name LIKE 'antiphon%'") }
 
+  scope :have_fons_externus, -> { where("header->'fons_externus' IS NOT NULL") }
+
   # Properties containing music encoded in Volpiano and other related encoding systems
   VOLPIANO_PROPERTIES = [
     :volpiano,
