@@ -10,6 +10,8 @@ class MismatchesController < ApplicationController
   end
 
   def resolve
+    authenticate_user!
+
     mismatch = ParentChildMismatch.unresolved.find(params[:id])
     mismatch.update!(resolved_at: Time.now)
 
