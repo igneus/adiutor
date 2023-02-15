@@ -11,4 +11,6 @@
 - if @next
   = link_to 'Next >', mismatch_path(@next), class: 'button button-outline', data: {navigation: :next}
 
+div= render 'tags', mismatch: @mismatch
+
 = render 'chants/comparison', chant_a: @mismatch.parent, chant_b: @mismatch.child, relation: @mismatch.relation

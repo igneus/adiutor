@@ -8,10 +8,10 @@ table
     - @mismatches.each do |m|
       tr
         td= link_to m.id, mismatch_path(m)
-        td= link_to m.child.fial, mismatch_path(m)
         td
-          - if m.simple_copy?
-            span.tag simple copy
+          = link_to m.child.fial, mismatch_path(m)
+          br
+          = render 'tags', mismatch: m
         td
           = link_to chant_path(m.child) do
             = render 'chants/image', chant: m.child
