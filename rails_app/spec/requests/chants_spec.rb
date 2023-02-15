@@ -46,6 +46,9 @@ RSpec.describe 'Chants', type: :request do
 
   describe 'GET /chants/resp-atyp' do
     it 'succeeds' do
+      create :in_adiutorium_corpus
+      create :genre, system_name: 'responsory_short'
+
       get '/chants/resp-atyp'
       expect(response).to have_http_status :ok
       expect(response.body).to include 'Atypical Responsories'
