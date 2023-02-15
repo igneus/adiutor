@@ -32,6 +32,13 @@
       <%= link_to 'Psalm tunes', psalm_tunes_path %>
       <%= link_to 'Atypical responsories', resp_atyp_chants_path %>
       <%= link_to 'Overview', overview_path %>
+      ::
+      <% if user_signed_in? %>
+        <span title="Signed in as <%= current_user.email %>"><%= current_user.email %></span>
+        <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>
+      <% else %>
+        <%= link_to 'Sign in', new_user_session_path %>
+      <% end %>
     </nav>
 
     <% flash.each do |name, msg| -%>

@@ -29,6 +29,9 @@ Internal tool, not intended for public deployment.
 1. check that the application works:
   - `http://localhost:3000/` serves Adiutor homepage
   - `make test` succeeds (or at least `make test-rails test-python` succeeds)
+1. optionally create some user account: `rake adduser[your@email.org]`
+   (only needed if you plan to use the data-modifying functionalities like reviewing
+   parent-child mismatches and marking them resolved)
 
 ### Import data
 
