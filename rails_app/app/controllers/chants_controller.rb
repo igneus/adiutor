@@ -92,6 +92,7 @@ class ChantsController < ApplicationController
 
   def open_in_editor
     raise 'forbidden' unless Rails.env.development?
+    authenticate_user!
     raise 'URL of the external fial opener service not specified' unless Adiutor::EDIT_FIAL_URL
 
     chant = Chant.find params[:id]
@@ -113,6 +114,7 @@ class ChantsController < ApplicationController
   end
 
   def open_in_editor_retry
+    authenticate_user!
     query = session[:last_open_in_editor]
 
     if query.nil?
