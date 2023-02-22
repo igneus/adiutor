@@ -14,7 +14,7 @@ table
         td
           = link_to chant_path(c) do
             = render 'image', chant: c
-        td= c.source_file_path
+        td= c.chant_id == BaseImporter::DEFAULT_CHANT_ID ? c.source_file_path : c.fial_of_self
         td= render 'tags', chant: c
         td= edit_chant_button c, 'edit', render_if_unavailable: false, opts: {class: 'button button-outline'}
 

@@ -62,7 +62,7 @@ class GregobaseImporter < BaseImporter
     # characteristics like Cycle, Season etc. often vary.)
     fake_path = "#{chant_source.source}/#{gchant.id}"
 
-    chant = corpus.chants.find_or_initialize_by(chant_id: '1', source_file_path: fake_path)
+    chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: fake_path)
     chant.corpus = corpus # not a duplicate, find_or_initialize_by doesn't infer any values from the relation when initializing
     chant.import = import
     chant.gregobase_chant_id = gchant.id

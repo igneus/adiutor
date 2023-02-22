@@ -1,4 +1,8 @@
 class BaseImporter
+  # Chant#chant_id value used for corpora which have only a single chant per source file
+  # (like gabc-based corpora)
+  DEFAULT_CHANT_ID = '1'
+
   def initialize(corpus)
     @corpus = corpus
   end

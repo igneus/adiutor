@@ -30,7 +30,7 @@ class LiberAntiphonariusImporter < BaseImporter
       return # just skip the failed score
     end
 
-    chant = corpus.chants.find_or_initialize_by(chant_id: '1', source_file_path: in_project_path)
+    chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: in_project_path)
 
     chant.corpus = corpus
     chant.import = import
