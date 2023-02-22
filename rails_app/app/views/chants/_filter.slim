@@ -43,12 +43,6 @@
       span.group-title Hour
       = form.collection_check_boxes :hour_id, @hours, :id, :name, include_hidden: false
 
-      span.group-title.tac Quality
-      = form.check_box :quality_notice, include_hidden: false
-      = label_tag :quality_notice, 'Quality notice'
-      = form.check_box :favourite, include_hidden: false
-      = label_tag :favourite, 'Marked as favourite'
-
       span.group-title.tac Source language
       = form.collection_check_boxes :source_language_id, @source_languages, :id, :name, include_hidden: false
 
@@ -56,6 +50,12 @@
       = form.collection_check_boxes :simple_copy, [true, false], :to_s, :to_s, include_hidden: false
       => check_box :mismatch, 'true', include_hidden: false
       = label_tag :mismatch, 'mismatch'
+
+      span.group-title.tac Quality
+      = form.check_box :quality_notice, include_hidden: false
+      = label_tag :quality_notice, 'Quality notice'
+      = form.check_box :favourite, include_hidden: false
+      = label_tag :favourite, 'Marked as favourite'
     div
       span.group-title Book
       =< form.collection_check_boxes :book_id, @books, :id, :name, include_hidden: false
