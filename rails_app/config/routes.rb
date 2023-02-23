@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
     member do
       post 'open_in_editor', as: :open_in_editor
+      post 'add_quality_notice', as: :add_quality_notice
       get '/compare/:other_id', action: :compare, as: :compare
     end
   end

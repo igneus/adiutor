@@ -131,6 +131,21 @@ class ChantsController < ApplicationController
     redirect_to target
   end
 
+  def add_quality_notice
+    raise 'forbidden' unless Rails.env.development?
+    authenticate_user!
+
+    chant = Chant.find params[:id]
+    result = AddQualityNotice.new.(chant)
+    if result.error?
+      flash[:error] = result.message
+    else
+      flash[:info] = 'Quality notice added.'
+    end
+
+    redirect_back fallback_location: chant_url(chant)
+  end
+
   def compare
     @chant_a = Chant.find params[:id]
     @chant_b = Chant.find params[:other_id]

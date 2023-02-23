@@ -55,6 +55,21 @@ module ChantsHelper
     )
   end
 
+  def quality_notice_button(chant)
+    return '' if chant.corpus.system_name != 'in_adiutorium'
+
+    opts = {title: "Add quality notice - modifies the source code in the directory specified in the configuration"}
+    if chant.placet.present?
+      opts.update(disabled: true, title: 'already has a quality notice')
+    end
+
+    button_to(
+      'Non placet',
+      add_quality_notice_chant_path(chant),
+      opts
+    )
+  end
+
   def chant_gregobase_link(chant)
     chant
       .gregobase_chant_id
