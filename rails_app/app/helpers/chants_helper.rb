@@ -58,7 +58,10 @@ module ChantsHelper
   def quality_notice_button(chant)
     return '' if chant.corpus.system_name != 'in_adiutorium'
 
-    opts = {title: "Add quality notice - modifies the source code in the directory specified in the configuration"}
+    opts = {
+      title: "Add quality notice - modifies the source code in the directory specified in the configuration",
+      data: {confirm: 'Really add quality notice?'}
+    }
     if chant.placet.present?
       opts.update(disabled: true, title: 'already has a quality notice')
     end
