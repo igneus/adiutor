@@ -47,7 +47,7 @@ class GregobaseImporter < BaseImporter
     return if source.scan('(::)').size > 8
 
     begin
-      score = SimpleGabcParser.call source
+      score = MyGabcParser.call source
     rescue => e
       STDERR.puts source
       STDERR.puts "failed to parse '#{gchant.id}': #{e.message}"

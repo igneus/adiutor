@@ -24,7 +24,7 @@ class LiberAntiphonariusImporter < BaseImporter
 
     source = File.read path
     begin
-      score = SimpleGabcParser.call source
+      score = MyGabcParser.call source
     rescue RuntimeError => e
       STDERR.puts "failed to parse '#{path}': #{e.message}"
       return # just skip the failed score

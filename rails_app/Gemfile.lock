@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/igneus/lygre.git
-  revision: 4a57c80c051e105f331a586681d80cba5d641537
+  revision: b16fd78f60d26f76321909711e5c9202cde2b0ba
   specs:
     lygre (0.0.3)
       polyglot (~> 0.3)
@@ -258,7 +258,7 @@ GEM
     thor (1.2.1)
     tilt (2.0.10)
     timeout (0.3.0)
-    treetop (1.6.11)
+    treetop (1.6.12)
       polyglot (~> 0.3)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)

@@ -53,7 +53,7 @@ class Antiphonale83Importer < BaseImporter
 
     gabc_score = nil
     begin
-      gabc_score = SimpleGabcParser.call(gabc)
+      gabc_score = MyGabcParser.call(gabc)
     rescue RuntimeError => e
       STDERR.puts "failed to parse gabc for '#{in_project_path}' ##{chant.id}: #{e.message}"
     end

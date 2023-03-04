@@ -1,7 +1,7 @@
 # Wrapper for lygre's GabcParser with simpler interface.
-class SimpleGabcParser
+class MyGabcParser
   def self.call(source)
-    parser = GabcParser.new
+    parser = SimpleGabcParser.new
     parser.parse(source)&.create_score ||
       raise(parser_failure_msg(parser))
   end
