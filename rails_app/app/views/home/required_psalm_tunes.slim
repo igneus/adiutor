@@ -17,5 +17,5 @@ table
           - tunes.each_with_index do |t, ti|
             = ', ' if ti > 0
             span class=('psalm-tone ' + (t.available? ? 'available' : 'missing'))
-              => link_to "#{t.modus || '~'}.#{t.differentia || '~'}", chants_path(modus: t.modus, differentia: t.differentia, **(psalm == 'Venite' ? {genre_id: @invitatory_genre.id} : {psalmus: psalm}))
+              => link_to "#{t.modus || '~'}.#{t.differentia || '~'}", chants_path(modus: t.modus, differentia: t.differentia, **(psalm == 'Venite' ? {genre_id: [@invitatory_genre.id]} : {psalmus: psalm}))
               = "(#{t.record_count}x)"
