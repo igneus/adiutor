@@ -40,9 +40,11 @@ class GregobaseImporter < BaseImporter
 
     return if gchant.gabc.start_with? '['
 
+    # if the 'name' header is not provided, gregorio prints a warning when processing the score
+    name = "name: #{gchant.incipit};\n"
     nabc_lines = gchant.gabc.include?('|') ? "nabc-lines: 1;\n" : ''
     source = JSON.parse(gchant.gabc)
-    source = nabc_lines + "%%\n" + source unless source =~ /^%%\r?$/
+    source = name + nabc_lines + "%%\n" + source unless source =~ /^%%\r?$/
 
     return if source.scan('(::)').size > 8
 
