@@ -27,7 +27,6 @@ class BaseImporter
       cv = chant.public_send(a)
       if av != cv
         puts "!!! #{a}: #{av.inspect} _x_ #{cv.inspect}"
-        sleep 3
       end
     end
   end
