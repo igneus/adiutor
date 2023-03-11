@@ -25,8 +25,9 @@ class ChantsController < ApplicationController
         .where(filter_params)
         .includes(:mismatches, :source_language, :corpus)
     if params[:lyrics].present?
+      lyrics_like_str = like_search_string(params[:lyrics], params[:lyrics_like_type])
       like = params[:case_sensitive] ? 'LIKE' : 'ILIKE'
-      @chants = @chants.where("lyrics #{like} ?", like_search_string(params[:lyrics], params[:lyrics_like_type]))
+      @chants = @chants.where("lyrics #{like} ? OR textus_approbatus #{like} ?", lyrics_like_str, lyrics_like_str)
     end
     volpiano = params[:volpiano]
     if volpiano.present?
