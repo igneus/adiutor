@@ -22,10 +22,10 @@ module ChantsHelper
     c << Tag.new('genre missing') if chant.genre_id.nil?
 
     if corpus
-      c << Tag.new(corpus_shortcut(chant.corpus.name), chant.corpus.name)
+      c << Tag.new(corpus_shortcut(chant.corpus.name), chant.corpus.name + ' corpus')
 
-      c << Tag.new('OP') if chant.book.system_name == 'bsop'
-      c << Tag.new('OSB') if %w(bm lhm).include? chant.book.system_name
+      c << Tag.new('OP', 'from Dominican books') if chant.book.system_name == 'bsop'
+      c << Tag.new('OSB', 'from Monastic books') if %w(bm lhm).include? chant.book.system_name
     end
 
     c
