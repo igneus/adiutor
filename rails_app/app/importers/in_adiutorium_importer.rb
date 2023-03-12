@@ -112,15 +112,18 @@ class InAdiutoriumImporter < BaseImporter
     chant.differentia = header['differentia']&.downcase
     chant.textus_approbatus = header['textus_approbatus']&.gsub(/\s+/, ' ')
     chant.lyrics_normalized = LyricsNormalizer.new.normalize_czech(
-      (chant.textus_approbatus ||
-       expand_responsory_variables(
+      expand_responsory_variables(
          score
            .lyrics_readable
            .sub('\Verse', ' V. ')
            .yield_self {|s| s.scan('\Response').size > 1 ? s[0...s.rindex('\Response')] : s } # cut responsories after the verse (but only those where R2 is repeated)
-       ))
+       )
         .sub(' V. ', ' | ')
     )
+    chant.textus_approbatus_normalized =
+      chant.textus_approbatus
+        &.sub(' V. ', ' | ')
+        &.yield_self {|t| LyricsNormalizer.new.normalize_czech t }
     chant.alleluia_optional = !!(score.music =~ /\\rubr(VelikAleluja|MimoPust)/)
     %w[quid psalmus placet fial].each do |key|
       chant.public_send "#{key}=", header[key]

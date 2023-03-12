@@ -1,30 +1,13 @@
 namespace :check do
   desc 'list texts which have multiple unrelated settings'
   task multiple_settings: :environment do
-    corpus_chants =
-      Corpus
-        .find_by_system_name('in_adiutorium')
-        .chants
-
-    replace = "regexp_replace(lyrics_normalized, ' aleluja$', '')"
-    result =
-      corpus_chants
-        .group(:genre_id, replace)
-        .select(:genre_id, replace + ' AS lyrics_further_normalized', 'COUNT(*) AS group_size')
-        .having('COUNT(*) > 1')
-        .order(:lyrics_further_normalized, :genre_id)
+    result = MultipleSettingsFinder.new.call
 
     result.each do |i|
-      chants = corpus_chants.where(
-        genre_id: i.genre_id,
-        lyrics_normalized: i.lyrics_further_normalized&.yield_self {|x| [x, x + ' aleluja'] }
-      )
-
-      relatives = chants.first.relatives
-      next if chants.all? {|c| relatives.include? c }
-
-      puts "#{i.genre_id} #{i.group_size} #{i.lyrics_further_normalized} " +
-           chants.collect {|j| "##{j.id}" }.join(' ')
+      puts "#{i.group_size} #{i.lyrics_further_normalized} "
+      # TODO: list IDs of the chants in the group
+      # TODO: url to a listing showing the chants in the group
+      # TODO: signal if there are chants of different genres
     end
 
     puts "Nothing found (that's good)" if result.empty?

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_15_095530) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_12_001611) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -57,6 +57,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_15_095530) do
     t.bigint "music_book_id"
     t.integer "gregobase_chant_id"
     t.bigint "import_id"
+    t.text "textus_approbatus_normalized"
     t.index ["book_id"], name: "index_chants_on_book_id"
     t.index ["corpus_id"], name: "index_chants_on_corpus_id"
     t.index ["cycle_id"], name: "index_chants_on_cycle_id"
