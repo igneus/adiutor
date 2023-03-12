@@ -61,19 +61,19 @@ describe MultipleSettingsFinder do
     end
 
     describe 'exactly the same textus_approbatus, different lyrics' do
-      xit 'finds them' do
+      it 'finds them' do
         first_chant =
           create_chant lyrics_normalized: 'a', textus_approbatus_normalized: 'c'
         create_chant lyrics_normalized: 'b', textus_approbatus_normalized: 'c'
 
         result = subject.call
         expect(result.size).to eq 1
-        expect(result[0].lyrics_further_normalized).to eq first_chant.lyrics_normalized
+        expect(result[0].lyrics_further_normalized).to eq first_chant.textus_approbatus_normalized
       end
     end
 
-    describe 'lyrics of one the same as textus_approbatus of the other' do
-      xit 'finds them' do
+    describe 'lyrics of one are the same as textus_approbatus of the other' do
+      it 'finds them' do
         first_chant =
           create_chant lyrics_normalized: 'a'
         create_chant lyrics_normalized: 'b', textus_approbatus_normalized: 'a'
