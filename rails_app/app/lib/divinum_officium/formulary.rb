@@ -2,7 +2,7 @@
 # allows enumerating the contents.
 module DivinumOfficium
   class Formulary
-    Item = Struct.new(:title, :text) do
+    Item = Struct.new(:title, :text, :section_pos) do
       def is_reference?
         text.start_with? '@'
       end
@@ -15,7 +15,10 @@ module DivinumOfficium
     attr_reader :items
 
     def antiphons
-      items.select {|i| i.title.include? 'Ant' }
+      items.select do |i|
+        i.title.include?('Ant') &&
+          !i.text.start_with?('V. ')
+      end
     end
 
     private
@@ -23,10 +26,34 @@ module DivinumOfficium
     def parse(source)
       r = []
       source.scan(/^\[(.+?)\]$([^\[]*)/) do |title, text|
-        r << Item.new(title, text.strip.sub(/;;[\d;]*$/, ''))
+        next if text.strip.empty?
+
+        if title.include?('Ant') && text =~ /^V\..+?^R\./m
+          # antiphon immediately followed by a versicle
+          a, _, v = text.partition(/(?=^V\.)/)
+          r << Item.new(title, scrub_text(a), 1)
+          r << Item.new(title, scrub_text(v), 2)
+        elsif title.include?('Ant') && text.strip.scan("\n").size > 0
+          # series of antiphons
+          text.strip.split("\n").each.with_index(1) do |a, i|
+            scrub_text(a).yield_self do |scrubbed|
+              next if scrubbed.empty?
+              r << Item.new(title, scrubbed, i)
+            end
+          end
+        else
+          scrub_text(text).yield_self do |scrubbed|
+            next if scrubbed.empty?
+            r << Item.new(title, scrubbed)
+          end
+        end
       end
 
       r
+    end
+
+    def scrub_text(str)
+      str.strip.sub(/;;[\d;]*$/, '')
     end
   end
 end
