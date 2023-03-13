@@ -48,7 +48,6 @@ Dir[File.join(DO_SOURCES_PATH, *%w(web www horas Latin ** *.txt))].each do |path
   next if options.has_key?(:'no-monastic') && monastic_path?(path)
 
   formulary = DivinumOfficium::Formulary.new(File.read(path))
-  next if formulary.antiphons.empty?
   title_printed = false
 
   formulary
