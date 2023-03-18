@@ -18,7 +18,7 @@ task update_children_tree_size: [:environment] do
   end
 end
 
-desc 'checks if each score matchis its parent'
+desc 'checks if each score matches its parent'
 task compare_parents: [:environment] do
   ParentChildMismatch.delete_all
 
