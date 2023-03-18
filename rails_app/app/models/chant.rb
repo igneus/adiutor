@@ -31,6 +31,11 @@ class Chant < ApplicationRecord
 
   scope :have_fons_externus, -> { where("header->'fons_externus' IS NOT NULL") }
 
+  scope :top_parents, -> do
+    all_parents = select(:parent_id).distinct.where.not(parent_id: nil)
+    where(parent_id: nil).where("id IN (#{all_parents.to_sql})")
+  end
+
   # Properties containing music encoded in Volpiano and other related encoding systems
   VOLPIANO_PROPERTIES = [
     :volpiano,
@@ -89,6 +94,8 @@ class Chant < ApplicationRecord
     parent.nil? ? self : parent.parental_tree_top(seen + [self])
   end
 
+  # #children_tree_size contains the same value persisted (rather than computed on the fly),
+  # but is only available on top parents
   def parental_tree_size
     1 + parental_tree_top.posterity.size
   end

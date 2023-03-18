@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     collection do
       get '/fial/:fial', action: :fial, as: :fial, constraints: {fial: /[^\/]+/}
       get 'resp-atyp', action: :atypical_responsories
+      get 'clusters', action: :clusters
 
       post 'open_in_editor_retry', as: :retry_open_in_editor
     end

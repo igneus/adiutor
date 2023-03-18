@@ -86,6 +86,16 @@ class ChantsController < ApplicationController
     @count_atyp = @chants.total_count
   end
 
+  def clusters
+    @chants =
+      Corpus
+        .find_by_system_name!('in_adiutorium')
+        .chants
+        .top_parents
+        .order(children_tree_size: :desc, lyrics: :asc)
+        .page(params[:page] || 1)
+  end
+
   def show
     @chant = Chant.find params[:id]
     @properties = @chant.attributes.except(*%w(id source_code header lyrics textus_approbatus))

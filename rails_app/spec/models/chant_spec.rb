@@ -9,6 +9,28 @@ RSpec.describe Chant, type: :model do
     }
   end
 
+  describe '.top_parents' do
+    it 'does not select an isolated chant' do
+      chant = create :chant
+      expect(Chant.top_parents).not_to include chant
+    end
+
+    it 'selects chant having a child' do
+      parent = create :chant
+      create :chant, parent: parent
+
+      expect(Chant.top_parents).to include parent
+    end
+
+    it 'does not select second level parent' do
+      top_parent = create :chant
+      parent = create :chant, parent: top_parent
+      create :chant, parent: parent
+
+      expect(Chant.top_parents).not_to include parent
+    end
+  end
+
   describe '#parental_tree_top' do
     it 'prevents infinite loop' do
       a = Chant.new(**default_chant_params)

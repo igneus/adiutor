@@ -55,6 +55,16 @@ RSpec.describe 'Chants', type: :request do
     end
   end
 
+  describe 'GET /chants/clusters' do
+    it 'succeeds' do
+      create :in_adiutorium_corpus
+
+      get '/chants/clusters'
+      expect(response).to have_http_status :ok
+      expect(response.body).to include 'Clusters'
+    end
+  end
+
   describe 'GET /chants/fial/:fial' do
     it 'root directory' do
       chant = create(

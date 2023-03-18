@@ -12,7 +12,9 @@ module ChantsHelper
       c << Tag.new('copy', chant.fial)
     end
 
-    if children
+    if chant.children_tree_size&.> 2
+      c << Tag.new("#{chant.children_tree_size - 1} children")
+    elsif children
       # not done by default, as it requires eager-loaded children or a separate query
       c << Tag.new('has children') unless chant.children.empty?
     end

@@ -1,0 +1,26 @@
+= page_title 'Clusters of Related Chants'
+
+.row
+  .column.column-20= page_entries_info @chants
+  .column.column-60.tac= paginate @chants
+
+/ TODO this is basically a duplicate of _listing.slim with just a single column added
+table
+  tbody
+    - @chants.each do |c|
+      tr
+        td
+          strong title='cluster size'= c.children_tree_size
+        td= link_to c.id, chant_path(c)
+        td= link_to c.quid, chants_path(quid: c.quid)
+        td= link_to c.modus, chants_path(modus: c.modus) if c.modus
+        td= link_to c.differentia, chants_path(modus: c.modus, differentia: c.differentia) if c.differentia
+        td= link_to c.link_text, chant_path(c)
+        td
+          = link_to chant_path(c) do
+            = render 'image', chant: c
+        td= c.chant_id == BaseImporter::DEFAULT_CHANT_ID ? c.source_file_path : c.fial_of_self
+        td= render 'tags', chant: c
+        td= edit_chant_button c, 'edit', render_if_unavailable: false, opts: {class: 'button button-outline'}
+
+.tac= paginate @chants

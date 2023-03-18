@@ -9,6 +9,15 @@ task update_parents: [:environment] do
   end
 end
 
+desc 'save children tree size for each top parent'
+task update_children_tree_size: [:environment] do
+  Chant.update_all(children_tree_size: nil)
+
+  Chant.top_parents.each do |chant|
+    chant.update(children_tree_size: chant.parental_tree_size)
+  end
+end
+
 desc 'checks if each score matchis its parent'
 task compare_parents: [:environment] do
   ParentChildMismatch.delete_all
