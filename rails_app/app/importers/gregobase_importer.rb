@@ -156,12 +156,10 @@ class GregobaseImporter < BaseImporter
         .gsub(%r{\s*<eu>.*?</eu>}, '')
         .then(&LyricsHelper.method(:remove_euouae))
         .gsub(%r{<sp>[*+]</sp>}, '')
-        .gsub(%r{<sp>([ao]e)</sp>}) { Regexp.last_match[1] }
-        .gsub(%r{<sp>'([ao])e</sp>}) { Regexp.last_match[1] + 'é' }
-        .gsub("<sp>'æ</sp>", 'aé')
-        .gsub("<sp>'œ</sp>", 'oé')
+        .then(&GabcLyricsHelper.method(:decode_special_characters))
         .gsub('<sp>\P</sp>', '')
         .gsub(%r{<v>.*?</v>}, '')
+        .then(&GabcLyricsHelper.method(:remove_attached_text))
     end
 
     def modus_differentia
