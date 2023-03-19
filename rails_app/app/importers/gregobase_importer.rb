@@ -83,7 +83,7 @@ class GregobaseImporter < BaseImporter
     Gregobase::Source
       .all
       .collect do |s|
-      import = s.title =~ /(antiphonale|antiphonarium|antiphonarius|completorium|hebdomad|les heures|liber hymnarius|matutinum|nocturnale|nocturnalis|psalterium|semaine|usualis|graduale simplex|et responsoria)/i
+      import = s.title =~ /(antiphonale|antiphonarium|antiphonarius|completorium|hebdomad|in nocte|les heures|liber hymnarius|matutinum|nocturnale|nocturnalis|psalterium|semaine|usualis|graduale simplex|et responsoria|responsorialis)/i
       puts "#{import ? '+' : '-'} #{s.title} (#{s.year})"
 
       import ? s : nil
@@ -206,9 +206,11 @@ class GregobaseImporter < BaseImporter
         {title: /Liber antiphonarius/, year: ^before_loth} |
         {title: /Nocturnale Romanum/} |
         {title: /Liber nocturnalis/, year: ^before_loth} |
-        {title: /Semaine Sainte/, year: ^before_loth}
+        {title: /Semaine Sainte/, year: ^before_loth} |
+        {title: /In nocte nativitatis domini/i, year: ^before_loth}
         'br'
       in {title: /Antiphonale Monasticum/, year: ^before_loth} |
+        {title: /Liber Responsorialis/, year: ^before_loth} |
         {title: /Cod. Sang. 39[01]/} # by a little cheat let's consider the monastic liturgy one and unchanging in time and space, for our purposes it's OK
         'bm'
       in {title: /monasticum/i, year: ^after_loth}
