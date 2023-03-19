@@ -34,6 +34,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :source_files
+
   namespace :api do
     post 'eantifonar/search', to: 'eantifonar#search'
   end

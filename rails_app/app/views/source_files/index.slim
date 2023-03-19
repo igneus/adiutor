@@ -1,0 +1,20 @@
+= page_title 'Source Files'
+
+.row
+  .column.column-20= page_entries_info @source_files
+  .column.column-60.tac= paginate @source_files
+
+table
+  thead
+    tr
+      th path
+      th chants
+      th quality notices
+  tbody
+    - @source_files.each do |f|
+      tr class=(f.quality_notice_count == 0 ? 'no-quality-notice' : nil)
+        td= f.source_file_path
+        td= f.chants_count
+        td= f.quality_notice_count
+
+.tac= paginate @source_files
