@@ -28,15 +28,15 @@ class GregobaseImporter < BaseImporter
     )
 
     source
-      .gregobase_chant_sources
-      .joins(:gregobase_chant)
+      .chant_sources
+      .joins(:chant)
       .where(gregobase_chants: {'office-part': GENRES.keys})
       .where.not(gregobase_chants: {gabc: ''})
       .each {|i| import_chant music_book, i, import }
   end
 
   def import_chant(music_book, chant_source, import)
-    gchant = chant_source.gregobase_chant
+    gchant = chant_source.chant
 
     return if gchant.gabc.start_with? '['
 
@@ -62,7 +62,7 @@ class GregobaseImporter < BaseImporter
     # as separate chant.
     # (And we want it like this, because, while the music is the same,
     # characteristics like Cycle, Season etc. often vary.)
-    fake_path = "#{chant_source.source}/#{gchant.id}"
+    fake_path = "#{chant_source.source_id}/#{gchant.id}"
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: fake_path)
     chant.corpus = corpus # not a duplicate, find_or_initialize_by doesn't infer any values from the relation when initializing
@@ -80,7 +80,7 @@ class GregobaseImporter < BaseImporter
 
   # selects sources for import
   def sources
-    Gregobase::GregobaseSource
+    Gregobase::Source
       .all
       .collect do |s|
       import = s.title =~ /(antiphonale|antiphonarium|antiphonarius|completorium|hebdomad|les heures|liber hymnarius|matutinum|nocturnale|nocturnalis|psalterium|semaine|usualis|graduale simplex|et responsoria)/i
@@ -94,10 +94,10 @@ class GregobaseImporter < BaseImporter
   class Adapter < BaseImportDataAdapter
     extend Forwardable
 
-    # @param gregobase_chant_source [Gregobase::GregobaseChantSource]
+    # @param gregobase_chant_source [Gregobase::ChantSource]
     def initialize(gregobase_chant_source, score, music_book, source_code)
-      @chant = gregobase_chant_source.gregobase_chant
-      @source = gregobase_chant_source.gregobase_source
+      @chant = gregobase_chant_source.chant
+      @source = gregobase_chant_source.source
       @score = score
       @music_book = music_book
       @source_code = source_code
