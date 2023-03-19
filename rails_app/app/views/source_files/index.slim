@@ -13,7 +13,7 @@ table
   tbody
     - @source_files.each do |f|
       tr class=(f.quality_notice_count == 0 ? 'no-quality-notice' : nil)
-        td= f.source_file_path
+        td= link_to f.source_file_path, chants_path(source_file_path: f.source_file_path)
         td= f.chants_count
         td= f.quality_notice_count
 

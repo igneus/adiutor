@@ -56,6 +56,9 @@
       = label_tag :quality_notice, 'Quality notice'
       = form.check_box :favourite, include_hidden: false
       = label_tag :favourite, 'Marked as favourite'
-    div
-      span.group-title Book
-      =< form.collection_check_boxes :book_id, @books, :id, :name, include_hidden: false
+    .row
+      .column.column-80
+        span.group-title Book
+        =< form.collection_check_boxes :book_id, @books, :id, :name, include_hidden: false
+      .column.column-20
+        = form.select :source_file_path, @source_files.collect {|x| [x.source_file_path] * 2 }, include_blank: true

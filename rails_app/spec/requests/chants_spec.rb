@@ -2,6 +2,10 @@ require 'rails_helper'
 
 RSpec.describe 'Chants', type: :request do
   describe 'GET /chants' do
+    before :each do
+      create :in_adiutorium_corpus
+    end
+
     it 'succeeds' do
       get '/chants'
       expect(response).to have_http_status :ok

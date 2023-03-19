@@ -19,6 +19,7 @@ class ChantsController < ApplicationController
       ['beginning', 'Begins with'],
       ['end', 'Ends with'],
     ]
+    @source_files = Corpus.find_by_system_name!('in_adiutorium').chants.select(:source_file_path).distinct.order(:source_file_path)
 
     @chants =
       Chant
@@ -62,6 +63,9 @@ class ChantsController < ApplicationController
     end
     if params[:ids]
       @chants = @chants.where(id: params[:ids].split(',').collect(&:to_i))
+    end
+    if params[:source_file_path].present?
+      @chants = @chants.where(source_file_path: params[:source_file_path])
     end
 
     @chants = @chants.page(params[:page] || 1)
