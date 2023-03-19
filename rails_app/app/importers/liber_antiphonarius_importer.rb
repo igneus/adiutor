@@ -133,6 +133,7 @@ class LiberAntiphonariusImporter < BaseImporter
       LyricsHelper
         .normalize_initial(score.music.lyrics_readable)
         .gsub(%r{\s*<sp>[VR]/</sp>\.?\s*}, ' ')
+        .then(&GabcLyricsHelper.method(:remove_attached_text))
     end
 
     def lyrics_normalized
