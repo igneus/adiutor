@@ -16,13 +16,12 @@ namespace :check do
   desc 'list chants with multiple +aleluja children'
   task multiple_child_alleluias: :environment do
     Chant
-      .select(:parent_id, 'COUNT(*) as children_count')
-      .where("fial LIKE '%+aleluja%'")
-      .group(:parent_id)
-      .having('COUNT(*) > 1')
+      .top_parents
+      .collect {|parent| [parent, parent.posterity.select {|i| i.fial.include? '+aleluja' }.count] }
+      .select {|(parent, plus_alleluias)| plus_alleluias > 1 }
       .tap {|result| puts "Nothing found (that's good)" if result.empty? }
-      .each do |i|
-      puts "##{i.parent_id}: #{i.children_count}"
+      .each do |(parent, plus_alleluias)|
+      puts "##{parent.id}: #{plus_alleluias}"
     end
   end
 
