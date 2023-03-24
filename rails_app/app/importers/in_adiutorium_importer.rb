@@ -37,6 +37,7 @@ class InAdiutoriumImporter < BaseImporter
         .scores
         .collect {|i| LyvExtensions::ScoreBetterLyrics.new i }
 
+    offset = 0
     # file due to historical reasons
     # containing chants of two seasons
     if in_project_path == 'velikonoce_velikonocnioktav.ly'
@@ -46,13 +47,15 @@ class InAdiutoriumImporter < BaseImporter
           .to_a
       season_triduum = Season.for_cr_season CR::Seasons::TRIDUUM
 
-      triduum_scores.each do |s|
+      triduum_scores.each_with_index do |s, si|
         puts s
-        import_score s, in_project_path, book, cycle, season_triduum, corpus, language, import
+        import_score s, in_project_path, book, cycle, season_triduum, corpus, language, import, si
       end
+
+      offset = triduum_scores.size
     end
 
-    scores.each do |s|
+    scores.each.with_index(offset) do |s, si|
       puts s
 
       if s.header['id'].blank?
@@ -60,11 +63,11 @@ class InAdiutoriumImporter < BaseImporter
         next
       end
 
-      import_score s, in_project_path, book, cycle, season, corpus, language, import
+      import_score s, in_project_path, book, cycle, season, corpus, language, import, si
     end
   end
 
-  def import_score(score, in_project_path, book, cycle, season, corpus, language, import)
+  def import_score(score, in_project_path, book, cycle, season, corpus, language, import, source_file_position)
     header = score.header.transform_values {|v| v == '' ? nil : v }
     chant = Chant.find_or_initialize_by(chant_id: header['id'], source_file_path: in_project_path)
 
@@ -74,6 +77,7 @@ class InAdiutoriumImporter < BaseImporter
     chant.cycle = cycle
     chant.season = season
     chant.source_language = language
+    chant.source_file_position = source_file_position
 
     hour, genre = detect_hour_and_genre(header['id'], header['quid'], in_project_path)
     genre = header['adiutor_genre'] if header['adiutor_genre']

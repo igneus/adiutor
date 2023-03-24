@@ -65,7 +65,10 @@ class ChantsController < ApplicationController
       @chants = @chants.where(id: params[:ids].split(',').collect(&:to_i))
     end
     if params[:source_file_path].present?
-      @chants = @chants.where(source_file_path: params[:source_file_path])
+      @chants =
+        @chants
+          .where(source_file_path: params[:source_file_path])
+          .order(:source_file_position)
     end
 
     @chants = @chants.page(params[:page] || 1)
