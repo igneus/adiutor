@@ -109,13 +109,11 @@ class GregobaseImporter < BaseImporter
     def_delegators :@score_with_stats, :syllable_count, :word_count, :melody_section_count
 
     def book
-      Book.find_by_system_name! detect_book @music_book
+      Book.find_by_system_name! book_system_name
     end
 
     def genre
-      GENRES[@chant.public_send('office-part')]
-        .yield_self {|g| (g == 'antiphon' && source_code.include?('<sp>V/</sp>')) ? 'antiphon_standalone' : g }
-        .yield_self {|g| Genre.find_by_system_name! g }
+      Genre.find_by_system_name! genre_system_name
     end
 
     def lyrics
@@ -195,11 +193,13 @@ class GregobaseImporter < BaseImporter
       [mode, diff]
     end
 
-    def detect_book(music_book)
+    public
+
+    def book_system_name
       before_loth = ->(i) { i < 1971 }
       after_loth = ->(i) { i >= 1971 }
 
-      case music_book.attributes.symbolize_keys # pattern matching doesn't seem to work for Hashes with String keys
+      case @music_book.attributes.symbolize_keys # pattern matching doesn't seem to work for Hashes with String keys
       in {title: /Liber Usualis/} |
         {title: /Antiphonale Romanum/, year: ^before_loth} |
         {title: /Antiphonale Marcianum/} |
@@ -228,6 +228,21 @@ class GregobaseImporter < BaseImporter
       in {title: 'Graduale simplex'}
         'gs'
       end
+    end
+
+    def genre_system_name
+      g = GENRES[@chant.public_send('office-part')]
+
+      if g == 'antiphon' && source_code.include?('<sp>V/</sp>')
+        return 'antiphon_standalone'
+      end
+
+      if g == 'antiphon' &&
+         (@music_book.title =~ /liber hymnarius/i || lyrics =~ /Ven[ií]te[\.,]?\Z/)
+        return 'invitatory'
+      end
+
+      g
     end
   end
 end
