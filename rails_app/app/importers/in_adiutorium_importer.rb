@@ -1,3 +1,5 @@
+require 'amatch'
+
 require_relative '../../spec/importers/in_adiutorium_importer_example_data'
 
 # Imports chants from the directory structure of the "In adiutorium" project sources
@@ -128,6 +130,9 @@ class InAdiutoriumImporter < BaseImporter
       chant.textus_approbatus
         &.sub(' V. ', ' | ')
         &.yield_self {|t| LyricsNormalizer.new.normalize_czech t }
+    chant.edited_lyrics_extent =
+      chant.textus_approbatus &&
+      Amatch::Levenshtein.new(chant.textus_approbatus).match(chant.lyrics)
     chant.alleluia_optional = !!(score.music =~ /\\rubr(VelikAleluja|MimoPust)/)
     %w[quid psalmus placet fial].each do |key|
       chant.public_send "#{key}=", header[key]
