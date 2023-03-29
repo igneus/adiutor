@@ -242,7 +242,7 @@ class InAdiutoriumImporter < BaseImporter
       case in_project_path
       when %r{^antifony/(tyden|doplnovaci|ferie_kantevgant|invitatoria)}, 'responsoria.ly'
         'psalter'
-      when %r{^(sanktoral|reholni)/}
+      when %r{^(commune|sanktoral|reholni)/}
         'sanctorale'
       when 'zakladni_napevy.ly', 'marianske_antifony.ly', %r{^invitatoria/}
         'ordinarium'
