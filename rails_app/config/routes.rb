@@ -7,7 +7,8 @@ Rails.application.routes.draw do
 
   resources :chants do
     collection do
-      get '/fial/:fial', action: :fial, as: :fial, constraints: {fial: /[^\/]+/}
+      post '/fial', to: 'browse_fial#list', as: :fial_list
+      get '/fial/:fial', to: 'browse_fial#detail', as: :fial, constraints: {fial: /[^\/]+/}
       get 'resp-atyp', action: :atypical_responsories
       get 'clusters', action: :clusters
 

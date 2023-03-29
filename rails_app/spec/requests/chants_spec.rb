@@ -68,28 +68,4 @@ RSpec.describe 'Chants', type: :request do
       expect(response.body).to include 'Clusters'
     end
   end
-
-  describe 'GET /chants/fial/:fial' do
-    it 'root directory' do
-      chant = create(
-        :chant,
-        source_file_path: 'basename.ly',
-        chant_id: 'chantid'
-      )
-
-      get '/chants/fial/basename.ly%23chantid'
-      expect(response).to redirect_to "/chants/#{chant.id}"
-    end
-
-    it 'subdirectory' do
-      chant = create(
-        :chant,
-        source_file_path: 'subdirectory/basename.ly',
-        chant_id: 'chantid'
-      )
-
-      get '/chants/fial/subdirectory%2Fbasename.ly%23chantid'
-      expect(response).to redirect_to "/chants/#{chant.id}"
-    end
-  end
 end
