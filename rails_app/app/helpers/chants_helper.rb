@@ -117,4 +117,8 @@ module ChantsHelper
 
     r.join ' '
   end
+
+  def chant_listing_anchor(chant)
+    "chant-listing-item-#{chant.id}"
+  end
 end
