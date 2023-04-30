@@ -150,6 +150,24 @@ EOS
         expect(a5.section_pos).to be 5
       end
     end
+
+    describe 'line continuation' do
+      let(:source) do
+        <<EOS
+[Ant 2]
+Appropinquábat autem * dies festus Judæórum: et quærébant príncipes sacerdótum~
+quómodo Jesum interfícerent, sed timébant plebem.
+EOS
+      end
+
+      it 'parses it correctly' do
+        expect(subject.items.size).to be 1
+
+        a1 = subject.items[0]
+        expect(a1.title).to eq 'Ant 2'
+        expect(a1.text).to eq 'Appropinquábat autem * dies festus Judæórum: et quærébant príncipes sacerdótum quómodo Jesum interfícerent, sed timébant plebem.'
+      end
+    end
   end
 
   describe '#antiphons' do

@@ -35,7 +35,7 @@ module DivinumOfficium
           r << Item.new(title, scrub_text(v), 2)
         elsif title.include?('Ant') && text.strip.scan("\n").size > 0
           # series of antiphons
-          text.strip.split("\n").each.with_index(1) do |a, i|
+          text.strip.split(/(?<!~)$/).each.with_index(1) do |a, i|
             scrub_text(a).yield_self do |scrubbed|
               next if scrubbed.empty?
               r << Item.new(title, scrubbed, i)
@@ -53,7 +53,7 @@ module DivinumOfficium
     end
 
     def scrub_text(str)
-      str.strip.sub(/;;[\d;]*$/, '')
+      str.strip.sub(/;;[\d;]*/, '').sub("~\n", ' ')
     end
   end
 end
