@@ -32,7 +32,7 @@ h2
       => @need_fix_total
       = link_to 'chants awaiting revision', chants_path(quality_notice: true)
     p
-      => ParentChildMismatch.count
+      => ParentChildMismatch.unresolved.count
       = link_to 'parent mismatches awaiting review', mismatches_path
 
 
