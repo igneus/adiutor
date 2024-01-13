@@ -6,6 +6,9 @@
         .column.column-60
           = form.check_box :case_sensitive, include_hidden: false
           = label_tag :case_sensitive, 'Case-sensitive'
+
+          = form.check_box :normalized, include_hidden: false
+          = label_tag :normalized, 'Normalized'
         .column.column-40
           = form.collection_select :lyrics_like_type, @like_types, :first, :last
     .column.column-40

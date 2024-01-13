@@ -26,9 +26,17 @@ class ChantsController < ApplicationController
         .where(filter_params)
         .includes(:mismatches, :source_language, :corpus)
     if params[:lyrics].present?
-      lyrics_like_str = like_search_string(params[:lyrics], params[:lyrics_like_type])
       like = params[:case_sensitive] ? 'LIKE' : 'ILIKE'
-      @chants = @chants.where("lyrics #{like} ? OR textus_approbatus #{like} ?", lyrics_like_str, lyrics_like_str)
+      column = 'lyrics'
+      lyrics_input = params[:lyrics]
+      if params[:normalized]
+        column = 'lyrics_normalized'
+        # using `normalize_czech` assumes that the user will usually use simple keyboard
+        # input and abstain from entering special Latin staff like accented digraphs
+        lyrics_input = LyricsNormalizer.new.normalize_czech lyrics_input
+      end
+      lyrics_like_str = like_search_string(lyrics_input, params[:lyrics_like_type])
+      @chants = @chants.where("#{column} #{like} ? OR textus_approbatus #{like} ?", lyrics_like_str, lyrics_like_str)
     end
     volpiano = params[:volpiano]
     if volpiano.present?
