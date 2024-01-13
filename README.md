@@ -39,6 +39,7 @@ Data import is not dockerized, so these steps install dependencies
 and execute code of the Rails application outside of Docker.
 (The dockerized database is still being used.)
 
+1. in section 3 of `.env` configure local paths to the data of corpora you plan to import
 1. `cd rails_app`
 1. `bundle install`
 1. check that the application works outside of Docker: `bundle exec rake spec`
@@ -47,7 +48,7 @@ and execute code of the Rails application outside of Docker.
    (respective optional settings in `.env` must be set)
     - `bundle exec rake antiphonarius:import` to import chants from the 1960 Liber antiphonarius
     - `bundle exec rake antiphonale83:import` to import chants from the 1983 Ordo cantus officii
-    - `bundle exec rake gregobase:import` to import relevant chants from GregoBase
+    - `bundle exec rake gregobase:load_dump gregobase:import` to import relevant chants from GregoBase
 1. `bundle exec rake images` to render each chant in notation (takes a lot of time to finish,
    requires LilyPond and Inkscape, for the gabc-based chant corpora also LuaLaTex and Gregorio)
 
