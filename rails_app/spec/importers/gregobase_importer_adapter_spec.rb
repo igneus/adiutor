@@ -47,5 +47,43 @@ describe GregobaseImporter::Adapter do
         end
       end
     end
+
+    describe 'antiphon with a tag' do
+      let(:gregobase_chant) { double('office-part': 'an', tags: [double(tag: 'Ad invitatorium')]) }
+
+      it 'is an invitatory' do
+        expect(subject.genre_system_name).to eq 'invitatory'
+      end
+    end
+  end
+
+  describe 'detecting hour' do
+    describe 'by tags' do
+      [
+        [[], nil],
+        [['unknown tag'], nil],
+
+        [['Ad I Vesperas'], 'vespers'],
+        [['Ad II Vesperas'], 'vespers'],
+        [['1/1 ad Off. lect. A1'], 'readings'],
+        [['Ad Laudes'], 'lauds'],
+        [['Ad Primam'], 'daytime'],
+        [['Ad Tertiam'], 'daytime'],
+        [['Ad Sextam'], 'daytime'],
+        [['Ad Nonam'], 'daytime'],
+        [['Ad Vigilias'], 'readings'],
+        [['Ad Completorium'], 'compline'],
+
+        [['irrelevant tag', 'Ad II Vesperas'], 'vespers'],
+      ].each do |tags, expected|
+        describe tags.inspect do
+          let(:gregobase_chant) { double(tags: tags.collect {|t| double(tag: t) }) }
+
+          it "detects #{expected}" do
+            expect(subject.hour_system_name).to eq expected
+          end
+        end
+      end
+    end
   end
 end
