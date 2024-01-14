@@ -30,6 +30,7 @@ class GregobaseImporter < BaseImporter
     source
       .chant_sources
       .joins(:chant)
+      .left_joins(chant: :tags)
       .where(gregobase_chants: {'office-part': GENRES.keys})
       .where.not(gregobase_chants: {gabc: ''})
       .each {|i| import_chant music_book, i, import }
@@ -63,6 +64,7 @@ class GregobaseImporter < BaseImporter
     # (And we want it like this, because, while the music is the same,
     # characteristics like Cycle, Season etc. often vary.)
     fake_path = "#{chant_source.source_id}/#{gchant.id}"
+    p fake_path
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: fake_path)
     chant.corpus = corpus # not a duplicate, find_or_initialize_by doesn't infer any values from the relation when initializing
@@ -114,6 +116,10 @@ class GregobaseImporter < BaseImporter
 
     def genre
       Genre.find_by_system_name! genre_system_name
+    end
+
+    def hour
+      hour_system_name&.then {|x| Hour.find_by_system_name! x }
     end
 
     def lyrics
@@ -233,16 +239,43 @@ class GregobaseImporter < BaseImporter
     def genre_system_name
       g = GENRES[@chant.public_send('office-part')]
 
-      if g == 'antiphon' && source_code.include?('<sp>V/</sp>')
-        return 'antiphon_standalone'
-      end
+      if g == 'antiphon'
+        if source_code.include?('<sp>V/</sp>')
+          return 'antiphon_standalone'
+        end
 
-      if g == 'antiphon' &&
-         (@music_book.title =~ /liber hymnarius/i || lyrics =~ /Ven[ií]te[\.,]?\Z/)
-        return 'invitatory'
+        if (@music_book.title =~ /liber hymnarius/i || lyrics =~ /Ven[ií]te[\.,]?\Z/)
+          return 'invitatory'
+        end
+
+        if @chant.tags.find {|t| t.tag =~ /invitatorium/i }
+          return 'invitatory'
+        end
       end
 
       g
+    end
+
+    def hour_system_name
+      @chant.tags.each do |t|
+        system_name =
+          case t.tag
+          when /vesperas/i
+            'vespers'
+          when /laudes/i
+            'lauds'
+          when /ad (primam|tertiam|sextam|nonam)/i
+            'daytime'
+          when /(matutinum|vigilias|off\. lect\.)/i
+            'readings'
+          when /completorium/i
+            'compline'
+          end
+
+        return system_name if system_name
+      end
+
+      nil
     end
   end
 end
