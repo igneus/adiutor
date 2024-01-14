@@ -94,7 +94,9 @@ class Antiphonale83Importer < BaseImporter
     attr_reader :book, :cycle
     alias source_code gabc
 
-    def hour
+    find_associations_by_system_name :hour, :genre
+
+    def hour_system_name
       id = score.headers['id']
 
       hour =
@@ -119,25 +121,19 @@ class Antiphonale83Importer < BaseImporter
           nil
         end
 
-      hour && Hour.find_by_system_name!(hour)
+      hour
     end
 
-    def genre
-      @genre ||=
-        begin
-          annotation = score.headers['annotation']
+    def genre_system_name
+      annotation = score.headers['annotation']
 
-          genre =
-            if in_project_path =~ /responsoria/
-              'responsory_short'
-            elsif annotation =~ /ad (Ben|Mag)/
-              'antiphon_gospel'
-            else
-              'antiphon'
-            end
-
-          Genre.find_by_system_name!(genre)
-        end
+      if in_project_path =~ /responsoria/
+        'responsory_short'
+      elsif annotation =~ /ad (Ben|Mag)/
+        'antiphon_gospel'
+      else
+        'antiphon'
+      end
     end
 
     def lyrics

@@ -110,17 +110,7 @@ class GregobaseImporter < BaseImporter
     attr_reader :source_code
     def_delegators :@score_with_stats, :syllable_count, :word_count, :melody_section_count
 
-    def book
-      Book.find_by_system_name! book_system_name
-    end
-
-    def genre
-      Genre.find_by_system_name! genre_system_name
-    end
-
-    def hour
-      hour_system_name&.then {|x| Hour.find_by_system_name! x }
-    end
+    find_associations_by_system_name :book, :genre, :hour
 
     def lyrics
       lyrics_common_base

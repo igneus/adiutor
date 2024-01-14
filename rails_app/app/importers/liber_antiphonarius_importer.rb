@@ -66,67 +66,60 @@ class LiberAntiphonariusImporter < BaseImporter
     attr_reader :book, :source_code
     def_delegators :@score_with_stats, :syllable_count, :word_count, :melody_section_count
 
-    def cycle
-      system_name =
-        if page.in_range?(1..209)
-          'psalter'
-        elsif page.in_range?(210..576)
-          'temporale'
-        elsif page.in_range?(577..931) || page.in_range?(1..141, '[')
-          'sanctorale'
-        elsif page.suffix == '*'
-          'ordinarium'
-        else
-          'temporale' # TODO
-        end
+    find_associations_by_system_name :cycle, :season, :genre
 
-      Cycle.find_by_system_name! system_name
+    def cycle_system_name
+      if page.in_range?(1..209)
+        'psalter'
+      elsif page.in_range?(210..576)
+        'temporale'
+      elsif page.in_range?(577..931) || page.in_range?(1..141, '[')
+        'sanctorale'
+      elsif page.suffix == '*'
+        'ordinarium'
+      else
+        'temporale' # TODO
+      end
     end
 
-    def season
+    def season_system_name
       # here we pragmatically impose post-Vatican II notions of liturgical seasons,
       # since the material is being imported for purposes of comparison
       # with the vernacular chants for a post-Vatican II LOTH
-      system_name =
-        if page.in_range?(210..258)
-          'advent'
-        elsif page.in_range?(259..335)
-          'christmas'
-        elsif page.in_range?(336..340)
-          'ordinary'
-        elsif page.in_range?(341..431)
-          'lent'
-        elsif page.in_range?(432..447)
-          'triduum'
-        elsif page.in_range?(448..515)
-          'easter'
-        elsif page.in_range?(516..576)
-          'ordinary'
-        else
-          nil
-        end
-
-      system_name && Season.find_by_system_name!(system_name)
+      if page.in_range?(210..258)
+        'advent'
+      elsif page.in_range?(259..335)
+        'christmas'
+      elsif page.in_range?(336..340)
+        'ordinary'
+      elsif page.in_range?(341..431)
+        'lent'
+      elsif page.in_range?(432..447)
+        'triduum'
+      elsif page.in_range?(448..515)
+        'easter'
+      elsif page.in_range?(516..576)
+        'ordinary'
+      else
+        nil
+      end
     end
 
-    def genre
+    def genre_system_name
       office_part = header['office-part']
 
-      genre =
-        if office_part == 'Responsoria brevia'
-          'responsory_short'
-        elsif office_part == 'Antiphonae'
-          # TODO: there is currently no easy and general way to detect gospel antiphons
-          if cycle.system_name == 'psalter'
-            'antiphon_psalter'
-          else
-            'antiphon'
-          end
+      if office_part == 'Responsoria brevia'
+        'responsory_short'
+      elsif office_part == 'Antiphonae'
+        # TODO: there is currently no easy and general way to detect gospel antiphons
+        if cycle.system_name == 'psalter'
+          'antiphon_psalter'
         else
-          'varia'
+          'antiphon'
         end
-
-      Genre.find_by_system_name!(genre)
+      else
+        'varia'
+      end
     end
 
     def lyrics

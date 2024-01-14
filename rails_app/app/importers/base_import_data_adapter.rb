@@ -16,6 +16,17 @@ class BaseImportDataAdapter
     attributes.reject {|a| method_defined?(a, false) }
   end
 
+  # defines methods finding Chant associations by system name
+  def self.find_associations_by_system_name(*associations)
+    associations.each do |a|
+      define_method a do
+        model = Object.const_get(a.capitalize)
+        system_name = public_send "#{a}_system_name"
+        system_name && model.find_by_system_name!(system_name)
+      end
+    end
+  end
+
   # associations
 
   def book
