@@ -110,7 +110,7 @@ class GregobaseImporter < BaseImporter
     attr_reader :source_code
     def_delegators :@score_with_stats, :syllable_count, :word_count, :melody_section_count
 
-    find_associations_by_system_name :book, :genre, :hour
+    find_associations_by_system_name :book, :genre, :hour, :season, :cycle
 
     def lyrics
       lyrics_common_base
@@ -247,25 +247,50 @@ class GregobaseImporter < BaseImporter
     end
 
     def hour_system_name
-      @chant.tags.each do |t|
-        system_name =
-          case t.tag
-          when /vesperas/i
-            'vespers'
-          when /laudes/i
-            'lauds'
-          when /ad (primam|tertiam|sextam|nonam)/i
-            'daytime'
-          when /(matutinum|vigilias|off\. lect\.)/i
-            'readings'
-          when /completorium/i
-            'compline'
-          end
-
-        return system_name if system_name
+      @chant.tags.lazy.collect do |t|
+        case t.tag
+        when /vesperas/i
+          'vespers'
+        when /laudes/i
+          'lauds'
+        when /ad (primam|tertiam|sextam|nonam)/i
+          'daytime'
+        when /(matutinum|vigilias|off\. lect\.)/i
+          'readings'
+        when /completorium/i
+          'compline'
+        end
       end
+        .find {|x| !x.nil? }
+    end
 
-      nil
+    def season_system_name
+      @chant.tags.lazy.collect do |t|
+        case t.tag
+        when /adventus/i
+          CR::Seasons::ADVENT
+        when /nativit.*? domini/i
+          CR::Seasons::CHRISTMAS
+        when /quadragesim/i, /hebdomad.*? sanct/i
+          CR::Seasons::LENT
+        when /pasch/i, /resurrectio/i
+          CR::Seasons::EASTER
+        end
+        &.symbol
+      end
+        .find {|x| !x.nil? }
+    end
+
+    def cycle_system_name
+      return 'temporale' unless season_system_name.nil?
+
+      @chant.tags.lazy.collect do |t|
+        case t.tag
+        when /^commune/i
+          'sanctorale'
+        end
+      end
+        .find {|x| !x.nil? }
     end
   end
 end

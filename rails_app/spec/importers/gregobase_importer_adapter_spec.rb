@@ -86,4 +86,28 @@ describe GregobaseImporter::Adapter do
       end
     end
   end
+
+  describe 'detecting season' do
+    describe 'by tags' do
+      [
+        [[], nil],
+        [['unknown tag'], nil],
+
+        [['Dominica 1 Adventus'], :advent],
+        [['In Nativitate Domini'], :christmas],
+        [['Ad vigilias in T. Quadragesimæ'], :lent],
+        [['Hebdomada Sancta'], :lent],
+        [['Dominica Paschae'], :easter],
+        # [[''], ''],
+      ].each do |tags, expected|
+        describe tags.inspect do
+          let(:gregobase_chant) { double(tags: tags.collect {|t| double(tag: t) }) }
+
+          it "detects #{expected}" do
+            expect(subject.season_system_name).to eq expected
+          end
+        end
+      end
+    end
+  end
 end
