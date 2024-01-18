@@ -2,6 +2,8 @@
 class GregobaseImporter < BaseImporter
   include GabcImporter
 
+  using Refinements::Enumerable
+
   GENRES = {
     'an' => 'antiphon',
     're' => 'responsory_nocturnal',
@@ -247,7 +249,7 @@ class GregobaseImporter < BaseImporter
     end
 
     def hour_system_name
-      @chant.tags.lazy.collect do |t|
+      @chant.tags.first_nonempty_result do |t|
         case t.tag
         when /vesperas/i
           'vespers'
@@ -261,11 +263,10 @@ class GregobaseImporter < BaseImporter
           'compline'
         end
       end
-        .find {|x| !x.nil? }
     end
 
     def season_system_name
-      @chant.tags.lazy.collect do |t|
+      @chant.tags.first_nonempty_result do |t|
         case t.tag
         when /adventus/i
           CR::Seasons::ADVENT
@@ -278,19 +279,17 @@ class GregobaseImporter < BaseImporter
         end
         &.symbol
       end
-        .find {|x| !x.nil? }
     end
 
     def cycle_system_name
       return 'temporale' unless season_system_name.nil?
 
-      @chant.tags.lazy.collect do |t|
+      @chant.tags.first_nonempty_result do |t|
         case t.tag
         when /^commune/i
           'sanctorale'
         end
       end
-        .find {|x| !x.nil? }
     end
   end
 end
