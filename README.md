@@ -43,7 +43,7 @@ and execute code of the Rails application outside of Docker.
 1. `cd rails_app`
 1. `bundle install`
 1. check that the application works outside of Docker: `bundle exec rake spec`
-1. `bundle exec rake import` to import the main corpus of chants
+1. `bundle exec rake refresh` to import the main corpus of chants
 1. optionally import more chant corpora for comparative purposes
    (respective optional settings in `.env` must be set)
     - `bundle exec rake antiphonarius:import` to import chants from the 1960 Liber antiphonarius
@@ -51,10 +51,7 @@ and execute code of the Rails application outside of Docker.
     - `bundle exec rake gregobase:load_dump gregobase:import` to import relevant chants from GregoBase
 1. `bundle exec rake images` to render each chant in notation (takes a lot of time to finish,
    requires LilyPond and Inkscape, for the gabc-based chant corpora also LuaLaTex and Gregorio)
-
-### Generate computed content
-
-1. TODO: generate relations between imported chants
-1. TODO: generate Volpiano
+1. `cd ..` (return to the project root directory)
+1. `make volpiano` to generate normalized representations of the melodies (required for music search and other features)
 
 [ia]: https://github.com/igneus/In-adiutorium
