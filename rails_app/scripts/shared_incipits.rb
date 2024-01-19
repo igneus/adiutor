@@ -21,9 +21,9 @@ def volpiano_syllables(volp)
   volp.sub(/^1---/, '').split(/-{2,}/)
 end
 
+url_helpers = Rails.application.routes.url_helpers
 
 
-include Rails.application.routes.url_helpers
 
 Chant
   .all_antiphons
@@ -50,7 +50,7 @@ Chant
     b.id,
     b.lyrics,
 
-    chants_url(
+    url_helpers.chants_url(
       ids: [a, b].collect {|i| i.id.to_s }.join(','),
       host: 'localhost:3000'
     )
