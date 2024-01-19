@@ -3,9 +3,18 @@
 require 'csv'
 
 def common_beginning_length(a, b)
-  0.upto([a.size, b.size].min).find do |i|
+  shorter_length = [a.size, b.size].min
+  0.upto(shorter_length).find do |i|
     a[i] != b[i]
   end
+end
+
+def common_beginning_length_contextualized(a, b)
+  common_length = common_beginning_length(a, b)
+  shorter_full_length = [a, b].collect(&:size).min
+  percentage = ((common_length.to_f / shorter_full_length) * 100).to_i
+
+  [common_length, shorter_full_length, "#{percentage}%"]
 end
 
 def volpiano_syllables(volp)
@@ -25,15 +34,15 @@ Chant
   .each_cons(2) do |a, b|
   next if a.lyrics_normalized == b.lyrics_normalized
 
-  lyrics_incipit = common_beginning_length a.lyrics_normalized.split, b.lyrics_normalized.split
-  next if lyrics_incipit == 0
+  lyrics_incipit = common_beginning_length_contextualized a.lyrics_normalized.split, b.lyrics_normalized.split
+  next if lyrics_incipit[0] == 0
 
-  music_incipit = common_beginning_length volpiano_syllables(a.volpiano), volpiano_syllables(b.volpiano)
+  music_incipit = common_beginning_length_contextualized volpiano_syllables(a.volpiano), volpiano_syllables(b.volpiano)
 
   cols = [
     # the interesting results
-    lyrics_incipit,
-    music_incipit,
+    *lyrics_incipit,
+    *music_incipit,
 
     # identification of both chants
     a.id,
