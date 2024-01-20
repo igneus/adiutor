@@ -85,6 +85,7 @@ task create_corpora: [:environment] do
   Corpus.find_or_create_by!(system_name: 'liber_antiphonarius', name: 'Liber antiphonarius 1960')
   Corpus.find_or_create_by!(system_name: 'antiphonale83', name: 'Antiphonale 1983')
   Corpus.find_or_create_by!(system_name: 'gregobase', name: 'GregoBase')
+  Corpus.find_or_create_by!(system_name: 'nocturnale', name: 'nocturnale.marteo.fr')
 end
 
 desc 'create SourceLanguages'
