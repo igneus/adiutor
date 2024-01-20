@@ -40,7 +40,7 @@ gem 'calendarium-romanum', require: 'calendarium-romanum/cr'
 gem 'devise'
 gem 'diffy'
 gem 'dotenv'
-gem 'factory_bot_rails'
+gem 'facets', require: false
 gem 'gly', github: 'igneus/gly'
 gem 'kaminari'
 gem 'lygre', github: 'igneus/lygre'
@@ -55,6 +55,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec-rails'
+  gem 'factory_bot_rails'
 end
 
 group :development do

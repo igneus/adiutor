@@ -114,6 +114,7 @@ GEM
     diffy (3.4.2)
     dotenv (2.8.1)
     erubi (1.12.0)
+    facets (3.1.0)
     factory_bot (6.4.2)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.4.2)
@@ -301,6 +302,7 @@ DEPENDENCIES
   devise
   diffy
   dotenv
+  facets
   factory_bot_rails
   gly!
   jbuilder (~> 2.7)
