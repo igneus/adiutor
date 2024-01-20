@@ -8,6 +8,32 @@ class GregobaseImporter < BaseImporter
     'rb' => 'responsory_short',
   }.freeze
 
+  # value for Chant#source_file_path
+  def self.fake_path(gregobase_chant_source)
+    # chant.id alone would not suffice.
+    # In the GregoBase DB model single chant often belongs to
+    # several different sources, while we import each such occurrence
+    # as separate chant.
+    # (And we want it like this, because, while the music is the same,
+    # characteristics like Cycle, Season etc. often vary.)
+
+    "#{gregobase_chant_source.source_id}/#{gregobase_chant_source.chant_id}"
+  end
+
+  # which of the chant's (possibly) multiple chant_sources is considered
+  # the main one?
+  def self.main_chant_source(gregobase_chant)
+    gregobase_chant
+      .chant_sources
+      .select {|i| to_be_imported? i.source }
+      .sort_by {|i| [i.source_id, i.page] }
+      .first
+  end
+
+  def self.to_be_imported?(gregobase_source)
+    gregobase_source.title =~ /(antiphonale|antiphonarium|antiphonarius|completorium|hebdomad|in nocte|les heures|liber hymnarius|matutinum|nocturnale|nocturnalis|psalterium|semaine|usualis|graduale simplex|et responsoria|responsorialis)/i
+  end
+
   def call(_)
     @source_language = SourceLanguage.find_by_system_name! 'gabc'
 
@@ -29,6 +55,7 @@ class GregobaseImporter < BaseImporter
 
     source
       .chant_sources
+      .order(:page)
       .joins(:chant)
       .left_joins(chant: :tags)
       .where(gregobase_chants: {'office-part': GENRES.keys})
@@ -57,13 +84,7 @@ class GregobaseImporter < BaseImporter
       return
     end
 
-    # This is important, gchant.id alone would not suffice.
-    # In the GregoBase DB model single chant often belongs to
-    # several different sources, while we import each such occurrence
-    # as separate chant.
-    # (And we want it like this, because, while the music is the same,
-    # characteristics like Cycle, Season etc. often vary.)
-    fake_path = "#{chant_source.source_id}/#{gchant.id}"
+    fake_path = self.class.fake_path chant_source
     p fake_path
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: fake_path)
@@ -77,15 +98,30 @@ class GregobaseImporter < BaseImporter
     adapter = Adapter.new(chant_source, score, music_book, source)
     update_chant_from_adapter(chant, adapter)
 
+    if chant.simple_copy?
+      parent_chant_source = self.class.main_chant_source(gchant)
+      parent_file_path = self.class.fake_path(parent_chant_source)
+      begin
+        chant.parent = corpus.chants.find_by_source_file_path!(parent_file_path)
+      rescue ActiveRecord::RecordNotFound
+        STDERR.puts "Failed to find Chant for #{parent_chant_source.inspect}, source_file_path #{parent_file_path.inspect}"
+        p chant_source
+        p parent_chant_source
+        chant.parent = nil
+      end
+    else
+      chant.parent = nil
+    end
+
     chant.save!
   end
 
   # selects sources for import
   def sources
     Gregobase::Source
-      .all
+      .order(:id)
       .collect do |s|
-      import = s.title =~ /(antiphonale|antiphonarium|antiphonarius|completorium|hebdomad|in nocte|les heures|liber hymnarius|matutinum|nocturnale|nocturnalis|psalterium|semaine|usualis|graduale simplex|et responsoria|responsorialis)/i
+      import = self.class.to_be_imported? s
       puts "#{import ? '+' : '-'} #{s.title} (#{s.year})"
 
       import ? s : nil
@@ -98,8 +134,9 @@ class GregobaseImporter < BaseImporter
 
     # @param gregobase_chant_source [Gregobase::ChantSource]
     def initialize(gregobase_chant_source, score, music_book, source_code)
-      @chant = gregobase_chant_source.chant
-      @source = gregobase_chant_source.source
+      @chant_source = gregobase_chant_source
+      @chant = @chant_source.chant
+      @source = @chant_source.source
       @score = score
       @music_book = music_book
       @source_code = source_code
@@ -141,6 +178,17 @@ class GregobaseImporter < BaseImporter
     def differentia
       modus_differentia[1]
     end
+
+    def copy
+      # `@copy ||=` can't be used here, false is a valid cached value
+      if @copy.nil?
+        @copy = !(@chant_source.same? GregobaseImporter.main_chant_source(@chant))
+      end
+
+      @copy
+    end
+
+    alias simple_copy copy
 
     private
 
