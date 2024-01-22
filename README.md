@@ -52,6 +52,8 @@ and execute code of the Rails application outside of Docker.
       https://github.com/igneus/antiphonale83
     - `bundle exec rake nocturnale:import` to import chants from the Nocturnale Romanum project
       https://github.com/Nocturnale-Romanum/nocturnale-romanum
+    - `bundle exec rake hughes:import` to import chants from the Andrew Hughes chant corpus
+      https://github.com/DDMAL/Andrew-Hughes-Chant
     - `bundle exec rake gregobase:load_dump gregobase:import` to import relevant chants from a GregoBase DB dump
       https://github.com/gregorio-project/GregoBase
 1. `bundle exec rake images` to render each chant in notation (takes a lot of time to finish,

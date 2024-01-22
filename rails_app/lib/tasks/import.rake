@@ -86,12 +86,14 @@ task create_corpora: [:environment] do
   Corpus.find_or_create_by!(system_name: 'antiphonale83', name: 'Antiphonale 1983')
   Corpus.find_or_create_by!(system_name: 'gregobase', name: 'GregoBase')
   Corpus.find_or_create_by!(system_name: 'nocturnale', name: 'nocturnale.marteo.fr')
+  Corpus.find_or_create_by!(system_name: 'hughes', name: 'Andrew Hughes')
 end
 
 desc 'create SourceLanguages'
 task create_source_languages: [:environment] do
   SourceLanguage.find_or_create_by!(system_name: 'lilypond', name: 'LilyPond')
   SourceLanguage.find_or_create_by!(system_name: 'gabc', name: 'GABC (Gregorio)')
+  SourceLanguage.find_or_create_by!(system_name: 'mei', name: 'MEI')
 end
 
 desc 'create Genres'

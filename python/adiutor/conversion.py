@@ -1,6 +1,6 @@
 import re
 
-from music21 import clef, converter, volpiano
+from music21 import clef, converter, volpiano, mei
 import chant21
 
 from . import lilypond21
@@ -16,6 +16,18 @@ def lilypond2volpiano(lilypond):
     chant = lilypond21.parse(lilypond)
 
     return '1---' + chant21_to_volpiano(chant)[0]
+
+def mei2volpiano(mei_str):
+    """convert MEI to Volpiano"""
+    conv = mei.MeiToM21Converter(mei_str)
+    score = conv.run()
+
+    # TODO temporary debugging output
+    score.show('text')
+    r = volpiano.fromStream(score)
+    print(s)
+
+    return r
 
 def chant21_to_volpiano(score, bIsFlat = False):
     """convert Stream loaded using chant21 to Volpiano"""
