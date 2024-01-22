@@ -47,9 +47,13 @@ and execute code of the Rails application outside of Docker.
 1. optionally import more chant corpora for comparative purposes
    (respective optional settings in `.env` must be set)
     - `bundle exec rake antiphonarius:import` to import chants from the 1960 Liber antiphonarius
+      https://github.com/ahinkley/liber-antiphonarius-1960
     - `bundle exec rake antiphonale83:import` to import chants from the 1983 Ordo cantus officii
-	- `bundle exec rake nocturnale:import` to import chants from the Nocturnale Romanum project
-    - `bundle exec rake gregobase:load_dump gregobase:import` to import relevant chants from GregoBase
+      https://github.com/igneus/antiphonale83
+    - `bundle exec rake nocturnale:import` to import chants from the Nocturnale Romanum project
+      https://github.com/Nocturnale-Romanum/nocturnale-romanum
+    - `bundle exec rake gregobase:load_dump gregobase:import` to import relevant chants from a GregoBase DB dump
+      https://github.com/gregorio-project/GregoBase
 1. `bundle exec rake images` to render each chant in notation (takes a lot of time to finish,
    requires LilyPond and Inkscape, for the gabc-based chant corpora also LuaLaTex and Gregorio)
 1. `cd ..` (return to the project root directory)
