@@ -17,11 +17,12 @@ class HughesImporter < BaseImporter
 
   def import_file(path, dir, import, book, source_language)
     p path
+    in_project_path = path.sub(dir + '/', '')
 
     mei = File.read path
-    adapter = Adapter.new(mei, book, path.sub(dir + '/', ''))
+    adapter = Adapter.new(mei, book, in_project_path)
 
-    chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: path)
+    chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: in_project_path)
 
     chant.corpus = corpus
     chant.import = import
