@@ -88,7 +88,7 @@ class NocturnaleImporter < BaseImporter
         'sanctorale'
       when /^OR/
         'ordinarium'
-      when /^F\d/
+      when /^(EX)?F\d/
         'psalter'
       else
         'temporale'
