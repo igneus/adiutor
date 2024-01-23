@@ -28,7 +28,7 @@ class LilypondImageGenerator
       f.flush
 
       `lilypond -dbackend=svg -dno-point-and-click --include=#{Adiutor::IN_ADIUTORIUM_SOURCES_PATH} --include=#{lib_lily} --output=#{output_file} #{f.path}`
-      `inkscape --verb=FitCanvasToDrawing --verb=FileSave --verb=FileQuit #{output_file_full}` if File.exist? output_file_full
+      SvgCropper.(output_file_full) if File.exist? output_file_full
     end
   end
 end

@@ -47,7 +47,7 @@ class GabcImageGenerator
 
       pdf_path = f.path.sub('.tex', '.pdf')
       `pdftocairo -svg #{pdf_path} #{output_file_full}`
-      `inkscape --verb=FitCanvasToDrawing --verb=FileSave --verb=FileQuit #{output_file_full}` if File.exist? output_file_full
+      SvgCropper.(output_file_full) if File.exist? output_file_full
     end
 
     FileUtils.rm_r dir
