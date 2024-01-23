@@ -19,16 +19,7 @@ class HughesImporter < BaseImporter
     p path
 
     mei = File.read path
-
-    begin
-      txt_path = path.sub(/\.mei$/, '.txt')
-      txt = File.read txt_path
-    rescue Errno::ENOENT
-      STDERR.puts "#{txt_path.inspect} not found, skipping"
-      return
-    end
-
-    adapter = Adapter.new(mei, txt, book, path.sub(dir + '/', ''))
+    adapter = Adapter.new(mei, book, path.sub(dir + '/', ''))
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: path)
 
@@ -44,9 +35,8 @@ class HughesImporter < BaseImporter
   class Adapter < BaseImportDataAdapter
     extend Forwardable
 
-    def initialize(mei, txt, book, path)
+    def initialize(mei, book, path)
       @source_code = mei
-      @txt = txt
       @book = book
       @path = path
     end
