@@ -311,6 +311,7 @@ DEPENDENCIES
   lygre!
   lyv!
   mysql2
+  nokogiri
   pg (~> 1.1)
   puma (~> 5.0)
   pycall

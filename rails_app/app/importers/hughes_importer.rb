@@ -56,6 +56,25 @@ class HughesImporter < BaseImporter
 
     find_associations_by_system_name :cycle, :hour, :genre
 
+    def header
+      @header ||=
+        Nokogiri::XML(@source_code)
+          .xpath('/m:mei/m:meiHead/m:extMeta', 'm' => 'http://www.music-encoding.org/ns/mei')
+          .collect(&:text)
+          .reject {|i| i.nil? || i.empty? }
+          .flat_map {|i| i.split('###') }
+          .collect {|i| i.split(/\s*:\s*/, 2) }
+          .to_h
+    end
+
+    def modus
+      header['mode']&.yield_self {|x| RomanNumerals.to_roman x.to_i }
+    end
+
+    def differentia
+      header['final']
+    end
+
     def cycle_system_name
       'sanctorale'
     end
@@ -65,7 +84,11 @@ class HughesImporter < BaseImporter
     end
 
     def hour_system_name
-      case File.basename(File.dirname(@path))
+      hour_name =
+        header['office'] ||
+        File.basename(File.dirname(@path))
+
+      case hour_name
       when 'Matins'
         'readings'
       when 'Lauds'
@@ -73,17 +96,13 @@ class HughesImporter < BaseImporter
       when /Vespers/
         'vespers'
       else
-        STDERR.puts "Failed to detect hour from path #{@path.inspect}"
+        STDERR.puts "Failed to detect hour: office #{header['office'].inspect}, path #{@path.inspect}"
         nil
       end
     end
 
     def lyrics
-      @txt
-        .yield_self {|x| x[x.index('/') .. x.index('/()')] }
-        .gsub('/', '')
-        .strip
-        .gsub(/\s+/m, ' ')
+      header['lyrics'].strip
     end
 
     def lyrics_normalized
