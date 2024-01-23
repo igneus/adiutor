@@ -16,6 +16,7 @@ Internal tool, not intended for public deployment.
   - LilyPond >= 2.18
   - Inkscape
   - LuaLaTeX and gregorio (only if you are going to import and render also Gregorio-based chant corpora)
+  - [Verovio][verovio] (only if you are going to import and render also MEI-based chant corpora)
   - PHP (only if you are going to use the "open in editor" functionality)
 
 ## Setup steps
@@ -62,3 +63,4 @@ and execute code of the Rails application outside of Docker.
 1. `make volpiano` to generate normalized representations of the melodies (required for music search and other features)
 
 [ia]: https://github.com/igneus/In-adiutorium
+[verovio]: https://www.verovio.org
