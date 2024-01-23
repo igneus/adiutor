@@ -8,6 +8,7 @@ class NocturnaleImporter < BaseImporter
 
     corpus.imports.build.do! do |import|
       Dir["#{path}/gabc/*.gabc"]
+        .sort.reverse # first chant_contributor.gabc, then chant.gabc
         .each {|f| import_file f, path, import, book, language, hour }
     end
 
@@ -44,7 +45,29 @@ class NocturnaleImporter < BaseImporter
 
     update_chant_from_adapter chant, adapter
 
+    if is_main_file? path
+      parent =
+        corpus.chants
+          .where(source_code: chant.source_code)
+          .where("source_file_path LIKE '#{chant.source_file_path.sub(/\.gabc$/, '')}%'")
+          .where.not(id: chant.id)
+          .limit(1)
+          .first
+
+      if parent
+        chant.parent = parent
+        chant.copy = chant.simple_copy = true
+      else
+        chant.parent = nil
+        chant.copy = chant.simple_copy = false
+      end
+    end
+
     chant.save!
+  end
+
+  def is_main_file?(path)
+    !File.basename(path).include?('_')
   end
 
   class Adapter < BaseImportDataAdapter
