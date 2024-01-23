@@ -37,7 +37,10 @@ class HughesImporter < BaseImporter
     extend Forwardable
 
     def initialize(mei, book, path)
-      @source_code = mei
+      # dirty hack: the MEI files miss staff@n attributes without which
+      # music21 is unable to load them
+      @source_code = mei.gsub('<staff ', '<staff n="1" ')
+
       @book = book
       @path = path
     end
