@@ -48,7 +48,7 @@ class HughesImporter < BaseImporter
     # overriding parent methods
     attr_reader :book, :source_code
 
-    find_associations_by_system_name :cycle, :hour, :genre
+    find_associations_by_system_name :cycle, :season, :hour, :genre
 
     def header
       @header ||=
@@ -70,7 +70,26 @@ class HughesImporter < BaseImporter
     end
 
     def cycle_system_name
-      'sanctorale'
+      if season_system_name
+        'temporale'
+      else
+        'sanctorale'
+      end
+    end
+
+    def season_system_name
+      case header['saint']
+      when /Adv\./
+        'advent'
+      when /=Epi(\.[Oov])?$/, /=Nat/, /=Cir$/
+        'christmas'
+      when /XL\.\d/
+        'lent'
+      when /Pas\.\d/, /=Pas=/, /Pen\./, /=Pen=/
+        'easter'
+      when /=Epi\.\d/, /=LX{0,2}$/, /Corpus_Christi/i, /Trinity/i, /Tri\./, /(Aug|Sep|Oct|Nov)/
+        'ordinary'
+      end
     end
 
     def genre_system_name
