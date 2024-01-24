@@ -49,6 +49,10 @@ def parse(lilypond_source):
 
     for i in music_content.iter_depth():
         if isinstance(i, ly.music.items.Note):
+            if in_slur and "\\]" in ly.document.Cursor(document, previous_note.end_position(), i.end_position()).text():
+                neume = Neume()
+                syllable.append(neume)
+
             if not in_slur:
                 if len(word_lengths) > 0:
                     if word_lengths[0] == 0:
@@ -66,6 +70,8 @@ def parse(lilypond_source):
                 syllable.append(neume)
 
             neume.append(_chant21_note(i))
+
+            previous_note = i
 
         if isinstance(i, ly.music.items.Slur):
             if i.event == 'stop':
