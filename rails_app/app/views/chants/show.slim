@@ -43,6 +43,9 @@ table.chant-properties
         - if label.end_with?('_id') && label != 'chant_id' && @chant.respond_to?(relation) && @chant.public_send(relation).respond_to?('name')
           th= relation
           td= link_to @chant.public_send(relation).name, chants_path("#{label}[]" => value)
+        - elsif label == 'source_file_path'
+          th= label
+          td= link_to value, chants_path(source_file_path: value)
         - else
           th= label
           td= value
