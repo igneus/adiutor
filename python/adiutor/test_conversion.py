@@ -47,7 +47,7 @@ from .conversion import *
         # natural
         # TODO: this is unexpected - flat/natural in the middle of a neume
         #   breaks the neume in two
-        # ('(c4) lyr(ixiiyi)', '1---ijIj---'),
+        pytest.param('(c4) lyr(ixiiyi)', '1---ijIj---', marks=pytest.mark.xfail),
         ('(c3) ly(gxg)ric(gyg)', '1---ij--Ij---'),
 
         # euouae
