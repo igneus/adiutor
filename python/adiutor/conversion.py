@@ -22,12 +22,10 @@ def mei2volpiano(mei_str):
     conv = mei.MeiToM21Converter(mei_str)
     score = conv.run()
 
-    # TODO temporary debugging output
-    score.show('text')
-    r = volpiano.fromStream(score)
-    print(s)
+    for stream in score.recurse(streamsOnly=True):
+        stream.removeByClass('Barline')
 
-    return r
+    return volpiano.fromStream(score)
 
 def chant21_to_volpiano(score, bIsFlat = False):
     """convert Stream loaded using chant21 to Volpiano"""

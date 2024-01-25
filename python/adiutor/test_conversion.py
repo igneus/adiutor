@@ -118,3 +118,48 @@ def test_strip_gabc_header(given, expected):
 )
 def test_lilypond2volpiano(lilypond, volpiano):
     assert lilypond2volpiano(lilypond) == volpiano
+
+@pytest.mark.parametrize(
+    'meiContent,volpiano',
+    [
+        (
+            '''<section>
+                <measure right="invis">
+                    <staff n="1">
+                        <layer>
+                            <note pname="f" oct="4" dur="4" stem.dir="up" stem.len="0">
+                                <verse n="1">
+                                    <syl>La</syl>
+                                </verse>
+                            </note>
+                        </layer>
+                    </staff>
+                </measure>
+            </section>''',
+            '1---f---'
+        ),
+    ]
+)
+def test_mei2volpiano(meiContent, volpiano):
+    meiTemplate = '''<?xml version="1.0" encoding="UTF-8"?>
+    <mei xmlns="http://www.music-encoding.org/ns/mei" meiversion="2013">
+        <music>
+            <body>
+                <mdiv>
+                    <score>
+                        <scoreDef>
+                            <staffGrp>
+                                <staffDef clef.line="2" clef.shape="G" lines="5" n="1" />
+                            </staffGrp>
+                        </scoreDef>
+
+                        <!-- the test-case-specific content will be inserted here -->
+                        {}
+                    </score>
+                </mdiv>
+            </body>
+        </music>
+    </mei>'''
+    mei = meiTemplate.format(meiContent)
+
+    assert mei2volpiano(mei) == volpiano
