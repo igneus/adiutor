@@ -36,6 +36,8 @@ class HughesImporter < BaseImporter
   class Adapter < BaseImportDataAdapter
     extend Forwardable
 
+    MEI_XML_NAMESPACE = 'http://www.music-encoding.org/ns/mei'
+
     def initialize(mei, book, path)
       # dirty hack: the MEI files miss staff@n attributes without which
       # music21 is unable to load them
@@ -43,6 +45,8 @@ class HughesImporter < BaseImporter
 
       @book = book
       @path = path
+
+      @xml_doc = Nokogiri::XML(@source_code)
     end
 
     # overriding parent methods
@@ -52,8 +56,8 @@ class HughesImporter < BaseImporter
 
     def header
       @header ||=
-        Nokogiri::XML(@source_code)
-          .xpath('/m:mei/m:meiHead/m:extMeta', 'm' => 'http://www.music-encoding.org/ns/mei')
+        @xml_doc
+          .xpath('/m:mei/m:meiHead/m:extMeta', 'm' => MEI_XML_NAMESPACE)
           .collect(&:text)
           .reject {|i| i.nil? || i.empty? }
           .flat_map {|i| i.split('###') }
@@ -124,6 +128,13 @@ class HughesImporter < BaseImporter
 
     def word_count
       lyrics.split(/\s+/).size
+    end
+
+    def syllable_count
+      @syllable_count ||=
+        @xml_doc
+          .xpath('//m:syl', 'm' => MEI_XML_NAMESPACE)
+          .size
     end
   end
 end
