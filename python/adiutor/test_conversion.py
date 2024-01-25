@@ -44,6 +44,10 @@ from .conversion import *
         # In gabc flat/natural applies up to the cancel or end of the word,
         # in Volpiano (at least in the CANTUS network) up to the cancel
         ('(c3) lyr(gxg) lyr(g)', '1---ij---Ij---'),
+        # flat on pitches other than b has no effect
+        # special case is the note e, see the next test
+        # TODO: this is suboptimal behavior, but should be harmless for our datasets
+        ('(c4) (dxd) (fxf) (gxg) (hxh) (jxj)', '1---d---f---g---h---k---'),
         # natural
         # TODO: this is unexpected - flat/natural in the middle of a neume
         #   breaks the neume in two
@@ -61,16 +65,8 @@ from .conversion import *
 def test_gabc2volpiano(gabc, volpiano):
     assert gabc2volpiano(gabc) == volpiano
 
-@pytest.mark.parametrize(
-    'gabc',
-    [
-        ( '(c4) lyr(exe)'),
-        # TODO: chant21 only generates flat accidentals for pitches B and E!
-        pytest.param( '(c4) lyr(dxd)', marks=pytest.mark.xfail),
-        pytest.param( '(c4) lyr(gxg)', marks=pytest.mark.xfail),
-    ]
-)
-def test_gabc2volpiano_unsupported_flat(gabc):
+def test_gabc2volpiano_unsupported_flat():
+    gabc = '(c4) lyr(exe)'
     with pytest.raises(RuntimeError) as excinfo:
         gabc2volpiano(gabc)
 
