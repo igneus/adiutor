@@ -181,6 +181,13 @@ class ChantsController < ApplicationController
         FIAL.parse(@chant_b.fial).additional
   end
 
+  def source
+    @chant = Chant.find params[:id]
+
+    # TODO: set reasonable content type
+    render body: @chant.source_code
+  end
+
   private
 
   def filter_params

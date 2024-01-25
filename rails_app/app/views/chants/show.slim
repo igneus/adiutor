@@ -55,6 +55,7 @@ table.chant-properties
           td
             span.volpiano_music= @properties['volpiano']
 
+= link_to 'Source code', source_chant_path(@chant)
 pre.code-highlight== lilypond_syntax_highlight @chant.source_code
 
 - if @chant.has_related_chants?

@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       post 'open_in_editor', as: :open_in_editor
       post 'add_quality_notice', as: :add_quality_notice
       get '/compare/:other_id', action: :compare, as: :compare
+      get 'src', action: :source, as: :source
     end
   end
 
