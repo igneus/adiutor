@@ -3,7 +3,7 @@ import re
 from music21 import clef, converter, volpiano, mei
 import chant21
 
-from . import lilypond21
+from . import lilypond21, mei21
 
 def gabc2volpiano(gabc):
     """convert gabc to Volpiano"""
@@ -19,13 +19,9 @@ def lilypond2volpiano(lilypond):
 
 def mei2volpiano(mei_str):
     """convert MEI to Volpiano"""
-    conv = mei.MeiToM21Converter(mei_str)
-    score = conv.run()
+    chant = mei21.parse(mei_str)
 
-    for stream in score.recurse(streamsOnly=True):
-        stream.removeByClass('Barline')
-
-    return volpiano.fromStream(score)
+    return '1---' + chant21_to_volpiano(chant)[0]
 
 def chant21_to_volpiano(score, bIsFlat = False):
     """convert Stream loaded using chant21 to Volpiano"""

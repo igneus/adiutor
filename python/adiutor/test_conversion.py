@@ -118,6 +118,7 @@ def test_lilypond2volpiano(lilypond, volpiano):
 @pytest.mark.parametrize(
     'meiContent,volpiano',
     [
+        # single note
         (
             '''<section>
                 <measure right="invis">
@@ -133,6 +134,73 @@ def test_lilypond2volpiano(lilypond, volpiano):
                 </measure>
             </section>''',
             '1---f---'
+        ),
+        # syllable and word boundaries
+        (
+            '''<section>
+                <measure right="invis">
+                    <staff n="1">
+                        <layer>
+                            <note pname="f" oct="4" dur="4" stem.dir="up" stem.len="0">
+                                <verse n="1">
+                                    <syl>Post</syl>
+                                </verse>
+                            </note>
+                            <note pname="f" oct="4" dur="4" stem.dir="up" stem.len="0">
+                                <verse n="1">
+                                    <syl>par-</syl>
+                                </verse>
+                            </note>
+                            <note pname="f" oct="4" dur="4" stem.dir="up" stem.len="0">
+                                <verse n="1">
+                                    <syl>tum</syl>
+                                </verse>
+                            </note>
+                        </layer>
+                    </staff>
+                </measure>
+            </section>''',
+            '1---f---f--f---'
+        ),
+        # melisma
+        (
+            '''<section>
+                <measure right="invis">
+                    <staff n="1">
+                        <layer>
+                            <note pname="d" oct="4" dur="4" stem.dir="up" stem.len="0">
+                                <verse n="1">
+                                    <syl>In</syl>
+                                </verse>
+                            </note>
+                            <note pname="c" oct="4" dur="4" stem.dir="up" stem.len="0">
+                                <verse n="1">
+                                    <syl>con-</syl>
+                                </verse>
+                            </note>
+                            <note pname="a" oct="3" dur="4" stem.dir="up" stem.len="0" />
+                            <note pname="c" oct="4" dur="4" stem.dir="up" stem.len="0">
+                                <verse n="1">
+                                    <syl>cur-</syl>
+                                </verse>
+                            </note>
+                        </layer>
+                    </staff>
+                </measure>
+                <measure right="invis">
+                    <staff n="1">
+                        <layer>
+                            <note pname="d" oct="4" dur="4" stem.dir="up" stem.len="0" />
+                            <note pname="d" oct="4" dur="4" stem.dir="up" stem.len="0">
+                                <verse n="1">
+                                    <syl>sU</syl>
+                                </verse>
+                            </note>
+                        </layer>
+                    </staff>
+                </measure>
+            </section>''',
+            '1---d---ca--cd--d---'
         ),
     ]
 )
