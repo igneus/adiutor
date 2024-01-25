@@ -148,12 +148,12 @@ def test_lilypond2volpiano(lilypond, volpiano):
                             </note>
                             <note pname="f" oct="4" dur="4" stem.dir="up" stem.len="0">
                                 <verse n="1">
-                                    <syl>par-</syl>
+                                    <syl wordpos="i">par-</syl>
                                 </verse>
                             </note>
                             <note pname="f" oct="4" dur="4" stem.dir="up" stem.len="0">
                                 <verse n="1">
-                                    <syl>tum</syl>
+                                    <syl wordpos="t">tum</syl>
                                 </verse>
                             </note>
                         </layer>
@@ -175,13 +175,13 @@ def test_lilypond2volpiano(lilypond, volpiano):
                             </note>
                             <note pname="c" oct="4" dur="4" stem.dir="up" stem.len="0">
                                 <verse n="1">
-                                    <syl>con-</syl>
+                                    <syl wordpos="i">con-</syl>
                                 </verse>
                             </note>
                             <note pname="a" oct="3" dur="4" stem.dir="up" stem.len="0" />
                             <note pname="c" oct="4" dur="4" stem.dir="up" stem.len="0">
                                 <verse n="1">
-                                    <syl>cur-</syl>
+                                    <syl wordpos="m">cur-</syl>
                                 </verse>
                             </note>
                         </layer>
@@ -193,7 +193,7 @@ def test_lilypond2volpiano(lilypond, volpiano):
                             <note pname="d" oct="4" dur="4" stem.dir="up" stem.len="0" />
                             <note pname="d" oct="4" dur="4" stem.dir="up" stem.len="0">
                                 <verse n="1">
-                                    <syl>sU</syl>
+                                    <syl wordpos="t">sU</syl>
                                 </verse>
                             </note>
                         </layer>
