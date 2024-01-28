@@ -5,6 +5,8 @@
 # Names of public methods match names of Chant attributes
 # to allow convenient copying.
 class BaseImportDataAdapter
+  extend Forwardable
+
   # Chant attributes which should be copied from the adapter.
   def self.attributes
     public_instance_methods - Object.public_instance_methods
@@ -25,6 +27,14 @@ class BaseImportDataAdapter
         system_name && model.find_by_system_name!(system_name)
       end
     end
+  end
+
+  def self.const_attributes(*attributes)
+    def_delegators :@const_attributes, *attributes
+  end
+
+  def initialize(const_attributes=nil)
+    @const_attributes = const_attributes
   end
 
   # associations

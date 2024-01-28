@@ -36,7 +36,8 @@ class LiberAntiphonariusImporter < BaseImporter
     chant.import = import
     chant.source_language = source_language
 
-    adapter = Adapter.new(score, source, book)
+    const_attributes = OpenStruct.new source_code: source, book: book
+    adapter = Adapter.new(const_attributes, score)
     update_chant_from_adapter chant, adapter
 
     chant.save!
@@ -49,12 +50,9 @@ class LiberAntiphonariusImporter < BaseImporter
   end
 
   class Adapter < BaseImportDataAdapter
-    extend Forwardable
-
-    def initialize(score, source_code, book)
+    def initialize(const_attributes, score)
+      super(const_attributes)
       @score = score
-      @book = book
-      @source_code = source_code
 
       @score_with_stats = GabcScoreStats.new(score)
     end
@@ -63,7 +61,7 @@ class LiberAntiphonariusImporter < BaseImporter
     attr_reader :score
 
     # overriding parent methods
-    attr_reader :book, :source_code
+    const_attributes :book, :source_code
     def_delegators :@score_with_stats, :syllable_count, :word_count, :melody_section_count
 
     find_associations_by_system_name :cycle, :season, :genre

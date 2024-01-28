@@ -95,7 +95,8 @@ class GregobaseImporter < BaseImporter
     chant.music_book = music_book
     chant.gregobase_chant_id = gchant.id
 
-    adapter = Adapter.new(chant_source, score, music_book, source)
+    attrs = OpenStruct.new music_book: music_book, source_code: source
+    adapter = Adapter.new(attrs, chant_source, score)
     update_chant_from_adapter(chant, adapter)
 
     if chant.simple_copy?
@@ -130,23 +131,20 @@ class GregobaseImporter < BaseImporter
   end
 
   class Adapter < BaseImportDataAdapter
-    extend Forwardable
-
     # @param gregobase_chant_source [Gregobase::ChantSource]
-    def initialize(gregobase_chant_source, score, music_book, source_code)
+    def initialize(const_attributes, gregobase_chant_source, score)
+      super(const_attributes)
       @chant_source = gregobase_chant_source
       @chant = @chant_source.chant
       @source = @chant_source.source
       @score = score
-      @music_book = music_book
-      @source_code = source_code
 
       @score_with_stats = GabcScoreStats.new(score)
     end
 
-    attr_reader :source_code
     def_delegators :@score_with_stats, :syllable_count, :word_count, :melody_section_count
 
+    const_attributes :music_book, :source_code
     find_associations_by_system_name :book, :genre, :hour, :season, :cycle
 
     def lyrics
@@ -243,7 +241,7 @@ class GregobaseImporter < BaseImporter
       before_loth = ->(i) { i < 1971 }
       after_loth = ->(i) { i >= 1971 }
 
-      case @music_book.attributes.symbolize_keys # pattern matching doesn't seem to work for Hashes with String keys
+      case music_book.attributes.symbolize_keys # pattern matching doesn't seem to work for Hashes with String keys
       in {title: /Liber Usualis/} |
         {title: /Antiphonale Romanum/, year: ^before_loth} |
         {title: /Antiphonale Marcianum/} |
@@ -282,7 +280,7 @@ class GregobaseImporter < BaseImporter
           return 'antiphon_standalone'
         end
 
-        if (@music_book.title =~ /liber hymnarius/i || lyrics =~ /Ven[ií]te[\.,]?\Z/)
+        if (music_book.title =~ /liber hymnarius/i || lyrics =~ /Ven[ií]te[\.,]?\Z/)
           return 'invitatory'
         end
 

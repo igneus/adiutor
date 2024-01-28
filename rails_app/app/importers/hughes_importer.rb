@@ -20,7 +20,8 @@ class HughesImporter < BaseImporter
     in_project_path = path.sub(dir + '/', '')
 
     mei = File.read path
-    adapter = Adapter.new(mei, book, in_project_path)
+    attrs = OpenStruct.new source_code: mei, book: book
+    adapter = Adapter.new(attrs, in_project_path)
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: in_project_path)
 
@@ -34,23 +35,23 @@ class HughesImporter < BaseImporter
   end
 
   class Adapter < BaseImportDataAdapter
-    extend Forwardable
-
     MEI_XML_NAMESPACE = 'http://www.music-encoding.org/ns/mei'
 
-    def initialize(mei, book, path)
+    def initialize(const_attributes, path)
+      super(const_attributes)
+
       # dirty hack: the MEI files miss staff@n attributes without which
       # music21 is unable to load them
-      @source_code = mei.gsub('<staff ', '<staff n="1" ')
+      @source_code = const_attributes.source_code.gsub('<staff ', '<staff n="1" ')
 
-      @book = book
       @path = path
 
       @xml_doc = Nokogiri::XML(@source_code)
     end
 
     # overriding parent methods
-    attr_reader :book, :source_code
+    const_attributes :book
+    attr_reader :source_code
 
     find_associations_by_system_name :cycle, :season, :hour, :genre
 

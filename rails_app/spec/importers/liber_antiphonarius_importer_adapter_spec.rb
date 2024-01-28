@@ -1,6 +1,6 @@
 # coding: utf-8
 describe LiberAntiphonariusImporter::Adapter do
-  let(:subject) { described_class.new(score, source_code, book) }
+  let(:subject) { described_class.new(nil, score) }
 
   let(:score) { MyGabcParser.call source_code }
   let(:source_code) { "%%\n" }
