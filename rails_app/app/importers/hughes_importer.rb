@@ -20,8 +20,15 @@ class HughesImporter < BaseImporter
     in_project_path = path.sub(dir + '/', '')
 
     mei = File.read path
+    txt =
+      begin
+        File.read path.sub(/\.mei$/, '.txt')
+      rescue Errno::ENOENT
+        STDERR.puts 'txt file not found'
+        ''
+      end
     attrs = OpenStruct.new source_code: mei, book: book
-    adapter = Adapter.new(attrs, in_project_path)
+    adapter = Adapter.new(attrs, in_project_path, txt)
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: in_project_path)
 
@@ -37,7 +44,7 @@ class HughesImporter < BaseImporter
   class Adapter < BaseImportDataAdapter
     MEI_XML_NAMESPACE = 'http://www.music-encoding.org/ns/mei'
 
-    def initialize(const_attributes, path)
+    def initialize(const_attributes, path, txt)
       super(const_attributes)
 
       # dirty hack: the MEI files miss staff@n attributes without which
@@ -45,6 +52,7 @@ class HughesImporter < BaseImporter
       @source_code = const_attributes.source_code.gsub('<staff ', '<staff n="1" ')
 
       @path = path
+      @txt = txt
 
       @xml_doc = Nokogiri::XML(@source_code)
     end
@@ -98,7 +106,33 @@ class HughesImporter < BaseImporter
     end
 
     def genre_system_name
-      'antiphon'
+      @txt.lines[0]&.match(/\|[\w\d]*?=(?<hour>\w)(?<genre>\w)(?<position>[\w\d]*)/) do |m|
+        case m[:genre]
+        when 'I'
+          'invitatory'
+        when 'A'
+          if m[:position] == 'E'
+            'antiphon_gospel'
+          else
+            'antiphon'
+          end
+        when 'E'
+          'antiphon_gospel'
+        when 'R', 'V'
+          if %w(T S N).include? m[:hour]
+            'responsory_short'
+          else
+            'responsory_nocturnal'
+          end
+        else
+          p m
+          nil
+        end
+      end ||
+        begin
+          STDERR.puts 'failed to parse'
+          'antiphon' # fake
+        end
     end
 
     def hour_system_name
