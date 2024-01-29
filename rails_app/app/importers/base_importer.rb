@@ -44,8 +44,8 @@ class BaseImporter
     end
   end
 
-  def report_unimplemented_attributes
+  def report_unimplemented_attributes(additional_implemented=[])
     puts "Chant attributes not implemented/populated by this importer:"
-    p self.class::Adapter.unimplemented_attributes
+    p(self.class::Adapter.unimplemented_attributes - additional_implemented)
   end
 end

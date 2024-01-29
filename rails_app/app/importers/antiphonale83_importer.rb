@@ -3,21 +3,22 @@
 # https://github.com/igneus/antiphonale83
 class Antiphonale83Importer < BaseImporter
   def call(path)
+    common_attributes = {
+      corpus: corpus,
+      book: Book.find_by_system_name!('oco1983'),
+      cycle: Cycle.find_by_system_name!('psalter'),
+      source_language: SourceLanguage.find_by_system_name!('gabc'),
+    }
+
     corpus.imports.build.do! do |import|
-      common_attributes = {
-        corpus: corpus,
-        import: import,
-        book: Book.find_by_system_name!('oco1983'),
-        cycle: Cycle.find_by_system_name!('psalter'),
-        source_language: SourceLanguage.find_by_system_name!('gabc'),
-      }
+      common_attributes.update(import: import)
 
       # only import Psalter antiphons, the rest is too small to be worth importing
       Dir["#{path}/psalterium/*.gly"].each {|f| import_file f, path, common_attributes }
     end
 
     report_unseen_chants
-    report_unimplemented_attributes
+    report_unimplemented_attributes(common_attributes.keys)
   end
 
   def import_file(path, dir, common_attributes)
@@ -45,7 +46,6 @@ class Antiphonale83Importer < BaseImporter
       chant_id: score.headers['id'],
       source_file_path: in_project_path
     )
-    chant.assign_attributes common_attributes
 
     # Import not the original gly source code, but transformed to gabc,
     # in order to make subsequent processing as simple as possible
@@ -59,13 +59,10 @@ class Antiphonale83Importer < BaseImporter
       STDERR.puts "failed to parse gabc for '#{in_project_path}' ##{chant.id}: #{e.message}"
     end
 
-    attrs = OpenStruct.new(
-      common_attributes
-        .slice(:book, :cycle)
-        .merge(source_code: gabc)
-    )
+    attrs = OpenStruct.new(source_code: gabc)
     adapter = Adapter.new attrs, score, gabc_score, in_project_path
     update_chant_from_adapter chant, adapter
+    chant.assign_attributes common_attributes
 
     chant.save!
   rescue
@@ -96,7 +93,7 @@ class Antiphonale83Importer < BaseImporter
     # internals
     attr_reader :score, :in_project_path
 
-    const_attributes :source_code, :book, :cycle
+    const_attributes :source_code
     find_associations_by_system_name :hour, :genre
 
     def hour_system_name

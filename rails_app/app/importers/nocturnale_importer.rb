@@ -2,14 +2,15 @@
 # https://github.com/Nocturnale-Romanum/nocturnale-romanum
 class NocturnaleImporter < BaseImporter
   def call(path)
+    common_attributes = {
+      corpus: corpus,
+      book: Book.find_by_system_name!('br'),
+      source_language: SourceLanguage.find_by_system_name!('gabc'),
+      hour: Hour.find_by_system_name!('readings'),
+    }
+
     corpus.imports.build.do! do |import|
-      common_attributes = {
-        corpus: corpus,
-        import: import,
-        book: Book.find_by_system_name!('br'),
-        source_language: SourceLanguage.find_by_system_name!('gabc'),
-        hour: Hour.find_by_system_name!('readings'),
-      }
+      common_attributes.update(import: import)
 
       Dir["#{path}/gabc/*.gabc"]
         .sort.reverse # so that "chantId_contributor.gabc" (contributor version) comes before "chantId.gabc" (selected version)
@@ -17,7 +18,7 @@ class NocturnaleImporter < BaseImporter
     end
 
     report_unseen_chants
-    report_unimplemented_attributes
+    report_unimplemented_attributes(common_attributes.keys)
   end
 
   def import_file(path, dir, import, common_attributes)
@@ -33,11 +34,7 @@ class NocturnaleImporter < BaseImporter
       return # just skip the failed score
     end
 
-    const_attributes = OpenStruct.new(
-      common_attributes
-        .slice(:book, :hour)
-        .merge(source_code: source)
-    )
+    const_attributes = OpenStruct.new(source_code: source)
     adapter = Adapter.new(const_attributes, score, path)
     return if adapter.genre_system_name == 'hymn'
 
@@ -48,9 +45,8 @@ class NocturnaleImporter < BaseImporter
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: File.basename(path))
 
-    chant.assign_attributes common_attributes
-
     update_chant_from_adapter chant, adapter
+    chant.assign_attributes common_attributes
 
     if is_main_file? path
       parent =
@@ -104,7 +100,7 @@ class NocturnaleImporter < BaseImporter
 
     # overriding parent methods
     attr_reader :modus, :differentia
-    const_attributes :source_code, :book, :hour
+    const_attributes :source_code
     def_delegators :@score_with_stats, :syllable_count, :word_count, :melody_section_count
 
     find_associations_by_system_name :cycle, :season, :genre
