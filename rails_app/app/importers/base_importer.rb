@@ -9,6 +9,34 @@ class BaseImporter
 
   attr_reader :corpus
 
+  # template method orchestrating the most usual import workflow
+  def call(*args)
+    common_attributes = build_common_attributes
+
+    corpus.imports.build.do! do |import|
+      do_import(
+        common_attributes.merge(
+          corpus: corpus,
+          import: import
+        ),
+        *args
+      )
+    end
+
+    report_unseen_chants
+    report_unimplemented_attributes(common_attributes.keys)
+  end
+
+  # returns valid argument to `Chant#assign_attributes`
+  # containing attribute values valid for all imported records.
+  def build_common_attributes
+    {}
+  end
+
+  def do_import(common_attributes)
+    raise 'not implemented'
+  end
+
   def update_chant_from_adapter(chant, adapter)
     BaseImportDataAdapter.attributes.each do |a|
       chant.public_send("#{a}=", adapter.send(a))

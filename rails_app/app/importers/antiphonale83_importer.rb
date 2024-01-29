@@ -2,23 +2,17 @@
 # Imports chants from the directory structure of Antiphonale 1983
 # https://github.com/igneus/antiphonale83
 class Antiphonale83Importer < BaseImporter
-  def call(path)
-    common_attributes = {
-      corpus: corpus,
+  def build_common_attributes
+    {
       book: Book.find_by_system_name!('oco1983'),
       cycle: Cycle.find_by_system_name!('psalter'),
       source_language: SourceLanguage.find_by_system_name!('gabc'),
     }
+  end
 
-    corpus.imports.build.do! do |import|
-      common_attributes.update(import: import)
-
-      # only import Psalter antiphons, the rest is too small to be worth importing
-      Dir["#{path}/psalterium/*.gly"].each {|f| import_file f, path, common_attributes }
-    end
-
-    report_unseen_chants
-    report_unimplemented_attributes(common_attributes.keys)
+  def do_import(common_attributes, path)
+    # only import Psalter antiphons, the rest is too small to be worth importing
+    Dir["#{path}/psalterium/*.gly"].each {|f| import_file f, path, common_attributes }
   end
 
   def import_file(path, dir, common_attributes)

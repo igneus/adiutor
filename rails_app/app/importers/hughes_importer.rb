@@ -1,23 +1,18 @@
 # Imports chants from the directory structure of the Andrew Hughes chant corpus
 # https://github.com/DDMAL/Andrew-Hughes-Chant
 class HughesImporter < BaseImporter
-  def call(path)
-    common_attributes = {
-      corpus: corpus,
+  def build_common_attributes
+    {
       book: Book.find_by_system_name!('other'),
       source_language: SourceLanguage.find_by_system_name!('mei'),
     }
+  end
 
+  def do_import(common_attributes, path)
     music_dir = File.join path, 'file_structure_text_file_MEI_file'
-    corpus.imports.build.do! do |import|
-      common_attributes.update(import: import)
 
-      Dir["#{music_dir}/**/*.mei"]
-        .each {|f| import_file f, music_dir, common_attributes }
-    end
-
-    report_unseen_chants
-    report_unimplemented_attributes(common_attributes.keys)
+    Dir["#{music_dir}/**/*.mei"]
+      .each {|f| import_file f, music_dir, common_attributes }
   end
 
   def import_file(path, dir, common_attributes)

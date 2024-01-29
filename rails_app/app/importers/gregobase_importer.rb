@@ -34,18 +34,17 @@ class GregobaseImporter < BaseImporter
     gregobase_source.title =~ /(antiphonale|antiphonarium|antiphonarius|completorium|hebdomad|in nocte|les heures|liber hymnarius|matutinum|nocturnale|nocturnalis|psalterium|semaine|usualis|graduale simplex|et responsoria|responsorialis)/i
   end
 
-  def call(_)
-    @source_language = SourceLanguage.find_by_system_name! 'gabc'
-
-    corpus.imports.build.do! do |import|
-      sources.each {|source| import_source(source, import) }
-    end
-
-    report_unseen_chants
-    report_unimplemented_attributes
+  def build_common_attributes
+    {
+      source_language: SourceLanguage.find_by_system_name!('gabc'),
+    }
   end
 
-  def import_source(source, import)
+  def do_import(common_attributes, _)
+    sources.each {|source| import_source(common_attributes, source) }
+  end
+
+  def import_source(common_attributes, source)
     music_book = MusicBook.find_or_create_by!(
       corpus: corpus,
       title: source.title,
@@ -53,12 +52,9 @@ class GregobaseImporter < BaseImporter
       year: source.year
     )
 
-    common_attributes = {
-      corpus: corpus,
-      import: import,
-      source_language: @source_language,
-      music_book: music_book,
-    }
+    source_attributes =
+      common_attributes
+        .merge(music_book: music_book)
 
     source
       .chant_sources
@@ -67,7 +63,7 @@ class GregobaseImporter < BaseImporter
       .left_joins(chant: :tags)
       .where(gregobase_chants: {'office-part': GENRES.keys})
       .where.not(gregobase_chants: {gabc: ''})
-      .each {|i| import_chant i, common_attributes }
+      .each {|i| import_chant i, source_attributes }
   end
 
   def import_chant(chant_source, common_attributes)

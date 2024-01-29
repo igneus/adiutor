@@ -3,24 +3,17 @@
 # transcribed by Andrew Hinkley
 # https://github.com/ahinkley/liber-antiphonarius-1960
 class LiberAntiphonariusImporter < BaseImporter
-
-  def call(path)
-    common_attributes = {
-      corpus: corpus,
+  def build_common_attributes
+    {
       book: Book.find_by_system_name!('br'),
       source_language: SourceLanguage.find_by_system_name!('gabc')
     }
+  end
 
-    corpus.imports.build.do! do |import|
-      common_attributes.update(import: import)
-
-      %w(AN RE)
-        .flat_map {|genre| Dir["#{path}/#{genre}/**/*.gabc"] }
-        .each {|f| import_file f, path, common_attributes }
-    end
-
-    report_unseen_chants
-    report_unimplemented_attributes(common_attributes.keys)
+  def do_import(common_attributes, path)
+    %w(AN RE)
+      .flat_map {|genre| Dir["#{path}/#{genre}/**/*.gabc"] }
+      .each {|f| import_file f, path, common_attributes }
   end
 
   def import_file(path, dir, common_attributes)

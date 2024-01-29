@@ -1,27 +1,21 @@
 # Imports chants from the directory structure of the Nocturnale Romanum project
 # https://github.com/Nocturnale-Romanum/nocturnale-romanum
 class NocturnaleImporter < BaseImporter
-  def call(path)
-    common_attributes = {
-      corpus: corpus,
+  def build_common_attributes
+    {
       book: Book.find_by_system_name!('br'),
       source_language: SourceLanguage.find_by_system_name!('gabc'),
       hour: Hour.find_by_system_name!('readings'),
     }
-
-    corpus.imports.build.do! do |import|
-      common_attributes.update(import: import)
-
-      Dir["#{path}/gabc/*.gabc"]
-        .sort.reverse # so that "chantId_contributor.gabc" (contributor version) comes before "chantId.gabc" (selected version)
-        .each {|f| import_file f, path, import, common_attributes }
-    end
-
-    report_unseen_chants
-    report_unimplemented_attributes(common_attributes.keys)
   end
 
-  def import_file(path, dir, import, common_attributes)
+  def do_import(common_attributes, path)
+    Dir["#{path}/gabc/*.gabc"]
+      .sort.reverse # so that "chantId_contributor.gabc" (contributor version) comes before "chantId.gabc" (selected version)
+      .each {|f| import_file f, path, common_attributes }
+  end
+
+  def import_file(path, dir, common_attributes)
     return if path.include? 'sandhofe' # we already have these from GregoBase
 
     p path
