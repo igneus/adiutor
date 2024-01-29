@@ -4,23 +4,25 @@ require_relative '../../spec/importers/in_adiutorium_importer_example_data'
 
 # Imports chants from the directory structure of the "In adiutorium" project sources
 class InAdiutoriumImporter < BaseImporter
-  def call(path)
+  def build_common_attributes
+    {
+      source_language: SourceLanguage.find_by_system_name!('lilypond'),
+    }
+  end
+
+  def do_import(common_attributes, path)
     files =
       Dir
         .chdir(path) { `git ls-files -z`.split("\x0") }
         .select {|x| x.end_with? '.ly' }
         .collect {|x| File.join path, x }
 
-    corpus.imports.build.do! do |import|
-      detect_genre_examples_check do
-        files.each {|f| import_file f, path, import }
-      end
+    detect_genre_examples_check do
+      files.each {|f| import_file f, path, common_attributes }
     end
-
-    report_unseen_chants
   end
 
-  def import_file(path, dir, import)
+  def import_file(path, dir, common_attributes)
     in_project_path =
       path
         .sub(dir, '')
@@ -28,10 +30,11 @@ class InAdiutoriumImporter < BaseImporter
 
     return if in_project_path =~ /(antifonar|cizojazycne|hymny|nechoral|psalmodie|rytmicke|variationes|^zalm\d+|kratkeverse)/
 
-    book = book_by_file_path(in_project_path)
-    cycle = cycle_by_file_path(in_project_path)
-    season = season_by_file_path(in_project_path)
-    language = SourceLanguage.find_by_system_name! 'lilypond'
+    file_attrs = common_attributes.merge(
+      book: book_by_file_path(in_project_path),
+      cycle: cycle_by_file_path(in_project_path),
+      season: season_by_file_path(in_project_path),
+    )
 
     scores =
       Lyv::LilyPondMusic
@@ -51,7 +54,7 @@ class InAdiutoriumImporter < BaseImporter
 
       triduum_scores.each_with_index do |s, si|
         puts s
-        import_score s, in_project_path, book, cycle, season_triduum, corpus, language, import, si
+        import_score s, in_project_path, file_attrs.merge(season: season_triduum), si
       end
 
       offset = triduum_scores.size
@@ -65,20 +68,15 @@ class InAdiutoriumImporter < BaseImporter
         next
       end
 
-      import_score s, in_project_path, book, cycle, season, corpus, language, import, si
+      import_score s, in_project_path, file_attrs, si
     end
   end
 
-  def import_score(score, in_project_path, book, cycle, season, corpus, language, import, source_file_position)
+  def import_score(score, in_project_path, common_attributes, source_file_position)
     header = score.header.transform_values {|v| v == '' ? nil : v }
     chant = Chant.find_or_initialize_by(chant_id: header['id'], source_file_path: in_project_path)
 
-    chant.corpus = corpus
-    chant.import = import
-    chant.book = book
-    chant.cycle = cycle
-    chant.season = season
-    chant.source_language = language
+    chant.assign_attributes common_attributes
     chant.source_file_position = source_file_position
 
     hour, genre = detect_hour_and_genre(header['id'], header['quid'], in_project_path)
