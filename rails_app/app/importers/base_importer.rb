@@ -73,7 +73,13 @@ class BaseImporter
   end
 
   def report_unimplemented_attributes(additional_implemented=[])
+    begin
+      adapter = self.class::Adapter
+    rescue NameError
+      return
+    end
+
     puts "Chant attributes not implemented/populated by this importer:"
-    p(self.class::Adapter.unimplemented_attributes - additional_implemented)
+    p(adapter.unimplemented_attributes - additional_implemented)
   end
 end
