@@ -53,6 +53,13 @@ class GregobaseImporter < BaseImporter
       year: source.year
     )
 
+    common_attributes = {
+      corpus: corpus,
+      import: import,
+      source_language: @source_language,
+      music_book: music_book,
+    }
+
     source
       .chant_sources
       .order(:page)
@@ -60,10 +67,10 @@ class GregobaseImporter < BaseImporter
       .left_joins(chant: :tags)
       .where(gregobase_chants: {'office-part': GENRES.keys})
       .where.not(gregobase_chants: {gabc: ''})
-      .each {|i| import_chant music_book, i, import }
+      .each {|i| import_chant i, common_attributes }
   end
 
-  def import_chant(music_book, chant_source, import)
+  def import_chant(chant_source, common_attributes)
     gchant = chant_source.chant
 
     return if gchant.gabc.start_with? '['
@@ -88,16 +95,13 @@ class GregobaseImporter < BaseImporter
     p fake_path
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: fake_path)
-    chant.corpus = corpus # not a duplicate, find_or_initialize_by doesn't infer any values from the relation when initializing
-    chant.import = import
-    chant.source_language = @source_language
 
-    chant.music_book = music_book
     chant.gregobase_chant_id = gchant.id
 
-    attrs = OpenStruct.new music_book: music_book, source_code: source
+    attrs = OpenStruct.new music_book: common_attributes[:music_book], source_code: source
     adapter = Adapter.new(attrs, chant_source, score)
     update_chant_from_adapter(chant, adapter)
+    chant.assign_attributes common_attributes
 
     if chant.simple_copy?
       parent_chant_source = self.class.main_chant_source(gchant)

@@ -2,20 +2,25 @@
 # https://github.com/DDMAL/Andrew-Hughes-Chant
 class HughesImporter < BaseImporter
   def call(path)
-    book = Book.find_by_system_name! 'other'
-    language = SourceLanguage.find_by_system_name! 'mei'
+    common_attributes = {
+      corpus: corpus,
+      book: Book.find_by_system_name!('other'),
+      source_language: SourceLanguage.find_by_system_name!('mei'),
+    }
 
     music_dir = File.join path, 'file_structure_text_file_MEI_file'
     corpus.imports.build.do! do |import|
+      common_attributes.update(import: import)
+
       Dir["#{music_dir}/**/*.mei"]
-        .each {|f| import_file f, music_dir, import, book, language }
+        .each {|f| import_file f, music_dir, common_attributes }
     end
 
     report_unseen_chants
-    report_unimplemented_attributes
+    report_unimplemented_attributes(common_attributes.keys)
   end
 
-  def import_file(path, dir, import, book, source_language)
+  def import_file(path, dir, common_attributes)
     p path
     in_project_path = path.sub(dir + '/', '')
 
@@ -27,16 +32,13 @@ class HughesImporter < BaseImporter
         STDERR.puts 'txt file not found'
         ''
       end
-    attrs = OpenStruct.new source_code: mei, book: book
+    attrs = OpenStruct.new source_code: mei
     adapter = Adapter.new(attrs, in_project_path, txt)
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: in_project_path)
 
-    chant.corpus = corpus
-    chant.import = import
-    chant.source_language = source_language
-
     update_chant_from_adapter chant, adapter
+    chant.assign_attributes common_attributes
 
     chant.save!
   end
@@ -58,7 +60,6 @@ class HughesImporter < BaseImporter
     end
 
     # overriding parent methods
-    const_attributes :book
     attr_reader :source_code
 
     find_associations_by_system_name :cycle, :season, :hour, :genre
