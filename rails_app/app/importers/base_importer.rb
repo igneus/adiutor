@@ -10,7 +10,7 @@ class BaseImporter
   attr_reader :corpus
 
   # template method orchestrating the most usual import workflow
-  def call(*args)
+  def call(corpus_path)
     common_attributes = build_common_attributes
 
     corpus.imports.build.do! do |import|
@@ -19,7 +19,7 @@ class BaseImporter
           corpus: corpus,
           import: import
         ),
-        *args
+        corpus_path
       )
     end
 
@@ -33,7 +33,7 @@ class BaseImporter
     {}
   end
 
-  def do_import(common_attributes)
+  def do_import(common_attributes, corpus_path)
     raise 'not implemented'
   end
 
