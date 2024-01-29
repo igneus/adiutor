@@ -127,7 +127,7 @@ class HughesImporter < BaseImporter
       end ||
         begin
           STDERR.puts 'failed to parse'
-          'antiphon' # fake
+          'varia' # fake
         end
     end
 
