@@ -2,21 +2,25 @@
 # https://github.com/Nocturnale-Romanum/nocturnale-romanum
 class NocturnaleImporter < BaseImporter
   def call(path)
-    book = Book.find_by_system_name! 'br'
-    language = SourceLanguage.find_by_system_name! 'gabc'
-    hour = Hour.find_by_system_name! 'readings'
-
     corpus.imports.build.do! do |import|
+      common_attributes = {
+        corpus: corpus,
+        import: import,
+        book: Book.find_by_system_name!('br'),
+        source_language: SourceLanguage.find_by_system_name!('gabc'),
+        hour: Hour.find_by_system_name!('readings'),
+      }
+
       Dir["#{path}/gabc/*.gabc"]
-        .sort.reverse # first chant_contributor.gabc, then chant.gabc
-        .each {|f| import_file f, path, import, book, language, hour }
+        .sort.reverse # so that "chantId_contributor.gabc" (contributor version) comes before "chantId.gabc" (selected version)
+        .each {|f| import_file f, path, import, common_attributes }
     end
 
     report_unseen_chants
     report_unimplemented_attributes
   end
 
-  def import_file(path, dir, import, book, source_language, hour)
+  def import_file(path, dir, import, common_attributes)
     return if path.include? 'sandhofe' # we already have these from GregoBase
 
     p path
@@ -29,7 +33,11 @@ class NocturnaleImporter < BaseImporter
       return # just skip the failed score
     end
 
-    const_attributes = OpenStruct.new source_code: source, book: book, hour: hour
+    const_attributes = OpenStruct.new(
+      common_attributes
+        .slice(:book, :hour)
+        .merge(source_code: source)
+    )
     adapter = Adapter.new(const_attributes, score, path)
     return if adapter.genre_system_name == 'hymn'
 
@@ -40,9 +48,7 @@ class NocturnaleImporter < BaseImporter
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: File.basename(path))
 
-    chant.corpus = corpus
-    chant.import = import
-    chant.source_language = source_language
+    chant.assign_attributes common_attributes
 
     update_chant_from_adapter chant, adapter
 

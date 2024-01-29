@@ -5,20 +5,24 @@
 class LiberAntiphonariusImporter < BaseImporter
 
   def call(path)
-    book = Book.find_by_system_name! 'br'
-    language = SourceLanguage.find_by_system_name! 'gabc'
-
     corpus.imports.build.do! do |import|
+      common_attributes = {
+        corpus: corpus,
+        import: import,
+        book: Book.find_by_system_name!('br'),
+        source_language: SourceLanguage.find_by_system_name!('gabc')
+      }
+
       %w(AN RE)
         .flat_map {|genre| Dir["#{path}/#{genre}/**/*.gabc"] }
-        .each {|f| import_file f, path, import, book, language }
+        .each {|f| import_file f, path, common_attributes }
     end
 
     report_unseen_chants
     report_unimplemented_attributes
   end
 
-  def import_file(path, dir, import, book, source_language)
+  def import_file(path, dir, common_attributes)
     p path
     in_project_path = path.sub(dir, '').sub(/^\//, '')
 
@@ -32,11 +36,9 @@ class LiberAntiphonariusImporter < BaseImporter
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: in_project_path)
 
-    chant.corpus = corpus
-    chant.import = import
-    chant.source_language = source_language
+    chant.assign_attributes common_attributes
 
-    const_attributes = OpenStruct.new source_code: source, book: book
+    const_attributes = OpenStruct.new source_code: source, book: common_attributes[:book]
     adapter = Adapter.new(const_attributes, score)
     update_chant_from_adapter chant, adapter
 

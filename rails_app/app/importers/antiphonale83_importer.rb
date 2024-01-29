@@ -4,23 +4,27 @@
 class Antiphonale83Importer < BaseImporter
   def call(path)
     corpus.imports.build.do! do |import|
+      common_attributes = {
+        corpus: corpus,
+        import: import,
+        book: Book.find_by_system_name!('oco1983'),
+        cycle: Cycle.find_by_system_name!('psalter'),
+        source_language: SourceLanguage.find_by_system_name!('gabc'),
+      }
+
       # only import Psalter antiphons, the rest is too small to be worth importing
-      Dir["#{path}/psalterium/*.gly"].each {|f| import_file f, path, import }
+      Dir["#{path}/psalterium/*.gly"].each {|f| import_file f, path, common_attributes }
     end
 
     report_unseen_chants
     report_unimplemented_attributes
   end
 
-  def import_file(path, dir, import)
+  def import_file(path, dir, common_attributes)
     in_project_path =
       path
         .sub(dir, '')
         .sub(%r{^/}, '')
-
-    book = Book.find_by_system_name! 'oco1983'
-    cycle = Cycle.find_by_system_name! 'psalter'
-    language = SourceLanguage.find_by_system_name! 'gabc'
 
     scores = Gly::Parser.new.parse(path).scores
 
@@ -32,19 +36,16 @@ class Antiphonale83Importer < BaseImporter
 
       puts in_project_path + '#' + s.headers['id']
 
-      import_score s, in_project_path, book, cycle, corpus, language, import
+      import_score s, in_project_path, common_attributes
     end
   end
 
-  def import_score(score, in_project_path, book, cycle, corpus, language, import)
+  def import_score(score, in_project_path, common_attributes)
     chant = corpus.chants.find_or_initialize_by(
       chant_id: score.headers['id'],
       source_file_path: in_project_path
     )
-
-    chant.corpus = corpus
-    chant.import = import
-    chant.source_language = language
+    chant.assign_attributes common_attributes
 
     # Import not the original gly source code, but transformed to gabc,
     # in order to make subsequent processing as simple as possible
@@ -58,7 +59,11 @@ class Antiphonale83Importer < BaseImporter
       STDERR.puts "failed to parse gabc for '#{in_project_path}' ##{chant.id}: #{e.message}"
     end
 
-    attrs = OpenStruct.new source_code: gabc, book: book, cycle: cycle
+    attrs = OpenStruct.new(
+      common_attributes
+        .slice(:book, :cycle)
+        .merge(source_code: gabc)
+    )
     adapter = Adapter.new attrs, score, gabc_score, in_project_path
     update_chant_from_adapter chant, adapter
 
