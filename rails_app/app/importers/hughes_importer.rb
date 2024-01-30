@@ -124,11 +124,12 @@ class HughesImporter < BaseImporter
           p m
           nil
         end
-      end ||
-        begin
-          STDERR.puts 'failed to parse'
-          'varia' # fake
-        end
+      end \
+      ||
+      begin
+        STDERR.puts 'failed to parse'
+        'varia' # fake
+      end
     end
 
     def hour_system_name
