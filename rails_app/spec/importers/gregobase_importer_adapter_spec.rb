@@ -1,6 +1,6 @@
 # coding: utf-8
 describe GregobaseImporter::Adapter do
-  let(:subject) { described_class.new(const_attrs, gregobase_chant_source, score) }
+  let(:subject) { described_class.new(source_code, music_book, gregobase_chant_source, score) }
 
   let(:gregobase_chant) { double() }
   let(:gregobase_source) { double() }
@@ -9,10 +9,6 @@ describe GregobaseImporter::Adapter do
   let(:music_book) { MusicBook.new }
   let(:source_code) { "%%\n" }
   let(:const_attrs) { double(music_book: music_book, source_code: source_code) }
-
-  include_examples 'attributes passed from the outside', %i[music_book source_code] do
-    let(:other_constructor_args) { [gregobase_chant_source, score] }
-  end
 
   describe '<alt></alt>' do
     let(:source_code) { "%%\n(f3)A<alt>Omnes genua flectunt</alt>(h/hf/ge)ve,(e.)" }

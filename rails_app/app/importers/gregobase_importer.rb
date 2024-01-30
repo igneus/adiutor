@@ -94,8 +94,7 @@ class GregobaseImporter < BaseImporter
 
     chant.gregobase_chant_id = gchant.id
 
-    attrs = OpenStruct.new music_book: common_attributes[:music_book], source_code: source
-    adapter = Adapter.new(attrs, chant_source, score)
+    adapter = Adapter.new(source, common_attributes[:music_book], chant_source, score)
     update_chant_from_adapter(chant, adapter)
     chant.assign_attributes common_attributes
 
@@ -132,11 +131,14 @@ class GregobaseImporter < BaseImporter
 
   class Adapter < BaseImportDataAdapter
     # @param gregobase_chant_source [Gregobase::ChantSource]
-    def initialize(const_attributes, gregobase_chant_source, score)
-      super(const_attributes)
+    def initialize(source_code, music_book, gregobase_chant_source, score)
+      @source_code = source_code
+      @music_book = music_book
+
       @chant_source = gregobase_chant_source
       @chant = @chant_source.chant
       @source = @chant_source.source
+
       @score = score
 
       @score_with_stats = GabcScoreStats.new(score)
@@ -144,7 +146,11 @@ class GregobaseImporter < BaseImporter
 
     def_delegators :@score_with_stats, :syllable_count, :word_count, :melody_section_count
 
-    const_attributes :music_book, :source_code
+    # internal
+    attr_reader :music_book
+
+    # overriding parent methods
+    attr_reader :source_code
     find_associations_by_system_name :book, :genre, :hour, :season, :cycle
 
     def lyrics

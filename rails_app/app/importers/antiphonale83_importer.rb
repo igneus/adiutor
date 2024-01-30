@@ -53,8 +53,7 @@ class Antiphonale83Importer < BaseImporter
       STDERR.puts "failed to parse gabc for '#{in_project_path}' ##{chant.id}: #{e.message}"
     end
 
-    attrs = OpenStruct.new(source_code: gabc)
-    adapter = Adapter.new attrs, score, gabc_score, in_project_path
+    adapter = Adapter.new gabc, score, gabc_score, in_project_path
     update_chant_from_adapter chant, adapter
     chant.assign_attributes common_attributes
 
@@ -74,9 +73,8 @@ class Antiphonale83Importer < BaseImporter
   end
 
   class Adapter < BaseImportDataAdapter
-    def initialize(const_attributes, score, gabc_score, in_project_path)
-      super(const_attributes)
-
+    def initialize(source_code, score, gabc_score, in_project_path)
+      @source_code = source_code
       @score = score
       @gabc_score = gabc_score
       @in_project_path = in_project_path
@@ -87,7 +85,7 @@ class Antiphonale83Importer < BaseImporter
     # internals
     attr_reader :score, :in_project_path
 
-    const_attributes :source_code
+    attr_reader :source_code
     find_associations_by_system_name :hour, :genre
 
     def hour_system_name

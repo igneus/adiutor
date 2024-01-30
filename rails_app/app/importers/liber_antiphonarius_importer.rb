@@ -30,8 +30,7 @@ class LiberAntiphonariusImporter < BaseImporter
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: in_project_path)
 
-    const_attributes = OpenStruct.new source_code: source
-    adapter = Adapter.new(const_attributes, score)
+    adapter = Adapter.new(source, score)
     update_chant_from_adapter chant, adapter
     chant.assign_attributes common_attributes
 
@@ -45,8 +44,8 @@ class LiberAntiphonariusImporter < BaseImporter
   end
 
   class Adapter < BaseImportDataAdapter
-    def initialize(const_attributes, score)
-      super(const_attributes)
+    def initialize(source_code, score)
+      @source_code = source_code
       @score = score
 
       @score_with_stats = GabcScoreStats.new(score)
@@ -56,7 +55,7 @@ class LiberAntiphonariusImporter < BaseImporter
     attr_reader :score
 
     # overriding parent methods
-    const_attributes :source_code
+    attr_reader :source_code
     def_delegators :@score_with_stats, :syllable_count, :word_count, :melody_section_count
 
     find_associations_by_system_name :cycle, :season, :genre

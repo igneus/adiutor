@@ -28,8 +28,7 @@ class NocturnaleImporter < BaseImporter
       return # just skip the failed score
     end
 
-    const_attributes = OpenStruct.new(source_code: source)
-    adapter = Adapter.new(const_attributes, score, path)
+    adapter = Adapter.new(source, score, path)
     return if adapter.genre_system_name == 'hymn'
 
     if adapter.genre_system_name.nil?
@@ -68,8 +67,8 @@ class NocturnaleImporter < BaseImporter
   end
 
   class Adapter < BaseImportDataAdapter
-    def initialize(const_attributes, score, path)
-      super(const_attributes)
+    def initialize(source_code, score, path)
+      @source_code = source_code
       @score = score
 
       @day_code = File.basename(path).split('.')[0].split('_')[0]
@@ -93,8 +92,7 @@ class NocturnaleImporter < BaseImporter
     attr_reader :score
 
     # overriding parent methods
-    attr_reader :modus, :differentia
-    const_attributes :source_code
+    attr_reader :modus, :differentia, :source_code
     def_delegators :@score_with_stats, :syllable_count, :word_count, :melody_section_count
 
     find_associations_by_system_name :cycle, :season, :genre

@@ -29,14 +29,6 @@ class BaseImportDataAdapter
     end
   end
 
-  def self.const_attributes(*attributes)
-    def_delegators :@const_attributes, *attributes
-  end
-
-  def initialize(const_attributes=nil)
-    @const_attributes = const_attributes
-  end
-
   # associations
 
   def book

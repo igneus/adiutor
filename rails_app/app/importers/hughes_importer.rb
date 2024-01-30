@@ -27,8 +27,7 @@ class HughesImporter < BaseImporter
         STDERR.puts 'txt file not found'
         ''
       end
-    attrs = OpenStruct.new source_code: mei
-    adapter = Adapter.new(attrs, in_project_path, txt)
+    adapter = Adapter.new(mei, in_project_path, txt)
 
     chant = corpus.chants.find_or_initialize_by(chant_id: DEFAULT_CHANT_ID, source_file_path: in_project_path)
 
@@ -41,12 +40,10 @@ class HughesImporter < BaseImporter
   class Adapter < BaseImportDataAdapter
     MEI_XML_NAMESPACE = 'http://www.music-encoding.org/ns/mei'
 
-    def initialize(const_attributes, path, txt)
-      super(const_attributes)
-
+    def initialize(source_code, path, txt)
       # dirty hack: the MEI files miss staff@n attributes without which
       # music21 is unable to load them
-      @source_code = const_attributes.source_code.gsub('<staff ', '<staff n="1" ')
+      @source_code = source_code.gsub('<staff ', '<staff n="1" ')
 
       @path = path
       @txt = txt
