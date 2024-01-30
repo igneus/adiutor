@@ -65,6 +65,7 @@ class HughesImporter < BaseImporter
           .flat_map {|i| i.split('###') }
           .collect {|i| i.split(/\s*:\s*/, 2) }
           .to_h
+          .merge('txt_meta' => txt_meta)
     end
 
     def modus
@@ -99,12 +100,14 @@ class HughesImporter < BaseImporter
     end
 
     def genre_system_name
-      @txt.lines[0]&.match(/\|[\w\d]*?=(?<hour>\w)(?<genre>\w)(?<position>[\w\d]*)/) do |m|
-        case m[:genre]
+      begin
+        txt_meta \
+        &&
+        case txt_meta['genre']
         when 'I'
           'invitatory'
         when 'A'
-          if m[:position] == 'E'
+          if txt_meta['position'] == 'E'
             'antiphon_gospel'
           else
             'antiphon'
@@ -112,13 +115,12 @@ class HughesImporter < BaseImporter
         when 'E'
           'antiphon_gospel'
         when 'R', 'V'
-          if %w(T S N).include? m[:hour]
+          if %w(T S N).include? txt_meta['hour']
             'responsory_short'
           else
             'responsory_nocturnal'
           end
         else
-          p m
           nil
         end
       end \
@@ -164,6 +166,15 @@ class HughesImporter < BaseImporter
         @xml_doc
           .xpath('//m:syl', 'm' => MEI_XML_NAMESPACE)
           .size
+    end
+
+    private
+
+    def txt_meta
+      @txt_meta ||=
+        @txt.lines[0]
+          &.match(/\|[\w\d]*?=(?<hour>\w)(?<genre>\w)(?<position>[\w\d]*)(\.(?<mode>[\w\d]+))?/)
+          &.named_captures
     end
   end
 end
