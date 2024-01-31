@@ -120,6 +120,10 @@ GEM
     factory_bot_rails (6.4.2)
       factory_bot (~> 6.4)
       railties (>= 5.0.0)
+    faraday (2.9.0)
+      faraday-net_http (>= 2.0, < 3.2)
+    faraday-net_http (3.1.0)
+      net-http
     ffi (1.16.3)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -159,6 +163,8 @@ GEM
       protocol (~> 2.0)
     msgpack (1.7.2)
     mysql2 (0.5.5)
+    net-http (0.4.1)
+      uri
     net-imap (0.4.9)
       date
       net-protocol
@@ -279,6 +285,7 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    uri (0.13.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.1)
@@ -304,6 +311,7 @@ DEPENDENCIES
   dotenv
   facets
   factory_bot_rails
+  faraday
   gly!
   jbuilder (~> 2.7)
   kaminari

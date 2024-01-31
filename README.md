@@ -57,6 +57,8 @@ and execute code of the Rails application outside of Docker.
       https://github.com/DDMAL/Andrew-Hughes-Chant
     - `bundle exec rake gregobase:load_dump gregobase:import` to import relevant chants from a GregoBase DB dump
       https://github.com/gregorio-project/GregoBase
+    - `bundle exec rake neuma:fetch neuma:import` to import chants from the Sequentia collection
+      http://neuma.huma-num.fr/home/corpus/sequentia/
 1. `bundle exec rake images` to render each chant in notation (takes a lot of time to finish,
    requires LilyPond and Inkscape, for the gabc-based chant corpora also LuaLaTex and Gregorio)
 1. `cd ..` (return to the project root directory)
