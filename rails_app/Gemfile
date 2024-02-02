@@ -53,6 +53,10 @@ gem 'roman-numerals'
 gem 'rouge'
 gem 'slim'
 
+# Temporary workaround for https://github.com/rubygems/rubygems/issues/7178#issuecomment-1877947144
+# preventing the bundle from loading
+gem 'uri', '0.10.1'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
