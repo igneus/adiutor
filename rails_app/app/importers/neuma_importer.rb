@@ -100,5 +100,11 @@ class NeumaImporter < BaseImporter
           .xpath('//m:syl', 'm' => MEI_XML_NAMESPACE)
           .size
     end
+
+    def melody_section_count
+      @xml_doc
+        .xpath('//m:measure', 'm' => MEI_XML_NAMESPACE)
+        .size
+    end
   end
 end
