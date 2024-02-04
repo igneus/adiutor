@@ -22,7 +22,11 @@ desc 'checks if each score matches its parent'
 task compare_parents: [:environment] do
   ParentChildMismatch.delete_all
 
-  Chant.where.not(parent: nil).find_each do |chant|
+  Corpus
+    .find_by_system_name!('in_adiutorium')
+    .chants
+    .where.not(parent: nil)
+    .find_each do |chant|
     comparison = ChildParentComparison.new chant.lyv_score, chant.parent.lyv_score
     unless comparison.match?
       ParentChildMismatch.create!(child: chant)
