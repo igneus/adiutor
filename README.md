@@ -3,6 +3,26 @@
 Private chant database assisting work on the [In adiutorium][ia] project.
 Internal tool, not intended for public deployment.
 
+# What it's used for
+
+The application's main purpose is to transform a heap of sheet music into
+a database of pieces which can be conveniently searched and filtered
+by lyrics, tune and metadata.
+Many features are specific to the corpus being worked on
+(keeping track of relations between pieces,
+of settings for a few special psalms and canticles required to match the respective antiphons,
+of non-standard tunes worth occasional re-evaluation;
+continual focus on pieces marked as needing a revision).
+
+The application is only used as visualization and accessibility tool,
+not to edit the data. The music corpus is maintained as a source code
+repository edited using standard music editing applications
+and the source code is regularly re-imported in the web app.
+
+Various publicly available corpora of Gregorian chant pieces
+are imported as additional reference material and for research purposes
+not directly related to the work on the vernacular chant corpus.
+
 # Setting up
 
 ## Prerequisites
