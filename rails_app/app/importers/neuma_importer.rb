@@ -46,7 +46,12 @@ class NeumaImporter < BaseImporter
     MEI_XML_NAMESPACE = 'http://www.music-encoding.org/ns/mei'
 
     def initialize(source_code, api_resource, path)
-      @source_code = source_code
+      @source_code =
+        source_code
+          .gsub(' label="MusicXML Part"', '') # remove ugly staff label
+          .gsub(' clef.shape="C"', ' clef.shape="G"') # make the clef a violin clef, as it's much more convenient to read
+          .gsub(/ clef.line="\d"/, ' clef.line="2"')
+
       @api_resource = api_resource
 
       @xml_doc = Nokogiri::XML(@source_code)
