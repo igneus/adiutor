@@ -48,7 +48,7 @@ class NocturnaleImporter < BaseImporter
     return if adapter.genre_system_name == 'hymn'
 
     if adapter.genre_system_name.nil?
-      STDERR.puts "failed to parse day code"
+      STDERR.puts "failed to parse day code '#{adapter.day_code}'"
       return
     end
 
@@ -111,7 +111,7 @@ class NocturnaleImporter < BaseImporter
     end
 
     # internals
-    attr_reader :score
+    attr_reader :score, :day_code
 
     # overriding parent methods
     attr_reader :modus, :differentia, :source_code
