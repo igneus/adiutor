@@ -12,7 +12,23 @@ class NocturnaleImporter < BaseImporter
   def do_import(common_attributes, path)
     Dir["#{path}/gabc/*.gabc"]
       .sort.reverse # so that "chantId_contributor.gabc" (contributor version) comes before "chantId.gabc" (selected version)
+      .tap {|gabcs| create_music_books gabcs }
       .each {|f| import_file f, path, common_attributes }
+  end
+
+  def create_music_books(gabcs)
+    ids = Set.new
+    ids << 'selected'
+    gabcs.each do |path|
+      ids << contributor_id(path)
+    end
+
+    ids.each do |id|
+      MusicBook.find_or_create_by!(
+        corpus: corpus,
+        title: id
+      )
+    end
   end
 
   def import_file(path, dir, common_attributes)
@@ -41,6 +57,8 @@ class NocturnaleImporter < BaseImporter
     update_chant_from_adapter chant, adapter
     chant.assign_attributes common_attributes
 
+    chant.music_book = corpus.music_books.find_by_title contributor_id(path)
+
     if is_main_file? path
       parent =
         corpus.chants
@@ -64,6 +82,10 @@ class NocturnaleImporter < BaseImporter
 
   def is_main_file?(path)
     !File.basename(path).include?('_')
+  end
+
+  def contributor_id(gabc_path)
+    File.basename(gabc_path).split('.')[0].split('_')[1] || 'selected'
   end
 
   class Adapter < BaseImportDataAdapter
