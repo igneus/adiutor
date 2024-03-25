@@ -1,9 +1,13 @@
 Arpeggio==1.10.2
 attrs==21.2.0
+certifi==2024.2.2
 chant21==0.4.6
+chardet==5.2.0
+charset-normalizer==3.3.2
 click==8.0.1
 cycler==0.10.0
-greenlet==1.1.1
+greenlet==3.0.3
+idna==3.6
 iniconfig==1.1.1
 Jinja2==2.11.3
 joblib==1.0.1
@@ -13,7 +17,7 @@ MarkupSafe==2.0.1
 matplotlib==3.4.3
 more-itertools==8.10.0
 music21==8.3.0
-numpy==1.21.2
+numpy==1.26.4
 Pillow==8.3.2
 pluggy==1.0.0
 psycopg2==2.9.1
@@ -23,5 +27,9 @@ python-dateutil==2.8.2
 python-dotenv==0.19.0
 python-ly==0.9.7
 PyYAML==5.3.1
+requests==2.31.0
+six==1.16.0
 SQLAlchemy==1.4.25
+toml==0.10.2
+urllib3==2.2.1
 webcolors==1.11.1

@@ -1,6 +1,6 @@
 # based on https://betterprogramming.pub/rails-6-development-with-docker-55437314a1ad
 
-FROM ruby:3.0.0-alpine
+FROM ruby:3.3.0-alpine
 
 ENV APP_PATH /var/app/rails_app
 ENV BUNDLE_PATH /usr/local/bundle/gems
@@ -34,6 +34,10 @@ tiff-dev \
 freetype-dev \
 && rm -rf /var/cache/apk/* \
 && mkdir -p $APP_PATH
+
+# Python: remove the "externally managed environment" (PEP 668) marker file
+# in order to allow `pip install`
+RUN rm $(echo 'import sysconfig; print(sysconfig.get_path("stdlib", sysconfig.get_default_scheme()))' | python)/EXTERNALLY-MANAGED
 
 # navigate to app directory
 WORKDIR $APP_PATH
