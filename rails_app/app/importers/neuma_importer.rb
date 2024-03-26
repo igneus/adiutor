@@ -16,7 +16,7 @@ class NeumaImporter < BaseImporter
 
       # downloaded MEI files contain no metadata at all, so we make an API
       # request for the chant listing and pair the files with API responses
-      Neuma::Corpus.opera(File.basename(f)).each do |opus|
+      Neuma::Client.new.opera(File.basename(f)).each do |opus|
         local_file = File.join f, "#{opus.ref}.xml"
         next unless File.exist? local_file
 
