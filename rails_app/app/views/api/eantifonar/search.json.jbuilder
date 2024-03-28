@@ -10,7 +10,12 @@
           differentia: chant.differentia,
           genre: chant.genre.system_name,
           lyrics: chant.lyrics,
-          image: image_url("chants/#{chant.source_language.system_name}/#{chant.id}.svg")
+          image:
+            begin
+              image_url("chants/#{chant.source_language.system_name}/#{chant.id}.svg")
+            rescue Sprockets::Rails::Helper::AssetNotFound
+              nil
+            end
         }
       end
     end
