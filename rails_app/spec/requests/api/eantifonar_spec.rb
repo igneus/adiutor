@@ -19,9 +19,6 @@ RSpec.describe "Api::Eantifonar", type: :request do
       expect(response.body).to eq '{"my_id":null}'
     end
 
-    # NOTE: since the code under test invokes image_url, it's quite possible
-    # that these tests only pass if there are images with matching names
-    # in the development asset pipeline, which is really unfortunate
     it 'returns chant details if found' do
       lyrics = 'lyrics'
       chant = create(
@@ -37,7 +34,6 @@ RSpec.describe "Api::Eantifonar", type: :request do
       expect(response).to have_http_status :ok
       expect(response.body).to start_with '{"my_id":[{"id":'
       expect(response.body).to include '"modus":"I","differentia":"D","genre":"antiphon"'
-      expect(response.body).to include '"image":"http://www.example.com/assets/chants/lilypond/'
     end
   end
 end
