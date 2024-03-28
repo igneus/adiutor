@@ -1,8 +1,11 @@
 # coding: utf-8
 IMPORT_PREREQUISITES = [
   :environment,
-  :create_books, :create_cycles, :create_seasons, :create_corpora, :create_source_languages, :create_genres, :create_hours
+  :create_corpora, :create_books, :create_cycles, :create_seasons, :create_source_languages, :create_genres, :create_hours
 ]
+
+desc 'create fundamental data entries required by the application'
+task init_data: IMPORT_PREREQUISITES
 
 desc 'import chants from In-adiutorium sources'
 task import: IMPORT_PREREQUISITES do
@@ -49,14 +52,15 @@ task create_books: [:environment] do
   Book.find_or_create_by!(system_name: 'gs', name: 'Graduale simplex')
 
   sources_path = Corpus.find_by_system_name!('in_adiutorium').sources_path
+  unless sources_path.blank?
+    Dir[File.join(sources_path, 'reholni', '*')]
+      .each {|f| p f }
+      .select {|f| File.directory? f }
+      .each do |f|
+      order_shortcut = File.basename f
 
-  Dir[File.join(sources_path, 'reholni', '*')]
-    .each {|f| p f }
-    .select {|f| File.directory? f }
-    .each do |f|
-    order_shortcut = File.basename f
-
-    Book.find_or_create_by!(system_name: order_shortcut.downcase, name: "Proprium #{order_shortcut}")
+      Book.find_or_create_by!(system_name: order_shortcut.downcase, name: "Proprium #{order_shortcut}")
+    end
   end
 end
 

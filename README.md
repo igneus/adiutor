@@ -43,10 +43,8 @@ not directly related to the work on the vernacular chant corpus.
 
 ### Configure and start the dockerized web app
 
-1. copy `.env.template` to `.env`, populate with required values (follow comments)
-1. `./dc.sh up`
-1. TODO: create databases
-1. `make install-pkgs`
+1. `./bin/init.sh`
+1. spin the application up by `./dc.sh up` (Ctrl+C to stop, `./dc.sh down` to remove the containers)
 1. check that the application works:
   - `http://localhost:3000/` serves Adiutor homepage
   - `make test` succeeds (or at least `make test-rails test-python` succeeds)
