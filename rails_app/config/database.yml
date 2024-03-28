@@ -26,11 +26,10 @@ default: &default
     adapter: mysql
     encoding: utf8
     database_tasks: false
+    url: <%= ENV['GREGOBASE_DATABASE_URL'] %>
 
 development:
   <<: *default
-  gregobase:
-    url: <%= ENV['GREGOBASE_DATABASE_URL'] %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -66,6 +65,13 @@ test:
   <<: *default
   primary:
     url: <%= ENV['APP_TEST_DATABASE_URL'] %>
+  gregobase:
+    url: <%= ENV['GREGOBASE_TEST_DATABASE_URL'] %>
+
+    # Although the setting is already in 'default', as of Rails 7.0.8
+    # it must be repeated here. Otherwise `rake db:create` is trying
+    # to create the gregobase_test database.
+    database_tasks: false
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
