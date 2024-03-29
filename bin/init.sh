@@ -38,7 +38,7 @@ echo
 echo '== Setting up databases'
 ./dc.sh up -d
 sleep 15
-./dc.sh run ruby bash -c 'rake db:create && rake db:migrate && rake init_data'
+./dc.sh run ruby bash -c 'rake db:create && rake db:migrate && rake db:seed'
 ./dc.sh down
 
 echo
