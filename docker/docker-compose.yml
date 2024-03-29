@@ -27,7 +27,7 @@ services:
     build: ruby
     volumes:
       - ..:/var/app
-      - ~/In-adiutorium:/var/in-adiutorium-sources # TODO extract user-specific path to configuration
+      - "${IN_ADIUTORIUM_SOURCES_PATH}:/var/in-adiutorium-sources"
       - ./volumes/shared_data:/var/shared
       - ./volumes/gem_cache:/usr/local/bundle/gems
       - ./volumes/pip_cache:/root/.cache/pip

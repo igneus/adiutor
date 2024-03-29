@@ -1,7 +1,7 @@
 # Shortcuts for executing essential commands from the outside of the dockerized environment
 
-IN_RAILS_APP=cd docker && docker-compose run -w '/var/app/rails_app' ruby
-IN_PYTHON_APP=cd docker && docker-compose run -w '/var/app/python' ruby
+IN_RAILS_APP=./dc.sh run -w '/var/app/rails_app' ruby
+IN_PYTHON_APP=./dc.sh run -w '/var/app/python' ruby
 
 # dependency management
 
