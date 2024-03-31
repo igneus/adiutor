@@ -62,19 +62,19 @@ and execute code of the Rails application outside of Docker.
 1. `cd rails_app`
 1. `bundle install`
 1. check that the application works outside of Docker: `bundle exec rake spec`
-1. `bundle exec rake refresh` to import the main corpus of chants
+1. `bundle exec rake refresh` to import (or re-import) the In adiutorium corpus
 1. optionally import more chant corpora for comparative purposes
    (respective optional settings in `.env` must be set)
-    - `bundle exec rake antiphonarius:import` to import chants from the 1960 Liber antiphonarius
-      https://github.com/ahinkley/liber-antiphonarius-1960
-    - `bundle exec rake antiphonale83:import` to import chants from the 1983 Ordo cantus officii
-      https://github.com/igneus/antiphonale83
+    - `bundle exec rake gregobase:load_dump gregobase:import` to import relevant chants from a GregoBase DB dump
+      https://github.com/gregorio-project/GregoBase
     - `bundle exec rake nocturnale:import` to import chants from the Nocturnale Romanum project
       https://github.com/Nocturnale-Romanum/nocturnale-romanum
     - `bundle exec rake hughes:import` to import chants from the Andrew Hughes chant corpus
       https://github.com/DDMAL/Andrew-Hughes-Chant
-    - `bundle exec rake gregobase:load_dump gregobase:import` to import relevant chants from a GregoBase DB dump
-      https://github.com/gregorio-project/GregoBase
+    - `bundle exec rake antiphonarius:import` to import chants from the 1960 Liber antiphonarius
+      https://github.com/ahinkley/liber-antiphonarius-1960
+    - `bundle exec rake antiphonale83:import` to import chants from the 1983 Ordo cantus officii
+      https://github.com/igneus/antiphonale83
     - `bundle exec rake neuma:fetch neuma:import` to import chants from the Sequentia collection
       http://neuma.huma-num.fr/home/corpus/sequentia/
 1. `bundle exec rake images` to render each chant in notation (takes a lot of time to finish,
