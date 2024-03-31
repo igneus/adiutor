@@ -26,7 +26,7 @@ task delete_unseen_chants: :environment do
 end
 
 desc 'run import together with subsequent data-building tasks'
-task refresh: %i[import update_parents compare_parents update_children_tree_size missing_images]
+task refresh: %i[import update_parents compare_parents update_children_tree_size images:missing]
 
 desc 'import chants from a specified file'
 task :import_file, [:file] => IMPORT_PREREQUISITES do |task, args|
