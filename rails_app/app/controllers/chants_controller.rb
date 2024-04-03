@@ -32,7 +32,7 @@ class ChantsController < ApplicationController
       if params[:normalized]
         column = 'lyrics_normalized'
         # using `normalize_czech` assumes that the user will usually use simple keyboard
-        # input and abstain from entering special Latin staff like accented digraphs
+        # input and abstain from entering special Latin stuff like accented digraphs
         lyrics_input = LyricsNormalizer.new.normalize_czech lyrics_input
       end
       lyrics_like_str = like_search_string(lyrics_input, params[:lyrics_like_type])
