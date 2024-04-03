@@ -32,7 +32,7 @@ echo '== Building Docker images'
 
 echo
 echo '== Installing dependencies'
-make install-pkgs
+make deps
 
 echo
 echo '== Setting up databases'

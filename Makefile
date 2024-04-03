@@ -5,7 +5,7 @@ IN_PYTHON_APP=./dc.sh run -w '/var/app/python' ruby
 
 # dependency management
 
-install-pkgs:
+deps:
 	$(IN_RAILS_APP) bundle install
 	$(IN_PYTHON_APP) pip install -r requirements.txt
 
