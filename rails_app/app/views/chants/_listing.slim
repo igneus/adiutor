@@ -10,7 +10,11 @@ table
         td= link_to c.quid, chants_path(quid: c.quid)
         td= link_to c.modus, chants_path(modus: c.modus) if c.modus
         td= link_to c.differentia, chants_path(modus: c.modus, differentia: c.differentia) if c.differentia
-        td= link_to c.link_text, chant_path(c)
+        td
+          = link_to c.link_text, chant_path(c)
+          - if @show_placet
+            br
+            em= c.placet
         td
           = link_to chant_path(c) do
             = render 'image', chant: c

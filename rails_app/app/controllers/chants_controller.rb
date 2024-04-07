@@ -80,6 +80,8 @@ class ChantsController < ApplicationController
     end
 
     @chants = @chants.page(params[:page] || 1)
+
+    @show_placet = params[:show_placet]
   end
 
   def atypical_responsories
