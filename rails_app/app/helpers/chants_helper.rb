@@ -43,18 +43,28 @@ module ChantsHelper
 
   def edit_chant_button(chant, label=nil, variationes: false, render_if_unavailable: true, opts: {})
     label ||= 'Open in editor' + (variationes ? ' (variationes)' : '')
-    opts = {method: :post, class: 'button'}.update opts
+    opts = {class: 'button'}.update opts
     if chant.corpus.system_name != 'in_adiutorium'
       opts.update(disabled: true, title: 'only available for the In adiutorium corpus')
 
       return '' unless render_if_unavailable
     end
 
-    button_to(
-      label,
-      open_in_editor_chant_path(chant, variationes: variationes),
-      opts
-    )
+    if Adiutor::EDIT_FIAL_URL
+      # POST request to the editfial service
+      button_to(
+        label,
+        open_in_editor_chant_path(chant, variationes: variationes),
+        opts.update({method: :post})
+      )
+    else
+      # link with the fial:// custom URL schema
+      link_to(
+        label,
+        chant.fial_of_self(scheme: true) + (variationes ? '?open_variationes=true' : ''),
+        opts
+      )
+    end
   end
 
   def quality_notice_button(chant)
