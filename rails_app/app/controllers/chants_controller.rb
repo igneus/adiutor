@@ -35,7 +35,7 @@ class ChantsController < ApplicationController
         .filtered(filter)
         .page(params[:page] || 1)
 
-    @show_placet = filter.show_placet
+    @show_placet = filter.quality_notice
   end
 
   def atypical_responsories

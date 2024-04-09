@@ -45,8 +45,6 @@ ChantsFilter = Struct.new(
   :fons_externus,
   :quality_notice,
   :favourite,
-
-  :show_placet
 ) do
 
   # methods required by #form_for

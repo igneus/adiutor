@@ -63,8 +63,5 @@
       .column.column-80
         span.group-title Book
         =< form.collection_check_boxes :book_id, @books, :id, :name, include_hidden: false
-        span.group-title.tac Display
-        = label_tag :show_placet, 'Quality notices'
-        =< form.check_box :show_placet, include_hidden: false
       .column.column-20
         = form.select :source_file_path, @source_files.collect {|x| [x.source_file_path] * 2 }, include_blank: true

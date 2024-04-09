@@ -30,7 +30,7 @@ h2
   .column.column-50
     p
       => @need_fix_total
-      = link_to 'chants awaiting revision', chants_path(quality_notice: true, show_placet: true)
+      = link_to 'chants awaiting revision', chants_path(quality_notice: true)
     p
       => ParentChildMismatch.unresolved.count
       = link_to 'parent mismatches awaiting review', mismatches_path

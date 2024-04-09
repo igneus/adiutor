@@ -45,7 +45,6 @@ class ChantsFilterForm < Reform::Form
     fons_externus
     quality_notice
     favourite
-    show_placet
     mismatch
   ].each do |i|
     property i, type: Types::Params::Bool
