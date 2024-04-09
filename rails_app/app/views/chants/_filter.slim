@@ -5,10 +5,10 @@
       .row
         .column.column-60
           = form.check_box :case_sensitive, include_hidden: false
-          = label_tag :case_sensitive, 'Case-sensitive'
+          = form.label :case_sensitive, 'Case-sensitive'
 
           = form.check_box :normalized, include_hidden: false
-          = label_tag :normalized, 'Normalized'
+          = form.label :normalized, 'Normalized'
         .column.column-40
           = form.collection_select :lyrics_like_type, @like_types, :first, :last
     .column.column-40
@@ -37,11 +37,11 @@
 
       span.group-title.tac Varia
       = form.check_box :alleluia_optional, include_hidden: false
-      = label_tag :alleluia_optional, 'optional alleluia'
+      = form.label :alleluia_optional, 'optional alleluia'
       = form.check_box :lyrics_edited, include_hidden: false
-      = label_tag :lyrics_edited, 'edited lyrics'
+      = form.label :lyrics_edited, 'edited lyrics'
       = form.check_box :fons_externus, include_hidden: false
-      = label_tag :fons_externus, 'fons externus', title: 'adaptations of Latin pieces or melodies taken from other sources'
+      = form.label :fons_externus, 'fons externus', title: 'adaptations of Latin pieces or melodies taken from other sources'
     div
       span.group-title Hour
       = form.collection_check_boxes :hour_id, @hours, :id, :name, include_hidden: false
@@ -51,14 +51,14 @@
 
       span.group-title.tac Simple copy
       = form.collection_check_boxes :simple_copy, [true, false], :to_s, :to_s, include_hidden: false
-      => check_box :mismatch, 'true', include_hidden: false
-      = label_tag :mismatch, 'mismatch'
+      => form.check_box :mismatch, include_hidden: false
+      = form.label :mismatch, 'mismatch'
 
       span.group-title.tac Quality
       = form.check_box :quality_notice, include_hidden: false
-      = label_tag :quality_notice, 'Quality notice'
+      = form.label :quality_notice, 'Quality notice'
       = form.check_box :favourite, include_hidden: false
-      = label_tag :favourite, 'Marked as favourite'
+      = form.label :favourite, 'Marked as favourite'
     .row
       .column.column-80
         span.group-title Book
