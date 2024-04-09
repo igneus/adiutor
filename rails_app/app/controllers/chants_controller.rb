@@ -23,7 +23,11 @@ class ChantsController < ApplicationController
 
     filter = ChantsFilter.new
     @filter_form = ChantsFilterForm.new filter
-    @filter_form.validate(params[:chants_filter] || {})
+    @filter_form.validate(
+      params
+        .to_unsafe_h # the form takes care of data safety
+        .yield_self {|x| x.merge(x[:chants_filter] || {}) } # support both scoped and unscoped parameters
+      )
     @filter_form.sync
 
     @chants =
