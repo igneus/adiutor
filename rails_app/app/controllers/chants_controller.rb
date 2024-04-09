@@ -21,67 +21,17 @@ class ChantsController < ApplicationController
     ]
     @source_files = Corpus.find_by_system_name!('in_adiutorium').chants.select(:source_file_path).distinct.order(:source_file_path)
 
+    filter = ChantsFilter.new
+    @filter_form = ChantsFilterForm.new filter
+    @filter_form.validate(params[:chants_filter] || {})
+    @filter_form.sync
+
     @chants =
       Chant
-        .where(filter_params)
-        .includes(:mismatches, :source_language, :corpus)
-    if params[:lyrics].present?
-      like = params[:case_sensitive] ? 'LIKE' : 'ILIKE'
-      column = 'lyrics'
-      lyrics_input = params[:lyrics]
-      if params[:normalized]
-        column = 'lyrics_normalized'
-        # using `normalize_czech` assumes that the user will usually use simple keyboard
-        # input and abstain from entering special Latin stuff like accented digraphs
-        lyrics_input = LyricsNormalizer.new.normalize_czech lyrics_input
-      end
-      lyrics_like_str = like_search_string(lyrics_input, params[:lyrics_like_type])
-      @chants = @chants.where("#{column} #{like} ? OR textus_approbatus #{like} ?", lyrics_like_str, lyrics_like_str)
-    end
-    volpiano = params[:volpiano]
-    if volpiano.present?
-      attr = :volpiano
-      value = volpiano
-      case params[:music_search_type]
-      when 'pitches'
-        attr = :pitch_series
-        value = VolpianoDerivates.pitch_series volpiano
-      when 'intervals'
-        attr = :interval_series
-        value = VolpianoDerivates.snippet_interval_series volpiano
-      when 'neume'
-        value = "-#{value}-"
-      end
-      @chants = @chants.where("#{attr} LIKE ?", like_search_string(value, params[:volpiano_like_type]))
-    end
-    if params[:quality_notice]
-      @chants = @chants.to_be_fixed
-    end
-    if params[:favourite]
-      @chants = @chants.favourite
-    end
-    if params[:mismatch]
-      @chants = @chants.joins(:mismatches)
-    end
-    if params[:lyrics_edited]
-      @chants = @chants.where('textus_approbatus IS NOT NULL')
-    end
-    if params[:fons_externus]
-      @chants = @chants.have_fons_externus
-    end
-    if params[:ids]
-      @chants = @chants.where(id: params[:ids].split(',').collect(&:to_i))
-    end
-    if params[:source_file_path].present?
-      @chants =
-        @chants
-          .where(source_file_path: params[:source_file_path])
-          .order(:source_file_position)
-    end
+        .filtered(filter)
+        .page(params[:page] || 1)
 
-    @chants = @chants.page(params[:page] || 1)
-
-    @show_placet = params[:show_placet]
+    @show_placet = filter.show_placet
   end
 
   def atypical_responsories
@@ -188,39 +138,5 @@ class ChantsController < ApplicationController
 
     # TODO: set reasonable content type
     render body: @chant.source_code
-  end
-
-  private
-
-  def filter_params
-    params.permit(
-      :quid,
-      :modus,
-      :differentia,
-      :psalmus,
-      :word_count,
-      :melody_section_count,
-      :alleluia_optional,
-      genre_id: [],
-      book_id: [],
-      corpus_id: [],
-      cycle_id: [],
-      season_id: [],
-      hour_id: [],
-      source_language_id: [],
-      music_book_id: [],
-      simple_copy: []
-    )
-  end
-
-  def like_search_string(str, search_type)
-    case search_type
-    when 'beginning'
-      "#{str}%"
-    when 'end'
-      "%#{str}"
-    else
-      "%#{str}%"
-    end
   end
 end

@@ -88,6 +88,62 @@ class Chant < ApplicationRecord
       .first
   end
 
+  def self.filtered(filter)
+    r =
+      Chant
+        .where(p(filter.simple_where_attributes))
+        .includes(:mismatches, :source_language, :corpus)
+
+    if filter.lyrics.present?
+      like = filter.case_sensitive ? 'LIKE' : 'ILIKE'
+      column = 'lyrics'
+      lyrics_input = filter.lyrics
+      if filter.normalized
+        column = 'lyrics_normalized'
+        # using `normalize_czech` assumes that the user will usually use simple keyboard
+        # input and abstain from entering special Latin stuff like accented digraphs
+        lyrics_input = LyricsNormalizer.new.normalize_czech lyrics_input
+      end
+      lyrics_like_str = SearchUtils.like_search_string(lyrics_input, filter.lyrics_like_type)
+      r = r.where("#{column} #{like} ? OR textus_approbatus #{like} ?", lyrics_like_str, lyrics_like_str)
+    end
+
+    volpiano = filter.volpiano
+    if volpiano.present?
+      attr = :volpiano
+      value = volpiano
+      case filter.music_search_type
+      when 'pitches'
+        attr = :pitch_series
+        value = VolpianoDerivates.pitch_series volpiano
+      when 'intervals'
+        attr = :interval_series
+        value = VolpianoDerivates.snippet_interval_series volpiano
+      when 'neume'
+        value = "-#{value}-"
+      end
+      r = r.where("#{attr} LIKE ?", SearchUtils.like_search_string(value, filter.volpiano_like_type))
+    end
+
+    r = r.to_be_fixed if filter.quality_notice
+    r = r.favourite if filter.favourite
+    r = r.joins(:mismatches) if filter.mismatch
+    r = r.where('textus_approbatus IS NOT NULL') if filter.lyrics_edited
+    r = r.have_fons_externus if filter.fons_externus
+
+    # TODO: simplify
+    r = r.where(id: filter.ids.split(',').collect(&:to_i)) if filter.ids
+
+    if filter.source_file_path.present?
+      r =
+        r
+          .where(source_file_path: filter.source_file_path)
+          .order(:source_file_position)
+    end
+
+    r
+  end
+
   def parental_tree_top(seen = [])
     raise "cycle in tree of parents #{seen.collect(&:fial_of_self)}" if seen.include? self
 

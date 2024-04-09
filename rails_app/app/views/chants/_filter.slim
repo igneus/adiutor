@@ -1,4 +1,4 @@
-.filter= form_with method: :get do |form|
+.filter= form_for @filter_form, url: chants_path, method: :get do |form|
   .row
     .column.column-40
       =< form.text_field :lyrics, placeholder: 'search by lyrics'
