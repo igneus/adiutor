@@ -1,4 +1,6 @@
 class SvgCropper
+  EXECUTABLE = 'inkscape'
+
   # crops an SVG image
   def self.call(path)
     options =
@@ -10,12 +12,12 @@ class SvgCropper
         '--export-overwrite --actions="select-all;page-fit-to-selection;export-type:svg;export-plain-svg;export-do"'
       end
 
-    `inkscape #{options} #{path}`
+    system "#{EXECUTABLE} #{options} #{path}", exception: true
   end
 
   def self.inkscape_version
     @iversion ||=
-      `inkscape --version`
+      `#{EXECUTABLE} --version`
         .match(/^Inkscape (\d+)/) {|m| m[1].to_i } \
         || raise('failed to determine Inkscape version')
   end
