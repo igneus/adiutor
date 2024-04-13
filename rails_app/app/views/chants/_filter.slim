@@ -12,7 +12,7 @@
         .column.column-40
           = form.collection_select :lyrics_like_type, @like_types, :first, :last
     .column.column-40
-      = form.text_field :volpiano, title: 'insert music snippet encoded using the Volpiano font', placeholder: 'search by music'
+      = form.text_field :volpiano, class: 'volpiano', title: 'insert music snippet encoded using the Volpiano font', placeholder: 'search by music'
       .row
         .column.column-60
           = form.collection_radio_buttons :music_search_type, @music_search_types, :first, :last, include_hidden: false
