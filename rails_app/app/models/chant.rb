@@ -88,6 +88,40 @@ class Chant < ApplicationRecord
       .first
   end
 
+  def self.filtered_by_lyrics(lyrics_input, case_sensitive: true, normalized: false, lyrics_like_type:)
+    column = 'lyrics'
+    like = case_sensitive ? 'LIKE' : 'ILIKE'
+
+    if normalized
+      column = 'lyrics_normalized'
+      # using `normalize_czech` assumes that the user will usually use simple keyboard
+      # input and abstain from entering special Latin stuff like accented digraphs
+      lyrics_input = LyricsNormalizer.new.normalize_czech lyrics_input
+    end
+
+    lyrics_like_str = SearchUtils.like_search_string(lyrics_input, lyrics_like_type)
+
+    self.where("#{column} #{like} ? OR textus_approbatus #{like} ?", lyrics_like_str, lyrics_like_str)
+  end
+
+  def self.filtered_by_melody(volpiano, music_search_type:, volpiano_like_type:)
+    attr = :volpiano
+    value = volpiano
+
+    case music_search_type
+    when 'pitches'
+      attr = :pitch_series
+      value = VolpianoDerivates.pitch_series volpiano
+    when 'intervals'
+      attr = :interval_series
+      value = VolpianoDerivates.snippet_interval_series volpiano
+    when 'neume'
+      value = "-#{value}-"
+    end
+
+    self.where("#{attr} LIKE ?", SearchUtils.like_search_string(value, volpiano_like_type))
+  end
+
   def self.filtered(filter)
     r =
       Chant
@@ -95,34 +129,11 @@ class Chant < ApplicationRecord
         .includes(:mismatches, :source_language, :corpus)
 
     if filter.lyrics.present?
-      like = filter.case_sensitive ? 'LIKE' : 'ILIKE'
-      column = 'lyrics'
-      lyrics_input = filter.lyrics
-      if filter.normalized
-        column = 'lyrics_normalized'
-        # using `normalize_czech` assumes that the user will usually use simple keyboard
-        # input and abstain from entering special Latin stuff like accented digraphs
-        lyrics_input = LyricsNormalizer.new.normalize_czech lyrics_input
-      end
-      lyrics_like_str = SearchUtils.like_search_string(lyrics_input, filter.lyrics_like_type)
-      r = r.where("#{column} #{like} ? OR textus_approbatus #{like} ?", lyrics_like_str, lyrics_like_str)
+      r = r.filtered_by_lyrics(filter.lyrics, **filter.to_h.slice(:case_sensitive, :normalized, :lyrics_like_type))
     end
 
-    volpiano = filter.volpiano
-    if volpiano.present?
-      attr = :volpiano
-      value = volpiano
-      case filter.music_search_type
-      when 'pitches'
-        attr = :pitch_series
-        value = VolpianoDerivates.pitch_series volpiano
-      when 'intervals'
-        attr = :interval_series
-        value = VolpianoDerivates.snippet_interval_series volpiano
-      when 'neume'
-        value = "-#{value}-"
-      end
-      r = r.where("#{attr} LIKE ?", SearchUtils.like_search_string(value, filter.volpiano_like_type))
+    if filter.volpiano.present?
+      r = r.filtered_by_melody(filter.volpiano, **filter.to_h.slice(:music_search_type, :volpiano_like_type))
     end
 
     r = r.to_be_fixed if filter.quality_notice
