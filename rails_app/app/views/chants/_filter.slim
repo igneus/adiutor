@@ -20,6 +20,7 @@
           = form.collection_select :volpiano_like_type, @like_types, :first, :last
     .column.column-20
       = form.submit 'Search'
+      =< link_to 'Clear filter', chants_path, disabled: !@clear_button_enabled, class: 'button button-outline'
 
   .checkboxes
     div

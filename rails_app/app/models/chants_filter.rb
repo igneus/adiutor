@@ -59,4 +59,8 @@ ChantsFilter = Struct.new(
     .select {|key, val| val.present? }
   end
 
+  def empty?
+    values.all?(&:nil?)
+  end
+
 end

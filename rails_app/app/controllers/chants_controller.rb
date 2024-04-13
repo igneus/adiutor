@@ -36,6 +36,7 @@ class ChantsController < ApplicationController
         .page(params[:page] || 1)
 
     @show_placet = filter.quality_notice
+    @clear_button_enabled = !filter.empty?
   end
 
   def atypical_responsories
