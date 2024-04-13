@@ -43,10 +43,6 @@ class Chant < ApplicationRecord
     :interval_series,
   ].freeze
 
-  def self.genres
-    distinct.pluck(:quid).compact.sort
-  end
-
   # @return Hash<String => Array<Chant>>
   #   the Chant instances have populated only properties modus, differentia and (ad hoc property) record_count
   def self.modi_and_differentiae
