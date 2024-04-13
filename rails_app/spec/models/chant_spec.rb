@@ -9,6 +9,23 @@ RSpec.describe Chant, type: :model do
     }
   end
 
+  describe '.to_be_fixed' do
+    [
+      [nil, false, 'no quality notice means OK'],
+      ['some text', true, 'quality notice means fix is necessary'],
+      ['* some text', false, 'quality notice which starts with an asterisk means a favourite piece'],
+    ].each do |(placet_value, should_be_found, label)|
+      it label do
+        chant = create :chant, placet: placet_value
+        expect(Chant.to_be_fixed)
+          .public_send(
+            (should_be_found ? :to : :not_to),
+            include(chant)
+          )
+      end
+    end
+  end
+
   describe '.top_parents' do
     it 'does not select an isolated chant' do
       chant = create :chant
