@@ -73,6 +73,8 @@ and execute parts of the Rails application outside of Docker.
         https://github.com/Nocturnale-Romanum/nocturnale-romanum
       - `bundle exec rake antiphonarius:import` to import chants from the 1960 Liber antiphonarius
         https://github.com/ahinkley/liber-antiphonarius-1960
+        (note: if you import GregoBase, complete contents of this dataset are included,
+        so there's no need to import both)
       - `bundle exec rake antiphonale83:import` to import chants from the 1983 Ordo cantus officii
         https://github.com/igneus/antiphonale83
     - MEI-based corpora
