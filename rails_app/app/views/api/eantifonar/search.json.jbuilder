@@ -6,6 +6,7 @@
       val.collect do |chant|
         {
           id: chant.id,
+          browse_url: chant_url(chant), # human-friendly detail of the chant
           modus: chant.modus,
           differentia: chant.differentia,
           genre: chant.genre.system_name,
