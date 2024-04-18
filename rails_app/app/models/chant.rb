@@ -140,7 +140,7 @@ class Chant < ApplicationRecord
   def self.filtered(filter)
     r =
       Chant
-        .where(p(filter.simple_where_attributes))
+        .where(filter.simple_where_attributes)
         .includes(:mismatches, :source_language, :corpus)
 
     if filter.lyrics.present?
