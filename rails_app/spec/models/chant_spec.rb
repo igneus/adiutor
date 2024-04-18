@@ -196,8 +196,7 @@ RSpec.describe Chant, type: :model do
     it 'prevents infinite loop' do
       a = Chant.new(**default_chant_params)
       b = Chant.create!(**default_chant_params.merge(parent: a))
-      a.parent = b
-      a.save!
+      a.update!(parent: b)
 
       expect { a.parental_tree_top }
         .to raise_exception /cycle in tree of parents/
