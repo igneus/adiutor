@@ -118,6 +118,25 @@ class Chant < ApplicationRecord
     self.where("#{attr} LIKE ?", SearchUtils.like_search_string(value, volpiano_like_type))
   end
 
+  def self.filtered_by_ambitus(min_note, max_note, match_type: :==, transpositions: false)
+    if transpositions
+      interval = VolpianoDerivates.ambitus("1---#{min_note}#{max_note}---")
+      operator = {:== => :eq, :>= => :gteq, :<= => :lteq}.fetch(match_type)
+      return self.where(arel_table[:ambitus_interval].public_send(operator, interval))
+    end
+
+    case match_type
+    when :==
+      self.where(ambitus_min_note: min_note, ambitus_max_note: max_note)
+    when :>=
+      self.where('ambitus_min_note <= ? AND ambitus_max_note >= ?', min_note, max_note)
+    when :<=
+      self.where('ambitus_min_note >= ? AND ambitus_max_note <= ?', min_note, max_note)
+    else
+      raise "unexpected match_type #{match_type.inspect}"
+    end
+  end
+
   def self.filtered(filter)
     r =
       Chant
@@ -130,6 +149,15 @@ class Chant < ApplicationRecord
 
     if filter.volpiano.present?
       r = r.filtered_by_melody(filter.volpiano, **filter.to_h.slice(:music_search_type, :volpiano_like_type))
+    end
+
+    if filter.ambitus_notes.present?
+      r = r.filtered_by_ambitus(
+        filter.ambitus_min_note,
+        filter.ambitus_max_note,
+        match_type: filter.ambitus_search_type,
+        transpositions: filter.ambitus_transpositions
+      )
     end
 
     r = r.to_be_fixed if filter.quality_notice

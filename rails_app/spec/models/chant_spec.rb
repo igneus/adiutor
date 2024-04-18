@@ -26,6 +26,150 @@ RSpec.describe Chant, type: :model do
     end
   end
 
+  describe '.filtered_by_ambitus' do
+    before :each do
+      @a = create :chant, ambitus_min_note: 'c', ambitus_max_note: 'g', ambitus_interval: 7
+    end
+
+    describe 'absolute' do
+      describe '==' do
+        it 'find' do
+          expect(Chant.filtered_by_ambitus('c', 'g'))
+            .to include @a
+        end
+
+        describe 'miss' do
+          {
+            'max differs' => ['c', 'k'],
+            'min differs' => ['d', 'g'],
+            'both differ' => ['f', 'k'],
+          }.each_pair do |label, values|
+            it label do
+              expect(Chant.filtered_by_ambitus(*values))
+                .not_to include @a
+            end
+          end
+        end
+      end
+
+      describe '>=' do
+        let(:match_type) { :>= }
+
+        describe 'find' do
+          {
+            'exact match' => ['c', 'g'],
+            'min exceeds' => ['d', 'g'],
+            'max exceeds' => ['c', 'f'],
+            'both exceed' => ['d', 'f'],
+          }.each_pair do |label, values|
+            it label do
+              expect(Chant.filtered_by_ambitus(*values, match_type: match_type))
+                .to include @a
+            end
+          end
+        end
+
+        describe 'miss' do
+          {
+            'min within' => ['b', 'g'],
+            'max within' => ['c', 'h'],
+            'both within' => ['b', 'h'],
+          }.each_pair do |label, values|
+            it label do
+              expect(Chant.filtered_by_ambitus(*values, match_type: match_type))
+                .not_to include @a
+            end
+          end
+        end
+      end
+
+      describe '<=' do
+        let(:match_type) { :<= }
+
+        describe 'find' do
+          {
+            'exact match' => ['c', 'g'],
+            'min within' => ['b', 'g'],
+            'max within' => ['c', 'h'],
+            'both within' => ['b', 'h'],
+          }.each_pair do |label, values|
+            it label do
+              expect(Chant.filtered_by_ambitus(*values, match_type: match_type))
+                .to include @a
+            end
+          end
+        end
+
+        describe 'miss' do
+          {
+            'min exceeds' => ['d', 'g'],
+            'max exceeds' => ['c', 'f'],
+            'both exceed' => ['d', 'f'],
+          }.each_pair do |label, values|
+            it label do
+              expect(Chant.filtered_by_ambitus(*values, match_type: match_type))
+                .not_to include @a
+            end
+          end
+        end
+      end
+    end
+
+    describe 'interval' do
+      describe '==' do
+        describe 'find' do
+          [
+            ['c', 'g'],
+            ['d', 'h'],
+            ['e', 'j'],
+          ].each do |values|
+            it values.inspect do
+              expect(Chant.filtered_by_ambitus(*values, transpositions: true))
+                .to include @a
+            end
+          end
+        end
+
+        describe 'miss' do
+          [
+            ['d', 'g'],
+            ['d', 'j'],
+            ['c', 'h'],
+          ].each do |values|
+            it values.inspect do
+              expect(Chant.filtered_by_ambitus(*values, transpositions: true))
+                .not_to include @a
+            end
+          end
+        end
+      end
+
+      describe '>=' do
+        it 'find' do
+          expect(Chant.filtered_by_ambitus('d', 'e', match_type: :>=, transpositions: true))
+            .to include @a
+        end
+
+        it 'miss' do
+          expect(Chant.filtered_by_ambitus('d', 'm', match_type: :>=, transpositions: true))
+            .not_to include @a
+        end
+      end
+
+      describe '<=' do
+        it 'find' do
+          expect(Chant.filtered_by_ambitus('d', 'm', match_type: :<=, transpositions: true))
+            .to include @a
+        end
+
+        it 'miss' do
+          expect(Chant.filtered_by_ambitus('d', 'e', match_type: :<=, transpositions: true))
+            .not_to include @a
+        end
+      end
+    end
+  end
+
   describe '.top_parents' do
     it 'does not select an isolated chant' do
       chant = create :chant

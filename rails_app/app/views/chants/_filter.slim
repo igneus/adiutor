@@ -11,13 +11,21 @@
           = form.label :normalized, 'Normalized'
         .column.column-40
           = form.collection_select :lyrics_like_type, @like_types, :first, :last
-    .column.column-40
+    .column.column-20
       = form.text_field :volpiano, class: 'volpiano', title: 'insert music snippet encoded using the Volpiano font', placeholder: 'search by music'
       .row
         .column.column-60
           = form.collection_radio_buttons :music_search_type, @music_search_types, :first, :last, include_hidden: false
         .column.column-40
           = form.collection_select :volpiano_like_type, @like_types, :first, :last
+    .column.column-20
+      = form.text_field :ambitus_notes, class: 'volpiano', title: 'insert music snippet encoded using the Volpiano font', placeholder: 'ambitus'
+      .row
+        .column.column-60
+          = form.check_box :ambitus_transpositions, include_hidden: false
+          = form.label :ambitus_transpositions, 'Transpositions'
+        .column.column-40
+          = form.collection_select :ambitus_search_type, %w(== >= <=), :itself, :itself
     .column.column-20
       = form.submit 'Search'
       =< link_to 'Clear filter', chants_path, disabled: !@clear_button_enabled, class: 'button button-outline'

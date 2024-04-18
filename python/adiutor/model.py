@@ -32,6 +32,10 @@ class Chant(Base):
     pitch_series = Column(String)
     interval_series = Column(String)
 
+    ambitus_min_note = Column(String)
+    ambitus_max_note = Column(String)
+    ambitus_interval = Column(Integer)
+
     corpus = relationship('Corpus', back_populates='chants')
     source_language = relationship('SourceLanguage', back_populates='chants')
 

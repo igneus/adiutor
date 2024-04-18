@@ -13,10 +13,13 @@ class ChantsFilterForm < Reform::Form
     volpiano
     music_search_type
     volpiano_like_type
+    ambitus_notes
     source_file_path
   ].each do |i|
     property i, type: Types::Coercible::String
   end
+
+  property :ambitus_search_type, type: Types::Coercible::Symbol
 
   property :word_count, type: Types::Params::Integer
   property :melody_section_count, type: Types::Params::Integer
@@ -46,6 +49,7 @@ class ChantsFilterForm < Reform::Form
     quality_notice
     favourite
     mismatch
+    ambitus_transpositions
   ].each do |i|
     property i, type: Types::Params::Bool
   end

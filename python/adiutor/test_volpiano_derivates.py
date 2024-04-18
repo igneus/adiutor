@@ -1,6 +1,6 @@
 import pytest
 
-from .volpiano_derivates import *
+from . import volpiano_derivates as vd
 
 @pytest.mark.parametrize(
     'volpiano,expected',
@@ -16,7 +16,7 @@ from .volpiano_derivates import *
     ]
 )
 def test_pitch_series(volpiano, expected):
-    assert pitch_series(volpiano) == expected
+    assert vd.pitch_series(volpiano) == expected
 
 @pytest.mark.parametrize(
     'volpiano,expected',
@@ -31,7 +31,7 @@ def test_pitch_series(volpiano, expected):
     ]
 )
 def test_interval_series(volpiano, expected):
-    assert interval_series(volpiano) == expected
+    assert vd.interval_series(volpiano) == expected
 
 @pytest.mark.parametrize(
     'volpiano,expected',
@@ -41,4 +41,33 @@ def test_interval_series(volpiano, expected):
     ]
 )
 def test_snippet_interval_series(volpiano, expected):
-    assert snippet_interval_series(volpiano) == expected
+    assert vd.snippet_interval_series(volpiano) == expected
+
+ambitus_examples = [
+    ('1---c', 'c', 'c', 0),
+    ('1---c--c', 'c', 'c', 0),
+    ('1---c--d', 'c', 'd', 2),
+    ('1---c-d-e-d-c-d-c', 'c', 'e', 4),
+    ('1---c-f', 'c', 'f', 5),
+]
+
+@pytest.mark.parametrize(
+    'volpiano,min_note,max_note,ambitus',
+    ambitus_examples
+)
+def test_min_note(volpiano, min_note, max_note, ambitus):
+    assert vd.min_note(volpiano) == min_note
+
+@pytest.mark.parametrize(
+    'volpiano,min_note,max_note,ambitus',
+    ambitus_examples
+)
+def test_max_note(volpiano, min_note, max_note, ambitus):
+    assert vd.max_note(volpiano) == max_note
+
+@pytest.mark.parametrize(
+    'volpiano,min_note,max_note,ambitus',
+    ambitus_examples
+)
+def test_ambitus(volpiano, min_note, max_note, ambitus):
+    assert vd.ambitus(volpiano) == ambitus

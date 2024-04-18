@@ -42,6 +42,10 @@ ChantsFilter = Struct.new(
   :music_search_type,
   :volpiano_like_type,
 
+  :ambitus_notes,
+  :ambitus_search_type,
+  :ambitus_transpositions,
+
   :fons_externus,
   :quality_notice,
   :favourite,
@@ -63,4 +67,9 @@ ChantsFilter = Struct.new(
     values.all?(&:nil?)
   end
 
+  %w(min max).each do |i|
+    define_method "ambitus_#{i}_note" do
+      ambitus_notes.chars.public_send i
+    end
+  end
 end

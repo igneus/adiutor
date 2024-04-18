@@ -7,6 +7,7 @@ import re
 
 from music21 import converter
 from music21.interval import Interval
+from music21.analysis.discrete import Ambitus
 import chant21
 
 def pitch_series(volpiano):
@@ -47,3 +48,29 @@ def snippet_interval_series(volpiano):
     return interval_series(
         volpiano if volpiano.startswith('1') else '1---' + volpiano
     )
+
+_notes = functools.partial(re.findall, r'[a-z]')
+
+def min_note(volpiano):
+    """
+    Lowest note of the tune.
+    """
+
+    return min(_notes(volpiano))
+
+def max_note(volpiano):
+    """
+    Highest note of the tune.
+    """
+
+    return max(_notes(volpiano))
+
+def ambitus(volpiano):
+    """
+    Ambitus of the tune in half-steps.
+    """
+
+    stream = converter.parse('cantus: ' + volpiano)
+    interval = Ambitus().getSolution(stream)
+
+    return interval.semitones

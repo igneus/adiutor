@@ -65,6 +65,15 @@ def volpiano(chant_id=None, missing=False, corpus=None, source_language=None, ra
             chant.volpiano = volpiano_code
             chant.pitch_series = volpiano_derivates.pitch_series(volpiano_code)
             chant.interval_series = volpiano_derivates.interval_series(volpiano_code)
+
+            try:
+                chant.ambitus_min_note = volpiano_derivates.min_note(volpiano_code)
+                chant.ambitus_max_note = volpiano_derivates.max_note(volpiano_code)
+                chant.ambitus_interval = volpiano_derivates.ambitus(volpiano_code)
+            except ValueError as e:
+                print(e)
+                continue
+
             session.commit()
 
 
