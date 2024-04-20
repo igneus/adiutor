@@ -1,0 +1,15 @@
+.differentiae-nav {
+  margin: 0.5em 0;
+
+  span {
+    display: inline-block;
+    margin-right: 1.5em;
+  }
+  a {
+    display: inline-block;
+    margin: 0 0.2em;
+
+    // to see which space divides two differentiae and which is part of a differentia name
+    text-decoration: underline;
+  }
+}

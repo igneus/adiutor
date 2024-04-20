@@ -2,10 +2,17 @@ h1
   em=> @corpus.name
   | Differentiae
 
+.differentiae-nav
+  - @differentiae.each_pair do |modus, differentiae|
+    span
+      strong=< modus
+      - differentiae.each_key do |differentia|
+        =< link_to differentia, '#' + differentia_anchor(modus, differentia)
+
 - @differentiae.each_pair do |modus, differentiae|
   h2= modus
   - differentiae.each_pair do |differentia, incipits|
-    h3= differentia
+    h3 id=differentia_anchor(modus, differentia) = differentia
     .row
       - incipits.each do |chant|
         .column.column-10
