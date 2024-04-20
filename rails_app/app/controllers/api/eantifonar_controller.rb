@@ -1,4 +1,5 @@
 # Prototype of an API for the next version of eantifonar / E-Antiphonal
+# https://github.com/igneus/eantifonar2
 class Api::EantifonarController < ApplicationController
   skip_before_action :verify_authenticity_token
 
@@ -7,6 +8,11 @@ class Api::EantifonarController < ApplicationController
     'cs' => LanguageConfig.new(:normalize_czech, 'aleluja'),
     'la' => LanguageConfig.new(:normalize_latin, 'alleluia'),
   }.freeze
+
+  ENTRY_SCHEMA = Types::Hash.schema(
+    lyrics: Types::Coercible::String,
+    lang: Types::Coercible::String
+  ).with_key_transform(&:to_sym)
 
   def search
     normalizer = LyricsNormalizer.new
@@ -17,23 +23,26 @@ class Api::EantifonarController < ApplicationController
         .request_parameters
         .reject {|key| key == 'eantifonar' } # system key; we only want keys from the actual POST body
         .collect do |key, val|
-      chant_params =
-        ActionController::Parameters.new(val)
-          .permit(:lyrics, :lang)
-      query = chant_params.yield_self do |p|
-        config = LANGUAGES[p[:lang]]
-        normalized_lyrics = normalizer.public_send(config.normalizer_method, p[:lyrics])
+      begin
+        chant_params = ENTRY_SCHEMA[val]
+        chant_params in {lyrics: lyrics, lang: lang}
+        config = LANGUAGES[lang] || raise("unknown language code #{lang}")
+      rescue => e
+        render status: 400, json: {error: "#{key}: #{e.message}"}
+        return
+      end
 
-        t[:lyrics_normalized].eq(normalized_lyrics)
-          .yield_self do |cond|
-          if normalized_lyrics.end_with?(config.alleluia)
-            cond
-          else
-            cond.or(
-              t[:alleluia_optional].eq(true)
-                .and(t[:lyrics_normalized].eq(normalized_lyrics + ' ' + config.alleluia))
-            )
-          end
+      normalized_lyrics = normalizer.public_send(config.normalizer_method, lyrics)
+
+      query = t[:lyrics_normalized].eq(normalized_lyrics)
+        .yield_self do |cond|
+        if normalized_lyrics.end_with?(config.alleluia)
+          cond
+        else
+          cond.or(
+            t[:alleluia_optional].eq(true)
+              .and(t[:lyrics_normalized].eq(normalized_lyrics + ' ' + config.alleluia))
+          )
         end
       end
       chants = Chant.where(query).limit(10)

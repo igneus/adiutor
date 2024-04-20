@@ -35,5 +35,25 @@ RSpec.describe "Api::Eantifonar", type: :request do
       expect(response.body).to start_with '{"my_id":[{"id":'
       expect(response.body).to include '"modus":"I","differentia":"D","genre":"antiphon"'
     end
+
+    describe 'non-standard input handling' do
+      {
+        'unsupported lang' => {my_id: {lyrics: 'Die Worte, die ich zu euch sprach', lang: 'de'}},
+        'missing lyrics key' => {my_id: {lang: 'cs'}},
+        'missing lang key' => {my_id: {lyrics: 'amen'}},
+        'non-string values' => {my_id: {lyrics: [1, 2, 3], lang: 4}},
+        'input right in the top-level mapping' => {lyrics: 'amen', lang: 'cs'},
+        'top-level element a list' => [{lyrics: 'amen', lang: 'cs'}],
+        'top-level element a scalar' => 'amen',
+      }.each_pair do |label, payload|
+        it label do
+          post path, params: payload.to_json
+
+          expect(response).to have_http_status :bad_request
+          expect(response.body).to include '"error":'
+          expect(response.headers['Content-Type']).to eq 'application/json; charset=utf-8'
+        end
+      end
+    end
   end
 end
