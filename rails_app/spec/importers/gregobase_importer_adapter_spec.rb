@@ -111,4 +111,33 @@ describe GregobaseImporter::Adapter do
       end
     end
   end
+
+  describe 'modus, differentia' do
+    [
+      [[nil, nil], [nil, nil]],
+      [['I', 'd'], ['I', 'd']],
+      [['2', nil], ['II', nil]], # numeral Arabic => Roman
+      [['c', nil], ['C', nil]],
+      [['p', nil], ['per', nil]],
+
+      # some pieces have the mode information in the differentia field
+      [[nil, 'I d'], ['I', 'd']],
+      [[nil, 'VII c tr'], ['VII', 'c tr']],
+      [[nil, 'I'], ['I', nil]],
+
+      # differentia normalization
+      [['I', 'D'], ['I', 'd']],
+      [['I', 'a 2'], ['I', 'a2']],
+      [['I', 'd *'], ['I', 'd*']],
+      [['I', '*d'], ['I', 'd*']],
+      [['VII', 'c transpos.'], ['VII', 'c tr']],
+      [['VII', 'c trans'], ['VII', 'c tr']],
+    ].each do |((g_mode, g_mode_var), (modus, differentia))|
+      describe [g_mode, g_mode_var].inspect do
+        let(:gregobase_chant) { double(mode: g_mode, mode_var: g_mode_var) }
+        it { expect(subject.modus).to eq modus }
+        it { expect(subject.differentia).to eq differentia }
+      end
+    end
+  end
 end

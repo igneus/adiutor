@@ -231,12 +231,20 @@ class GregobaseImporter < BaseImporter
           @chant.mode
         end
 
-      mode&.sub!(/^t.\s+/, '')
-      mode&.sub!(/^per$/i, &:downcase)
-      mode&.sub!(/^[cde]$/i, &:upcase)
-      mode&.sub!(/^(irreg)\.$/, '\1')
+      if mode
+        mode.sub!(/^t.\s+/, '')
+        mode.sub!(/^per$/i, &:downcase)
+        mode.sub!(/^[cde]$/i, &:upcase)
+        mode.sub!(/^(irreg)\.$/, '\1')
+      end
 
-      diff&.sub!(/trans(p(os)?)?/i, 'tr')
+      if diff
+        diff.downcase!
+        diff.sub!(/tr(ans(p(os)?)?)?\.?/i, 'tr')
+
+        diff.gsub!(/\s*([\*\d])\s*/, '\1') # no whitespace around an asterisk or a number
+        diff.reverse! if diff.start_with? '*' # leading asterisk => trailing asterisk
+      end
 
       [mode, diff]
     end
