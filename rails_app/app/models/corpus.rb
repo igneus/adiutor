@@ -27,10 +27,11 @@ class Corpus < ApplicationRecord
 
   # Hash<mode => Hash<differentia => Array<String - unique melody incipits>>>
   def differentiae
+    ch = Chant.arel_table
     chants
       .all_antiphons
       .select(:modus, :differentia, 'SUBSTRING(volpiano, 1, 10) as melody_incipit', 'COUNT(modus) as occurrences')
-      .where('volpiano IS NOT NULL')
+      .where.not(ch[:volpiano].eq(nil).or(ch[:differentia].eq(nil)))
       .group(:modus, :differentia, :melody_incipit)
       .group_by(&:modus)
       .transform_values {|v| v.group_by(&:differentia) }
