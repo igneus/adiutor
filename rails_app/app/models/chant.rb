@@ -31,6 +31,15 @@ class Chant < ApplicationRecord
 
   scope :have_fons_externus, -> { where("header->'fons_externus' IS NOT NULL") }
 
+  scope :obsolete, -> {
+    joins(
+      'INNER JOIN corpuses
+      ON chants.corpus_id = corpuses.id
+      AND chants.import_id !=
+        (SELECT id FROM imports WHERE corpus_id = corpuses.id ORDER BY started_at DESC LIMIT 1)'
+    )
+  }
+
   scope :top_parents, -> do
     all_parents = select(:parent_id).distinct.where.not(parent_id: nil)
     where(parent_id: nil).where("id IN (#{all_parents.to_sql})")
@@ -168,6 +177,7 @@ class Chant < ApplicationRecord
     r = r.joins(:mismatches) if filter.mismatch
     r = r.where('textus_approbatus IS NOT NULL') if filter.lyrics_edited
     r = r.have_fons_externus if filter.fons_externus
+    r = r.obsolete if filter.obsolete
 
     # TODO: simplify
     r = r.where(id: filter.ids.split(',').collect(&:to_i)) if filter.ids

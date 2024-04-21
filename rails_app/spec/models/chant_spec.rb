@@ -26,6 +26,24 @@ RSpec.describe Chant, type: :model do
     end
   end
 
+  describe '.obsolete' do
+    before :each do
+      @corpus = create :corpus
+      @last_import = create :import, corpus: @corpus, started_at: 1.hour.ago
+      @older_import = create :import, corpus: @corpus, started_at: 2.days.ago
+    end
+
+    it 'finds obsolete chant' do
+      chant = create :chant, corpus: @corpus, import: @older_import
+      expect(Chant.obsolete).to include chant
+    end
+
+    it 'does not find chant seen by the last import' do
+      chant = create :chant, corpus: @corpus, import: @last_import
+      expect(Chant.obsolete).not_to include chant
+    end
+  end
+
   describe '.filtered_by_ambitus' do
     before :each do
       @a = create :chant, ambitus_min_note: 'c', ambitus_max_note: 'g', ambitus_interval: 7

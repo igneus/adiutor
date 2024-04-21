@@ -51,6 +51,8 @@
       = form.label :lyrics_edited, 'edited lyrics'
       = form.check_box :fons_externus, include_hidden: false
       = form.label :fons_externus, 'fons externus', title: 'adaptations of Latin pieces or melodies taken from other sources'
+      = form.check_box :obsolete, include_hidden: false
+      = form.label :obsolete, 'obsolete', title: 'not touched by the last import of the respective corpus'
     div
       span.group-title Hour
       = form.collection_check_boxes :hour_id, @hours, :id, :name, include_hidden: false

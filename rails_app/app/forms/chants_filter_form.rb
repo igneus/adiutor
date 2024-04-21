@@ -48,6 +48,7 @@ class ChantsFilterForm < Reform::Form
     fons_externus
     quality_notice
     favourite
+    obsolete
     mismatch
     ambitus_transpositions
   ].each do |i|
