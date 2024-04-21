@@ -41,6 +41,9 @@ class Chant < ApplicationRecord
     :volpiano,
     :pitch_series,
     :interval_series,
+    :ambitus_min_note,
+    :ambitus_max_note,
+    :ambitus_interval,
   ].freeze
 
   # @return Hash<String => Array<Chant>>
