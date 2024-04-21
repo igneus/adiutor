@@ -6,6 +6,7 @@ class Corpus < ApplicationRecord
   has_many :music_books
   has_many :chants
   has_many :imports
+  has_one :last_import, -> { order(started_at: :desc).limit(1) }, class_name: 'Import'
 
   def import!
     importer.(sources_path)
@@ -35,10 +36,6 @@ class Corpus < ApplicationRecord
       .group(:modus, :differentia, :melody_incipit)
       .group_by(&:modus)
       .transform_values {|v| v.group_by(&:differentia) }
-  end
-
-  def last_import
-    imports.order(started_at: :desc).limit(1).first
   end
 
   def chants_unseen_by_last_import

@@ -32,7 +32,7 @@ class ChantsController < ApplicationController
 
     @chants =
       Chant
-        .includes(:book)
+        .includes(:book, :import, corpus: [:last_import])
         .filtered(filter)
         .page(params[:page] || 1)
 
