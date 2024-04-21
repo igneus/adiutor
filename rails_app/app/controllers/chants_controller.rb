@@ -32,6 +32,7 @@ class ChantsController < ApplicationController
 
     @chants =
       Chant
+        .includes(:book)
         .filtered(filter)
         .page(params[:page] || 1)
 
