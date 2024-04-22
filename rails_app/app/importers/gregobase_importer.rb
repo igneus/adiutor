@@ -42,6 +42,8 @@ class GregobaseImporter < BaseImporter
 
   def do_import(common_attributes, _)
     sources.each {|source| import_source(common_attributes, source) }
+
+    import_chants_without_source(common_attributes)
   end
 
   def import_source(common_attributes, source)
@@ -66,10 +68,33 @@ class GregobaseImporter < BaseImporter
       .each {|i| import_chant i, source_attributes }
   end
 
+  def import_chants_without_source(common_attributes)
+    music_book = MusicBook.find_or_create_by!(
+      corpus: corpus,
+      title: 'Liber fictus'
+    )
+
+    source_attributes =
+      common_attributes
+        .merge(music_book: music_book)
+
+    Gregobase::Chant
+      .without_source
+      .left_joins(:tags)
+      .where('office-part': GENRES.keys)
+      .where.not(gabc: '')
+      .each {|i| import_chant Gregobase::ChantSource.new(chant: i), source_attributes }
+  end
+
   def import_chant(chant_source, common_attributes)
     gchant = chant_source.chant
 
     return if gchant.gabc.start_with? '['
+
+    # not interested in vernacular adaptations
+    tags = gchant.tags.collect &:tag
+    return if tags.intersect? ['Annamitice', 'Graece', 'Sinnice']
+    return if tags.find {|s| s =~ /English/i }
 
     # if the 'name' header is not provided, gregorio prints a warning when processing the score
     name = "name: #{gchant.incipit};\n"
@@ -186,7 +211,8 @@ class GregobaseImporter < BaseImporter
     def copy
       # `@copy ||=` can't be used here, false is a valid cached value
       if @copy.nil?
-        @copy = !(@chant_source.same? GregobaseImporter.main_chant_source(@chant))
+        main_source = GregobaseImporter.main_chant_source(@chant)
+        @copy = main_source.present? && !(@chant_source.same? main_source)
       end
 
       @copy
@@ -264,6 +290,8 @@ class GregobaseImporter < BaseImporter
         {title: /Liber nocturnalis/, year: ^before_loth} |
         {title: /Semaine Sainte/, year: ^before_loth} |
         {title: /In nocte nativitatis domini/i, year: ^before_loth}
+        'br'
+      in {title: 'Liber fictus'} # our fictive book used for chants unassigned to any source in GregoBase
         'br'
       in {title: /Antiphonale Monasticum/, year: ^before_loth} |
         {title: /Liber Responsorialis/, year: ^before_loth} |
