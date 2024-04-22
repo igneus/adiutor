@@ -269,7 +269,7 @@ class GregobaseImporter < BaseImporter
         diff.sub!(/tr(ans(p(os)?)?)?\.?/i, 'tr')
 
         diff.gsub!(/\s*([\*\d])\s*/, '\1') # no whitespace around an asterisk or a number
-        diff.reverse! if diff.start_with? '*' # leading asterisk => trailing asterisk
+        diff.sub!(/^\*[\s-]*(.*)$/, '\1*') # leading asterisk => trailing asterisk
       end
 
       [mode, diff]

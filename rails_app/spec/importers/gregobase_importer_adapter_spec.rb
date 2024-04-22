@@ -130,6 +130,7 @@ describe GregobaseImporter::Adapter do
       [['I', 'a 2'], ['I', 'a2']],
       [['I', 'd *'], ['I', 'd*']],
       [['I', '*d'], ['I', 'd*']],
+      [['I', '*-4a'], ['I', '4a*']],
       [['VII', 'c transpos.'], ['VII', 'c tr']],
       [['VII', 'c trans'], ['VII', 'c tr']],
     ].each do |((g_mode, g_mode_var), (modus, differentia))|
