@@ -24,9 +24,6 @@ class Chant < ApplicationRecord
       ELSE 3 END'))
   end
 
-  # TODO: instead of hard equality condition really just prefer in ordering
-  scope :prefer_same_genre, ->(genre) { where(genre: genre) }
-
   scope :all_antiphons, -> { joins("INNER JOIN genres ON chants.genre_id = genres.id AND system_name LIKE 'antiphon%'") }
 
   scope :have_fons_externus, -> { where("header->'fons_externus' IS NOT NULL") }
@@ -65,21 +62,16 @@ class Chant < ApplicationRecord
   end
 
   def self.similar_by_structure_to(chant, limit=5)
-    prefer_same_genre(chant.genre)
+    where(genre: chant.genre)
       .where.not(id: chant.id)
-      .where(melody_section_count: chant.melody_section_count)
+      .order(Arel.sql("ABS(melody_section_count - #{chant.melody_section_count})"))
       .limit(limit)
   end
 
   def self.similar_by_lyrics_length_to(chant, limit=5)
-    t = arel_table
-
-    prefer_same_genre(chant.genre)
+    where(genre: chant.genre)
       .where.not(id: chant.id)
-      .where(
-        t[:word_count].eq(chant.word_count)
-          .or(t[:syllable_count].eq(chant.syllable_count))
-      )
+      .order(Arel.sql("LEAST(ABS(word_count - #{chant.word_count}), ABS(syllable_count - #{chant.syllable_count}))"))
       .limit(limit)
   end
 
