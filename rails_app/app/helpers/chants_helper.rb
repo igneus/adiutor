@@ -89,6 +89,21 @@ module ChantsHelper
     )
   end
 
+  # link opening a corresponding hour in the Latin online breviary
+  def liturgia_horarum_button(chant)
+    return '' if chant.corpus.system_name != 'in_adiutorium'
+
+    url = LiturgiaHorarumLinkBuilder.(chant)
+
+    link_to(
+      'LH',
+      url,
+      title: (url ? 'open in Liturgia horarum' : 'could not build link'),
+      class: 'button button-outline',
+      disabled: url.nil?
+    )
+  end
+
   def chant_gregobase_link(chant)
     chant
       .gregobase_chant_id
