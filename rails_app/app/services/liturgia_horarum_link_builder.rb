@@ -20,6 +20,8 @@ class LiturgiaHorarumLinkBuilder
         'compline' => 'mk'
       }[chant.hour&.system_name]
 
+    # TODO: investigate why Hash.to_query doesn't work -
+    # is it due to changing parameter order, or something else?
     query = URI.encode_www_form({
       qt: 'pdt',
       d: date.day,
