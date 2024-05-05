@@ -1,40 +1,62 @@
-generate_image = lambda do |c|
-  generator = c.source_language.image_generator
+module ImageTaskUtils
+  extend self
 
-  puts c.id
+  def generate_image(c)
+    generator = c.source_language.image_generator
 
-  begin
-    generator.(c)
-  rescue => e
-    STDERR.puts "Generating image for Chant #{c.id} failed:"
-    STDERR.puts e
+    puts c.id
+
+    begin
+      generator.(c)
+    rescue => e
+      STDERR.puts "Generating image for Chant #{c.id} failed:"
+      STDERR.puts e
+    end
+  end
+
+  def concurrently_generate_images(chants, missing_only: false)
+    pc = Concurrent.processor_count
+    executor = Concurrent::ThreadPoolExecutor.new(min_threads: pc, max_threads: pc)
+
+    filter =
+      if missing_only
+        -> (chants) { chants.reject {|c| File.exist? c.source_language.image_generator.image_path c } }
+      else
+        :itself.to_proc
+      end
+
+    chants.includes(:source_language).find_in_batches(batch_size: 100) do |batch|
+      futures =
+        batch
+          .then {|b| filter.(b) }
+          .collect {|c| Concurrent::Future.execute(executor: executor) { generate_image(c) } }
+      futures.each(&:value)
+    end
   end
 end
 
 namespace :images do
   desc '(re-)generate images for all Chants'
   task all: [:environment] do
-    pc = Concurrent.processor_count
-    executor = Concurrent::ThreadPoolExecutor.new(min_threads: pc, max_threads: pc)
-
-    Chant.includes(:source_language).find_in_batches(batch_size: 100) do |batch|
-      futures = batch.collect {|c| Concurrent::Future.execute { generate_image.(c) } }
-      futures.each(&:value)
-    end
+    ImageTaskUtils.concurrently_generate_images(Chant)
   end
 
   desc 'generate images for Chants missing them'
   task missing: [:environment] do
-    pc = Concurrent.processor_count
-    executor = Concurrent::ThreadPoolExecutor.new(min_threads: pc, max_threads: pc)
+    ImageTaskUtils.concurrently_generate_images(Chant, missing_only: true)
+  end
 
-    Chant.includes(:source_language).find_in_batches(batch_size: 100) do |batch|
-      futures =
-        batch
-          .reject {|c| File.exist? c.source_language.image_generator.image_path c }
-          .collect {|c| Concurrent::Future.execute(executor: executor) { generate_image.(c) } }
-      futures.each(&:value)
-    end
+  task :for_corpus, [:corpus_system_name] => [:environment] do |task, args|
+    ImageTaskUtils.concurrently_generate_images(
+      Corpus.find_by_system_name(args.corpus_system_name).chants
+    )
+  end
+
+  task :missing_for_corpus, [:corpus_system_name] => [:environment] do |task, args|
+    ImageTaskUtils.concurrently_generate_images(
+      Corpus.find_by_system_name(args.corpus_system_name).chants,
+      missing_only: true
+    )
   end
 
   desc 'list images of chants which no longer exist in the database'

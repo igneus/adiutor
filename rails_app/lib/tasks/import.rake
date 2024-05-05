@@ -4,32 +4,81 @@ IMPORT_PREREQUISITES = [
   :'db:seed'
 ]
 
-desc 'import chants from In-adiutorium sources'
-task import: IMPORT_PREREQUISITES do
-  Corpus.find_by_system_name!('in_adiutorium').import!
-end
+# Hardcode Corpus system names, so we don't have to touch the database
+# in order to generate tasks for each Corpus.
+CORPUS_SYSTEM_NAMES = %w(
+  in_adiutorium
+  liber_antiphonarius
+  antiphonale83
+  gregobase
+  nocturnale
+  hughes
+  neuma
+)
 
-desc 'import chants not seen by the last import'
-task delete_unseen_chants: :environment do
-  delendi = Corpus.find_by_system_name!('in_adiutorium').chants_unseen_by_last_import
+CORPUS_SYSTEM_NAMES.each do |system_name|
+  namespace system_name do
+    desc 'check that the Corpus is configured and can be imported'
+    task setup_check: IMPORT_PREREQUISITES do
+      unless Corpus.find_by_system_name(system_name).configured?
+        abort 'Corpus is not configured.'
+      end
+    end
 
-  delendi.each do |c|
-    puts "- ##{c.id} #{c.lyrics}"
+    corpus_import_prerequisites = IMPORT_PREREQUISITES + ["#{system_name}:setup_check"]
+
+    desc 'import chants'
+    task import: corpus_import_prerequisites do
+      Corpus.find_by_system_name!(system_name).import!
+    end
+
+    desc 'delete chants not seen by the last import'
+    task delete_unseen_chants: corpus_import_prerequisites do
+      delendi = Corpus.find_by_system_name!(system_name).chants_unseen_by_last_import
+
+      delendi.each do |c|
+        puts "- ##{c.id} #{c.lyrics}"
+      end
+      puts
+
+      print "Delete #{delendi.size} chants? (type 'yes') "
+      exit if STDIN.gets.chomp != 'yes'
+
+      delendi.destroy_all
+      puts "Chants deleted."
+    end
+
+    desc '(re-)generate images for all Chants'
+    task images: corpus_import_prerequisites do
+      Rake::Task["images:for_corpus"].invoke(system_name)
+    end
+
+    desc 'generate images for Chants missing them'
+    task images_missing: corpus_import_prerequisites do
+      Rake::Task["images:missing_for_corpus"].invoke(system_name)
+    end
+
+    desc 'run import and all subsequent tasks to refresh the corpus'
+    task refresh: ["#{system_name}:import", "#{system_name}:images_missing"]
   end
-  puts
-
-  print "Delete #{delendi.size} chants? (type 'yes') "
-  exit if STDIN.gets.chomp != 'yes'
-
-  delendi.destroy_all
-  puts "Chants deleted."
 end
 
-desc 'run import together with subsequent data-building tasks'
-task refresh: %i[import parents:update parents:compare parents:update_children_tree_size images:missing]
+# Specific to the In adiutorium corpus:
+
+# additional prerequisites
+Rake::Task['in_adiutorium:refresh']
+  .enhance %i[parents:update parents:compare parents:update_children_tree_size]
 
 desc 'import chants from a specified file'
 task :import_file, [:file] => IMPORT_PREREQUISITES do |task, args|
   sources_path = Corpus.find_by_system_name!('in_adiutorium').sources_path
   InAdiutoriumImporter.new.import_file File.join(sources_path, args.file)
 end
+
+# convenience shortcuts for the most frequently imported corpus
+
+desc 'import chants from In-adiutorium sources'
+task import: :'in_adiutorium:import'
+
+desc 'run import together with subsequent data-building tasks'
+task refresh: :'in_adiutorium:refresh'

@@ -11,11 +11,6 @@ namespace :gregobase do
     sh mysql_connect + " #{dbname} < #{export_path}"
   end
 
-  desc 'import chants from the GregoBase database'
-  task import: IMPORT_PREREQUISITES do
-    Corpus.find_by_system_name!('gregobase').import!
-  end
-
   desc 'export all GregoBase scores as gabc files grouped by source(book) and genre'
   task :export, [:path] => [:environment] do |t, args|
     raise 'path must be specified' if args[:path].blank?

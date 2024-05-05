@@ -18,8 +18,13 @@ class Corpus < ApplicationRecord
     Kernel.const_get(class_name).new(self)
   end
 
+  # Is the configuration required for the Corpus' import available?
+  def configured?
+    ENV[sources_path_varname].present?
+  end
+
   def sources_path
-    varname = system_name.upcase + '_SOURCES_PATH'
+    varname = sources_path_varname
 
     ENV[varname] ||
       raise("Expected environment variable #{varname} to contain path of the directory" \
@@ -45,5 +50,11 @@ class Corpus < ApplicationRecord
     chants
       .where(import: nil)
       .or(chants.where.not(import: i))
+  end
+
+  private
+
+  def sources_path_varname
+    system_name.upcase + '_SOURCES_PATH'
   end
 end
