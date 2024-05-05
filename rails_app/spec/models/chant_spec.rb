@@ -188,6 +188,31 @@ RSpec.describe Chant, type: :model do
     end
   end
 
+  describe '.similar_by_structure_to' do
+    it 'does not crash on missing properties' do
+      chant = create(:chant, melody_section_count: nil)
+
+      # ActiveRecord seemingly does some kind of preliminary check
+      # and if there is no other Chant of the given Genre,
+      # `similar_by_structure_to` doesn't fire the SQL query at all
+      other_chant = create(:chant, genre: chant.genre)
+
+      similar = described_class.similar_by_structure_to(chant)
+      expect(similar).to include other_chant
+    end
+  end
+
+  describe '.similar_by_lyrics_length_to' do
+    it 'does not crash on missing properties' do
+      chant = create(:chant, word_count: nil, syllable_count: nil)
+
+      other_chant = create(:chant, genre: chant.genre)
+
+      similar = described_class.similar_by_lyrics_length_to(chant)
+      expect(similar).to include other_chant
+    end
+  end
+
   describe '.top_parents' do
     it 'does not select an isolated chant' do
       chant = create :chant

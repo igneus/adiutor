@@ -64,14 +64,14 @@ class Chant < ApplicationRecord
   def self.similar_by_structure_to(chant, limit=5)
     where(genre: chant.genre)
       .where.not(id: chant.id)
-      .order(Arel.sql("ABS(melody_section_count - #{chant.melody_section_count})"))
+      .order(Arel.sql("ABS(melody_section_count - #{chant.melody_section_count || 0})"))
       .limit(limit)
   end
 
   def self.similar_by_lyrics_length_to(chant, limit=5)
     where(genre: chant.genre)
       .where.not(id: chant.id)
-      .order(Arel.sql("LEAST(ABS(word_count - #{chant.word_count}), ABS(syllable_count - #{chant.syllable_count}))"))
+      .order(Arel.sql("LEAST(ABS(word_count - #{chant.word_count || 0}), ABS(syllable_count - #{chant.syllable_count || 0}))"))
       .limit(limit)
   end
 
