@@ -2,13 +2,12 @@
 describe GregobaseImporter::Adapter do
   let(:subject) { described_class.new(source_code, music_book, gregobase_chant_source, score) }
 
-  let(:gregobase_chant) { double() }
-  let(:gregobase_source) { double() }
-  let(:gregobase_chant_source) { double(chant: gregobase_chant, source: gregobase_source) }
+  let(:gregobase_chant) { double(Gregobase::Chant) }
+  let(:gregobase_source) { double(Gregobase::Source) }
+  let(:gregobase_chant_source) { double(Gregobase::ChantSource, chant: gregobase_chant, source: gregobase_source) }
   let(:score) { MyGabcParser.call source_code }
   let(:music_book) { MusicBook.new }
   let(:source_code) { "%%\n" }
-  let(:const_attrs) { double(music_book: music_book, source_code: source_code) }
 
   describe '<alt></alt>' do
     let(:source_code) { "%%\n(f3)A<alt>Omnes genua flectunt</alt>(h/hf/ge)ve,(e.)" }
@@ -20,7 +19,7 @@ describe GregobaseImporter::Adapter do
   # GregoBase doesn't recognize invitatories as a separate genre
   describe 'detecting invitatories' do
     describe 'Liber hymnarius' do
-      let(:gregobase_chant) { double('office-part': 'an') }
+      let(:gregobase_chant) { double(Gregobase::Chant, 'office-part': 'an') }
       let(:music_book) { MusicBook.new title: 'Liber hymnarius' }
 
       it 'any antiphon is an invitatory' do
@@ -36,7 +35,7 @@ describe GregobaseImporter::Adapter do
         'Ve(h)ni(h)te(h)',
       ].each do |psalm_incipit|
         describe psalm_incipit do
-          let(:gregobase_chant) { double('office-part': 'an') }
+          let(:gregobase_chant) { double(Gregobase::Chant, 'office-part': 'an') }
           let(:source_code) do
             "%%\n (c4) An(h)ti(h)phon(h) ly(h)rics.(h) (::) " +
               psalm_incipit + ' (::)'
@@ -50,7 +49,7 @@ describe GregobaseImporter::Adapter do
     end
 
     describe 'antiphon with a tag' do
-      let(:gregobase_chant) { double('office-part': 'an', tags: [double(tag: 'Ad invitatorium')]) }
+      let(:gregobase_chant) { double(Gregobase::Chant, 'office-part': 'an', tags: [double(tag: 'Ad invitatorium')]) }
 
       it 'is an invitatory' do
         expect(subject.genre_system_name).to eq 'invitatory'
@@ -78,7 +77,7 @@ describe GregobaseImporter::Adapter do
         [['irrelevant tag', 'Ad II Vesperas'], 'vespers'],
       ].each do |tags, expected|
         describe tags.inspect do
-          let(:gregobase_chant) { double(tags: tags.collect {|t| double(tag: t) }) }
+          let(:gregobase_chant) { double(Gregobase::Chant, tags: tags.collect {|t| double(tag: t) }) }
 
           it "detects #{expected}" do
             expect(subject.hour_system_name).to eq expected
@@ -102,7 +101,7 @@ describe GregobaseImporter::Adapter do
         # [[''], ''],
       ].each do |tags, expected|
         describe tags.inspect do
-          let(:gregobase_chant) { double(tags: tags.collect {|t| double(tag: t) }) }
+          let(:gregobase_chant) { double(Gregobase::Chant, tags: tags.collect {|t| double(tag: t) }) }
 
           it "detects #{expected}" do
             expect(subject.season_system_name).to eq expected
@@ -135,7 +134,7 @@ describe GregobaseImporter::Adapter do
       [['VII', 'c trans'], ['VII', 'c tr']],
     ].each do |((g_mode, g_mode_var), (modus, differentia))|
       describe [g_mode, g_mode_var].inspect do
-        let(:gregobase_chant) { double(mode: g_mode, mode_var: g_mode_var) }
+        let(:gregobase_chant) { double(Gregobase::Chant, mode: g_mode, mode_var: g_mode_var) }
         it { expect(subject.modus).to eq modus }
         it { expect(subject.differentia).to eq differentia }
       end
