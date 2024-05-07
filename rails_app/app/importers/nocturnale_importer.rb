@@ -157,7 +157,11 @@ class NocturnaleImporter < BaseImporter
       @day_code.match(/([ARIH])\d?[ab]?$/) do |m|
         case m[1]
         when 'A'
-          'antiphon'
+          if cycle_system_name == 'psalter'
+            'antiphon_psalter'
+          else
+            'antiphon'
+          end
         when 'R'
           'responsory_nocturnal'
         when 'I'
