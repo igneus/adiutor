@@ -34,6 +34,9 @@ h2
     p
       => ParentChildMismatch.unresolved.count
       = link_to 'parent mismatches awaiting review', mismatches_path
+    p
+      ' last import
+      =< @main_corpus.imports.last.finished_at.to_date
 
 
 hr
