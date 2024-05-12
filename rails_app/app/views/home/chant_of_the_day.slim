@@ -2,12 +2,18 @@ h1
   | Chant of the day
   =< @date
 
-= form_with method: :get do |form|
-  .row
-    .column.column-10
-      =< date_field_tag :date, @date.to_s
-    .column.column-10
-      = form.submit 'Select'
+.row
+  .column.column-10
+    = link_to 'previous', chant_of_the_day_path(date: (@date - 1).to_s), class: 'button button-outline', data: {navigation: 'previous'}
+  .column.column-40
+    = form_with method: :get do |form|
+      .row
+        .column.column-50
+          =< date_field_tag :date, @date.to_s
+        .column.column-50
+          = form.submit 'Select'
+  .column.column-10
+    = link_to 'next', chant_of_the_day_path(date: (@date + 1).to_s), class: 'button button-outline', data: {navigation: 'next'}
 
 - if @chant
   = render 'chant_to_fix', chant: @chant
