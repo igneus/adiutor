@@ -11,6 +11,8 @@ class LiturgiaHorarumLinkBuilder
   def date_and_hour(chant)
     date = chant.source_file_path.match(/^sanktoral\/(\d{2})(\d{2})/) do |m|
       Date.new(2000, m[1].to_i, m[2].to_i)
+    rescue Date::Error
+      nil
     end
 
     return nil unless date

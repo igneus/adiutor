@@ -42,6 +42,11 @@ describe LiturgiaHorarumLinkBuilder do
         'sanktoral/0103jmenajezis.ly', 'aben', 'lauds',
         [Date.new(2000, 1, 3), :lauds]
       ],
+      [
+        'sanktoral/0599neposkvrnenehosrdcepm.ly', 'aben', 'lauds',
+        nil,
+        'movable sanctorale feasts unsupported for now'
+      ],
 
       # handling differences between our and breviar.sk Hour ontology:
       # 1. here invitatories have no Hour, over there they "are" an hour
