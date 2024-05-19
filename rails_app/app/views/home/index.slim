@@ -23,7 +23,7 @@ h2
       | unique antiphons
     p
       => @main_corpus.chants.have_fons_externus.size
-      | adaptations of Latin chants
+      = link_to 'adaptations of Latin chants', chants_path(fons_externus: true)
     p
       => Chant.where.not(corpus: @main_corpus).size
       | chants from other corpora for comparative purposes
