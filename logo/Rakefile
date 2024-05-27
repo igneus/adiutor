@@ -1,0 +1,18 @@
+desc 'build favicon'
+task default: 'favicon.ico'
+
+file 'logo.pdf' => ['logo.tex', 'adiutor.gabc'] do
+  sh 'lualatex', 'logo'
+end
+
+file 'favicon.ico' => ['logo.pdf'] do |t|
+  sh 'convert', t.prerequisites[0],
+     '-alpha', 'off',
+     '-define', 'icon:auto-resize=64,48,32,16', # multi-resolution
+     t.name
+end
+
+desc 'update favicon in the web app source tree'
+task update: ['favicon.ico'] do |t|
+  cp t.prerequisites[0], '../rails_app/public'
+end
