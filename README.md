@@ -47,8 +47,8 @@ not directly related to the work on the vernacular chant corpus.
 1. `./bin/init.sh`
 1. spin the application up by `./dc.sh up` (Ctrl+C to stop, `./dc.sh down` to remove the containers)
 1. check that the application works:
-  - `http://localhost:3000/` serves Adiutor homepage
-  - `make test` succeeds (or at least `make test-rails test-python` succeeds)
+    - `http://localhost:3000/` serves Adiutor homepage
+    - `make test` succeeds (or at least `make test-rails test-python` succeeds)
 1. optionally create some user account: `rake user:add[your@email.org]`
    (only needed if you plan to use the data-modifying functionalities like reviewing
    parent-child mismatches and marking them resolved)
