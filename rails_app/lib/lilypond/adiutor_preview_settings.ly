@@ -17,3 +17,7 @@
 doxologieResponsoriumVI = \relative c'' {
   \respVIdoxologie \barFinalis
 }
+
+\layout {
+  indent = 0
+}
