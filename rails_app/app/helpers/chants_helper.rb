@@ -32,6 +32,12 @@ module ChantsHelper
       if chant.import != chant.corpus.last_import
         c << Tag.new('obsolete', "not seen by import since #{chant.import.started_at.strftime('%F')}")
       end
+
+      if chant.corpus.system_name == 'in_adiutorium'
+        intensity_label = "#{chant.development_versions_count} development versions"
+        c << Tag.new('not worked on', intensity_label) if chant.development_versions_count <= 2
+        c << Tag.new('heavily worked on', intensity_label) if chant.development_versions_count > 25
+      end
     end
 
     c

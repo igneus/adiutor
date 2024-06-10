@@ -37,6 +37,10 @@ pre {
   &.obsolete { background-color: black; }
   &.copy, &.copy-simple, &.has-children { background-color: darkseagreen; }
 
+  // development intensity
+  &.not-worked-on { background-color: #adfffe; }
+  &.heavily-worked-on { background-color: #af3451; }
+
   // corpora shortcuts
   &.IA { background-color: blue; }
   &.A1983 { background-color: lightblue; }
