@@ -42,6 +42,8 @@ class InAdiutoriumImporter < BaseImporter
         .scores
         .collect {|i| LyvExtensions::ScoreBetterLyrics.new i }
 
+    development_versions = development_version_counts(dir, in_project_path)
+
     offset = 0
     # file due to historical reasons
     # containing chants of two seasons
@@ -54,7 +56,7 @@ class InAdiutoriumImporter < BaseImporter
 
       triduum_scores.each_with_index do |s, si|
         puts s
-        import_score s, in_project_path, file_attrs.merge(season: season_triduum), si
+        import_score s, in_project_path, file_attrs.merge(season: season_triduum), si, development_versions[s.header['id']]
       end
 
       offset = triduum_scores.size
@@ -63,21 +65,23 @@ class InAdiutoriumImporter < BaseImporter
     scores.each.with_index(offset) do |s, si|
       puts s
 
-      if s.header['id'].blank?
+      score_id = s.header['id']
+      if score_id.blank?
         puts 'score ID missing, skip'
         next
       end
 
-      import_score s, in_project_path, file_attrs, si
+      import_score s, in_project_path, file_attrs, si, development_versions[score_id]
     end
   end
 
-  def import_score(score, in_project_path, common_attributes, source_file_position)
+  def import_score(score, in_project_path, common_attributes, source_file_position, development_versions_count)
     header = score.header.transform_values {|v| v == '' ? nil : v }
     chant = Chant.find_or_initialize_by(chant_id: header['id'], source_file_path: in_project_path)
 
     chant.assign_attributes common_attributes
     chant.source_file_position = source_file_position
+    chant.development_versions_count = development_versions_count || 0
 
     hour, genre = detect_hour_and_genre(header['id'], header['quid'], in_project_path)
     genre = header['adiutor_genre'] if header['adiutor_genre']
@@ -309,5 +313,30 @@ class InAdiutoriumImporter < BaseImporter
     end
 
     @detect_genre_examples = nil
+  end
+
+  # builds a Hash mapping score IDs to development versions counts
+  def development_version_counts(data_dir, in_project_path)
+    DevelopmentFilesFinder
+      .new(File.join(data_dir, 'variationes'))
+      .find_for(in_project_path)
+      .inject({}) do |memo, development_file|
+        next memo unless File.exist? development_file
+
+        Lyv::LilyPondMusic.new(File.read(development_file))
+          .scores
+          .each do |s|
+            id = s.header['id']
+
+            # TODO: there _are_ development versions lacking an ID, it would be desirable
+            #   to try matching them by comparing normalized lyrics
+            next unless id
+
+            memo[id] ||= 0
+            memo[id] += 1
+          end
+
+        memo
+      end
   end
 end

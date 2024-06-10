@@ -4,7 +4,8 @@ task vendor_update: [:environment] do
   vendor_dir = Rails.root.join('vendor', 'inadiutorium')
   [
     'fial.rb',
-    'lib/checkcopies/'
+    'lib/checkcopies/',
+    'lib/updatefromvar/development_files_finder.rb',
   ].each do |f|
     dir = vendor_dir.join(File.dirname(f))
     FileUtils.mkdir_p dir
