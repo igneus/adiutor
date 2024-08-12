@@ -4,6 +4,7 @@ class GregobaseImporter < BaseImporter
 
   GENRES = {
     'an' => 'antiphon',
+    'hy' => 'hymn',
     're' => 'responsory_nocturnal',
     'rb' => 'responsory_short',
   }.freeze

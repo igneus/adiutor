@@ -79,6 +79,7 @@ Genre.find_or_create_by!(system_name: 'antiphon_gospel', name: 'Gospel antiphon'
 Genre.find_or_create_by!(system_name: 'antiphon_standalone', name: 'Votive/final/processional antiphon')
 Genre.find_or_create_by!(system_name: 'responsory_short', name: 'Short responsory')
 Genre.find_or_create_by!(system_name: 'responsory_nocturnal', name: 'Nocturnal responsory')
+Genre.find_or_create_by!(system_name: 'hymn', name: 'Hymn')
 Genre.find_or_create_by!(system_name: 'varia', name: 'Varia')
 
 # Hours
