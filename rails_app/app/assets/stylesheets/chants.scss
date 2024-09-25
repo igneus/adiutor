@@ -73,4 +73,7 @@ pre {
   .volpiano::placeholder { font-family: Roboto, Helvetica, Arial, sans-serif; font-size: 14pt; }
   .checkboxes > div { border: 1px solid #ccc; padding: 6px 4px 0 4px; margin-bottom: -1px; }
   .group-title { display: inline-block; min-width: 100px; padding: 0 10px; }
+
+  // highlight inputs affecting the data displayed
+  :checked, input[type=text]:not(:placeholder-shown) { outline: 2px solid violet; }
 }
