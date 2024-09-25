@@ -1,1 +1,5 @@
-json.array! @chants, :id, :lyrics, :fial_of_self
+json.array! @chants,
+  :id,
+  :lyrics,
+  :fial_of_self,
+  :volpiano
