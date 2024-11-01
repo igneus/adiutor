@@ -1,0 +1,30 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[left=1.5cm, right=1.5cm, top=3cm, bottom=3cm]{geometry}
+
+\usepackage{lyluatex}
+\usepackage{gregoriotex}
+
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+
+\setluaoption{ly}{includepaths}{<%= include_path %>}
+
+<% chants.each do |gchant| %>
+\href{https://gregobase.selapa.net/chant.php?id=<%= gchant.id %>}{%
+  <%= gchant.id %> <%= gchant['office-part'] %> \textit{<%= gchant.incipit %>} }
+
+\gabcsnippet{<%= JSON.parse(gchant.gabc).html_safe %>}
+
+\begin{lilypond}
+  \include "gregorian.ly"
+  \include "lilygabc.ily"
+  #(set-global-staff-size 33)
+  \score {
+    \gabc-vaticana "<%= JSON.parse(gchant.gabc).html_safe %>"
+  }
+\end{lilypond}
+
+<% end %>
+
+\end{document}
