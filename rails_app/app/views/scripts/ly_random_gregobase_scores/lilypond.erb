@@ -1,0 +1,11 @@
+\version "2.24.0"
+\include "gregorian.ly"
+\include "lilygabc.ily"
+
+<% chants.each do |gchant| %>
+\markup\with-url "https://gregobase.selapa.net/chant.php?id=<%= gchant.id %>%" {
+  <%= gchant.id %> <%= gchant['office-part'] %> \italic{<%= gchant.incipit %>}
+}
+\score { \gabc-vaticana "<%= JSON.parse(gchant.gabc) %>" }
+
+<% end %>

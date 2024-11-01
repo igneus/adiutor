@@ -4,23 +4,15 @@
 
 count = ARGV[0]&.to_i || 5
 
-puts <<EOS
-\\version "2.24.0"
-\\include "gregorian.ly"
-\\include "lilygabc.ily"
+chants =
+  Gregobase::Chant
+    .where.not(gabc: '')
+    .where.not("gabc LIKE '[%'") # TODO try to reasonably handle those, too
+    .order(Arel.sql('RAND()'))
+    .limit(count)
 
-EOS
-
-Gregobase::Chant
-  .where.not(gabc: '')
-  .where.not("gabc LIKE '[%'") # TODO try to reasonably handle those, too
-  .order(Arel.sql('RAND()'))
-  .limit(count)
-  .each do |gchant|
-    gabc = JSON.parse(gchant.gabc)
-    puts "\\markup\\with-url \"https://gregobase.selapa.net/chant.php?id=#{gchant.id}\"" +
-         " {#{gchant.id} #{gchant['office-part']}" +
-         " \\italic{#{gchant.incipit}}}"
-    puts "\\score { \\gabc-vaticana \"#{gabc}\" }"
-    puts
-  end
+puts ApplicationController.renderer.render(
+  'scripts/ly_random_gregobase_scores/lilypond',
+  locals: {chants: chants},
+  layout: false
+)
