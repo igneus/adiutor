@@ -34,8 +34,8 @@
     div
       span.group-title Corpus
       = form.collection_check_boxes :corpus_id, @corpora, :id, :name, include_hidden: false
-
-      span.group-title.tac Genre
+    div
+      span.group-title Genre
       = form.collection_check_boxes :genre_id, @genres, :id, :name, include_hidden: false
     div
       span.group-title Cycle

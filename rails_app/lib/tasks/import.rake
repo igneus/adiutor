@@ -14,6 +14,7 @@ CORPUS_SYSTEM_NAMES = %w(
   nocturnale
   hughes
   neuma
+  echoes
 )
 
 CORPUS_SYSTEM_NAMES.each do |system_name|

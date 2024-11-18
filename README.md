@@ -82,6 +82,8 @@ and execute parts of the Rails application outside of Docker.
         https://github.com/DDMAL/Andrew-Hughes-Chant
       - `bundle exec rake neuma:fetch neuma:import` to import chants from the Sequentia collection
         http://neuma.huma-num.fr/home/corpus/sequentia/
+      - `bundle exec rake echoes:import` to import chants from the Echoes from the Past corpus
+        https://github.com/ECHOES-from-the-Past/GABCtoMEI
 1. `bundle exec rake images` to render each chant in notation (takes a lot of time to finish,
    requires LilyPond and Inkscape, for the gabc-based chant corpora also LuaLaTex and Gregorio)
 1. `cd ..` (return to the project root directory)

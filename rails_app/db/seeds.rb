@@ -20,6 +20,7 @@ Corpus.find_or_create_by!(system_name: 'gregobase', name: 'GregoBase')
 Corpus.find_or_create_by!(system_name: 'nocturnale', name: 'nocturnale.marteo.fr')
 Corpus.find_or_create_by!(system_name: 'hughes', name: 'Andrew Hughes')
 Corpus.find_or_create_by!(system_name: 'neuma', name: 'Neuma')
+Corpus.find_or_create_by!(system_name: 'echoes', name: 'Echoes from the Past (Aquitanian chant)')
 
 # Books
 
