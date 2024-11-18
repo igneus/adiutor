@@ -21,7 +21,7 @@ CORPUS_SYSTEM_NAMES.each do |system_name|
     desc 'check that the Corpus is configured and can be imported'
     task setup_check: IMPORT_PREREQUISITES do
       unless Corpus.find_by_system_name(system_name).configured?
-        abort 'Corpus is not configured.'
+        abort "ERROR: Corpus is not configured.\nUsually this means you should go to .env and set an environment variable to the path of the corpus data."
       end
     end
 
