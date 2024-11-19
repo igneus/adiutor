@@ -157,10 +157,6 @@ class HughesImporter < BaseImporter
       LyricsNormalizer.new.normalize_latin lyrics
     end
 
-    def word_count
-      lyrics.split(/\s+/).size
-    end
-
     def syllable_count
       @syllable_count ||=
         @xml_doc

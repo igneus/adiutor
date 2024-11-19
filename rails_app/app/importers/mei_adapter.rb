@@ -10,12 +10,6 @@ module MeiAdapter
       .strip
   end
 
-  def word_count
-    @xml_doc
-      .xpath('//m:syl[@wordpos = "i" or not(@wordpos)]', 'm' => MEI_XML_NAMESPACE)
-      .size
-  end
-
   # duplicate code, with HughesImporter
   def syllable_count
     @syllable_count ||=

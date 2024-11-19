@@ -100,6 +100,7 @@ class BaseImportDataAdapter
   end
 
   def word_count
+    lyrics.split(/\s+/).size
   end
 
   def melody_section_count
