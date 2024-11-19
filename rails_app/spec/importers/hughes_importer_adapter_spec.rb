@@ -1,6 +1,6 @@
 describe HughesImporter::Adapter do
   let(:xml) do
-    '<mei xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.music-encoding.org/ns/mei" meiversion="2013">
+    '<mei xmlns="http://www.music-encoding.org/ns/mei" meiversion="2013">
 	<meiHead>
 		<fileDesc>
 			<titleStmt>
