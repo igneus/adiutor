@@ -5,6 +5,15 @@ file 'logo.pdf' => ['logo.tex', 'adiutor.gabc'] do
   sh 'lualatex', 'logo'
 end
 
+file 'readme_logo.png' => ['logo.pdf', __FILE__] do |t|
+  sh 'convert',
+     '-density', '100',
+     t.prerequisites[0],
+     '-resize', '40x40',
+     '-crop', '40x22+0+9',
+     t.name
+end
+
 file 'favicon.ico' => ['logo.pdf'] do |t|
   sh 'convert', t.prerequisites[0],
      '-alpha', 'off',

@@ -1,4 +1,4 @@
-# Adiutor
+# ![adiutor logo](logo/readme_logo.png "adiutor logo") Adiutor
 
 Private chant database assisting work on the [In adiutorium][ia] project.
 Internal tool, not intended for public deployment.
