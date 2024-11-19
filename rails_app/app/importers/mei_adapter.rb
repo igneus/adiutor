@@ -5,7 +5,7 @@ module MeiAdapter
   def lyrics
     @xml_doc
       .xpath('//m:syl', 'm' => MEI_XML_NAMESPACE)
-      .collect {|s| s.text + (s[:wordpos].yield_self {|x| x == 't' || x.nil? } ? ' ' : '') }
+      .collect {|s| s.text + (s[:wordpos].yield_self {|x| x == 't' || x == 's' || x.nil? } ? ' ' : '') }
       .join
       .strip
   end
