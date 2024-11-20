@@ -70,5 +70,15 @@ class EchoesImporter < BaseImporter
     def lyrics_normalized
       LyricsNormalizer.new.normalize_latin lyrics
     end
+
+    def header
+      cantus_id =
+        @xml_doc
+          .xpath("//m:titleStmt/m:title/m:identifier[@type='CantusID']", 'm' => MEI_XML_NAMESPACE)
+          .first
+          &.text
+
+      {cantus_id: cantus_id} if cantus_id
+    end
   end
 end
