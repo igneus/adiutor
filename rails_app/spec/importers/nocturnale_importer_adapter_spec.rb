@@ -18,4 +18,21 @@ describe NocturnaleImporter::Adapter do
       end
     end
   end
+
+  describe 'detecting modus and differentia' do
+    [
+      ['mode:;', nil, nil],
+      ['mode:4;', 'IV', nil],
+      ['mode:4e;', 'IV', 'e'],
+    ].each do |(snip, expected_modus, expected_differentia)|
+      it snip do
+        source = "#{snip}\n%%\n"
+        score = MyGabcParser.call source
+        adapter = described_class.new(source, score, path)
+
+        expect(adapter.modus).to eq expected_modus
+        expect(adapter.differentia).to eq expected_differentia
+      end
+    end
+  end
 end

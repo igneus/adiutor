@@ -99,7 +99,7 @@ class NocturnaleImporter < BaseImporter
       case header_mode
       when /^(\d)(.*)$/
         @modus = RomanNumerals.to_roman $1.to_i
-        @differentia = $2
+        @differentia = $2 if $2.present?
       when /irreg/
         @modus =
           header_mode
