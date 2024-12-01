@@ -3,8 +3,7 @@ module MeiAdapter
   MEI_XML_NAMESPACE = 'http://www.music-encoding.org/ns/mei'
 
   def lyrics
-    @xml_doc
-      .xpath('//m:syl', 'm' => MEI_XML_NAMESPACE)
+    mei_syllables
       .collect {|s| s.text + (s[:wordpos].yield_self {|x| x == 't' || x == 's' || x.nil? } ? ' ' : '') }
       .join
       .strip
@@ -12,9 +11,12 @@ module MeiAdapter
 
   # duplicate code, with HughesImporter
   def syllable_count
-    @syllable_count ||=
-      @xml_doc
-        .xpath('//m:syl', 'm' => MEI_XML_NAMESPACE)
-        .size
+    @syllable_count ||= mei_syllables.size
+  end
+
+  private
+
+  def mei_syllables
+    @xml_doc.xpath('//m:syl', 'm' => MEI_XML_NAMESPACE)
   end
 end
