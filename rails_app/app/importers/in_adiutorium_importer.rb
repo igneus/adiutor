@@ -113,6 +113,7 @@ class InAdiutoriumImporter < BaseImporter
         .lyrics_readable
         .yield_self {|l| expand_responsory_variables(l) }
         .yield_self {|l| /^(antiphon|invitatory)/ =~ chant.genre.system_name ? l.gsub(/\s*\*\s*/, ' ') : l }
+        .yield_self(&LyricsCleaner.method(:call))
         .strip
     chant.header = header_json header
 
@@ -338,5 +339,16 @@ class InAdiutoriumImporter < BaseImporter
 
         memo
       end
+  end
+
+  # cleans LilyPond-specific markup from lyrics
+  class LyricsCleaner
+    def self.call(lyrics)
+      lyrics
+        .gsub('\markup\Nomen', 'N.')
+        .gsub(/\s*\\skip\s*1\s*/, ' ')
+        .gsub(/\\markup(\\(bold|italic|underline))?\{(.*?)\}/, '\3') # the Regexp is naive, but our data don't contain lyrics with nested markup structures
+        .gsub('"', '')
+    end
   end
 end
