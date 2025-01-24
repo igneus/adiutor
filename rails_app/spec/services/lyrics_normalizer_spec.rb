@@ -34,7 +34,8 @@ RSpec.describe LyricsNormalizer do
        ['jJ', 'ii', 'converts J'],
        ['yY', 'ii', 'converts Y'],
        ['áéíóúý', 'aeiouy', 'strips diacritics'],
-       ['Ææ Ǽǽ Œœ', 'aeae aeae oeoe', 'normalizes digraphs'],
+       ['Ææ Ǽǽ', 'aeae aeae', 'normalizes ae digraph'],
+       ['Œœ OEoe', 'aeae aeae', 'normalizes oe'],
      ]).each do |given, expected, label|
       it(label || given) do
         expect(subject.normalize_latin(given)).to eq expected

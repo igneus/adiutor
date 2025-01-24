@@ -12,6 +12,7 @@ class LyricsNormalizer
       .gsub(/[jy]/, 'i')
       .gsub(/[Ǽǽ]/, 'ae') # I18n.transliterate doesn't get accented digraphs right
       .yield_self(&I18n.method(:transliterate))
+      .gsub('oe', 'ae')
       .yield_self {|a| a.empty? ? nil : a }
   end
 
