@@ -46,5 +46,12 @@ Rails.application.routes.draw do
     post 'eantifonar/search', to: 'eantifonar#search'
   end
 
+  get '/gregobase', to: redirect('gregobase/sources#index')
+  namespace :gregobase do
+    resources :sources do
+      resources :chants
+    end
+  end
+
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end

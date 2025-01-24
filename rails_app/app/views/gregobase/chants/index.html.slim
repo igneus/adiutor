@@ -1,0 +1,18 @@
+h1
+  | Gregobase:
+  em=< @source.title
+  |  chants
+
+= link_to 'Back to Sources', gregobase_sources_path
+
+= paginate @chants
+
+ul
+  - @chants.each do |chant|
+    li
+      = chant['office-part']
+      =< chant.incipit
+      br
+      = image_tag "https://gregobase.selapa.net/chant_img.php?id=#{chant.id}"
+
+= paginate @chants
