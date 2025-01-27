@@ -15,8 +15,9 @@ ul
   - @chants.each do |chant|
     li
       = chant['office-part']
-      =< chant.incipit
+      em=< chant.incipit
+      =< link_to "[Gregobase]", GregobaseUri.chant_uri(chant.id), class: 'small'
       br
-      = image_tag "https://gregobase.selapa.net/chant_img.php?id=#{chant.id}", loading: 'lazy'
+      = image_tag GregobaseUri.chant_image_uri(chant.id), loading: 'lazy'
 
 = paginate @chants
