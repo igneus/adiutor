@@ -6,6 +6,11 @@ h1 Gregobase: Sources
 ul
   - @sources.each do |source|
     li
-      = link_to source.title, gregobase_source_path(source)
+      - if GregobaseImporter.to_be_imported?(source)
+        span title='imported' +
+      - else
+        span title='not imported' -
+
+      =< link_to source.title, gregobase_source_path(source)
       =< source.editor
       =< source.year
