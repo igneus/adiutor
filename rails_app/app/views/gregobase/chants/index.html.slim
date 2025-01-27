@@ -17,6 +17,6 @@ ul
       = chant['office-part']
       =< chant.incipit
       br
-      = image_tag "https://gregobase.selapa.net/chant_img.php?id=#{chant.id}"
+      = image_tag "https://gregobase.selapa.net/chant_img.php?id=#{chant.id}", loading: 'lazy'
 
 = paginate @chants
