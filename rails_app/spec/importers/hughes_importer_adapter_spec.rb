@@ -82,4 +82,41 @@ EOS
   describe '#genre_system_name' do
     it { expect(subject.genre_system_name).to eq 'antiphon' }
   end
+
+  describe '#modus, #differentia' do
+    describe 'available in the data' do
+      it { expect(subject.modus).to eq 'VII' }
+      it { expect(subject.differentia).to eq 'g' }
+    end
+
+    describe 'not available' do
+      before :each do
+        xml.gsub! /<extMeta>.*?<\/extMeta>/, '<extMeta></extMeta>'
+      end
+
+      it { expect(subject.modus).to eq nil }
+      it { expect(subject.differentia).to eq nil }
+    end
+
+    describe 'empty' do
+      before :each do
+        xml.gsub! /<extMeta>.*?<\/extMeta>/, '<extMeta>mode:###final:</extMeta>'
+      end
+
+      it { expect(subject.modus).to eq nil }
+      it { expect(subject.differentia).to eq nil }
+    end
+
+    describe 'non-standard' do
+      before :each do
+        xml.gsub! /<extMeta>.*?<\/extMeta>/, '<extMeta>mode:O###final:s</extMeta>'
+      end
+
+      it 'keeps the non-standard value' do
+        expect(subject.modus).to eq 'O'
+      end
+
+      it { expect(subject.differentia).to eq 's' }
+    end
+  end
 end

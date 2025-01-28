@@ -66,10 +66,17 @@ class HughesImporter < BaseImporter
           .collect {|i| i.split(/\s*:\s*/, 2) }
           .to_h
           .merge('txt_meta' => txt_meta)
+          .transform_values {|v| v == '' ? nil : v }
     end
 
     def modus
-      header['mode']&.yield_self {|x| RomanNumerals.to_roman x.to_i }
+      header['mode']&.yield_self do |x|
+        if x =~ /^\d+$/
+          RomanNumerals.to_roman x.to_i
+        else
+          x
+        end
+      end
     end
 
     def differentia
