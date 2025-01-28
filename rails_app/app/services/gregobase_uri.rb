@@ -8,4 +8,8 @@ module GregobaseUri
   def self.chant_image_uri(id)
     BASE_URI + "/chant_img.php?id=#{id}"
   end
+
+  def self.source_uri(id)
+    BASE_URI + "/source.php?id=#{id}"
+  end
 end
