@@ -38,7 +38,7 @@ class HughesImporter < BaseImporter
   end
 
   class Adapter < BaseImportDataAdapter
-    MEI_XML_NAMESPACE = 'http://www.music-encoding.org/ns/mei'
+    include MeiAdapter
 
     def initialize(source_code, path, txt)
       # dirty hack: the MEI files miss staff@n attributes without which
@@ -162,13 +162,6 @@ class HughesImporter < BaseImporter
 
     def lyrics_normalized
       LyricsNormalizer.new.normalize_latin lyrics
-    end
-
-    def syllable_count
-      @syllable_count ||=
-        @xml_doc
-          .xpath('//m:syl', 'm' => MEI_XML_NAMESPACE)
-          .size
     end
 
     private
