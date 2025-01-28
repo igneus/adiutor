@@ -66,7 +66,7 @@ class HughesImporter < BaseImporter
           .collect {|i| i.split(/\s*:\s*/, 2) }
           .to_h
           .merge('txt_meta' => txt_meta)
-          .transform_values {|v| v == '' ? nil : v }
+          .transform_values(&Transformations.method(:empty_str_to_nil))
     end
 
     def modus

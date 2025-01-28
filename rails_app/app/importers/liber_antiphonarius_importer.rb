@@ -131,7 +131,7 @@ class LiberAntiphonariusImporter < BaseImporter
     end
 
     def header
-      @header ||= score.header.to_hash.transform_values {|v| v == '' ? nil : v }
+      @header ||= score.header.to_hash.transform_values(&Transformations.method(:empty_str_to_nil))
     end
 
     def modus

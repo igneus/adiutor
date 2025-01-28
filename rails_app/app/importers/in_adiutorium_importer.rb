@@ -76,7 +76,7 @@ class InAdiutoriumImporter < BaseImporter
   end
 
   def import_score(score, in_project_path, common_attributes, source_file_position, development_versions_count)
-    header = score.header.transform_values {|v| v == '' ? nil : v }
+    header = score.header.transform_values(&Transformations.method(:empty_str_to_nil))
     chant = Chant.find_or_initialize_by(chant_id: header['id'], source_file_path: in_project_path)
 
     chant.assign_attributes common_attributes
@@ -102,7 +102,7 @@ class InAdiutoriumImporter < BaseImporter
   end
 
   def update_chant_from_score(chant, score)
-    header = score.header.transform_values {|v| v == '' ? nil : v }
+    header = score.header.transform_values(&Transformations.method(:empty_str_to_nil))
 
     score_with_stats = LyvExtensions::ScoreStats.new score
 
