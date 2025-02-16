@@ -1,6 +1,7 @@
 % files from the In adiutorium source tree, expected to be on include path
 \include "spolecne.ly"
 \include "dilyresponsorii.ly"
+\include "spolecne/zj19.ly"
 
 \header {
   tagline = ##f

@@ -42,6 +42,14 @@ class InAdiutoriumImporter < BaseImporter
         .scores
         .collect {|i| LyvExtensions::ScoreBetterLyrics.new i }
 
+    if path =~ /kantikum-/
+      CustomSourceSplitter.new(File.read(path)).yield_self do |splitter|
+        scores = scores.collect do |score|
+          PropertyOverrideDecorator.new(score, text: splitter.source_by_id(score.header['id']))
+        end
+      end
+    end
+
     development_versions = development_version_counts(dir, in_project_path)
 
     offset = 0
@@ -350,5 +358,30 @@ class InAdiutoriumImporter < BaseImporter
         .gsub(/\\markup(\\(bold|italic|underline))?\{(.*?)\}/, '\3') # the Regexp is naive, but our data don't contain lyrics with nested markup structures
         .gsub('"', '')
     end
+  end
+
+  # source code extraction for the few files
+  # where it's not enough to extract the very \score { ... } block
+  # and important context must be packaged in
+  class CustomSourceSplitter
+    extend Forwardable
+
+    def initialize(file_contents)
+      @sources = {}
+      @shared = ''
+
+      file_contents.split(/^(?=%%%)/).each do |chunk|
+        if chunk.start_with?('%%% spolecne')
+          @shared = chunk
+        else
+          chunk.match(/(?<!\w)id\s+=\s+"(.+?)"/) do |m|
+            @sources[m[1]] = @shared + chunk
+          end
+        end
+      end
+    end
+
+    def_delegator :@sources, :[]
+    alias source_by_id []
   end
 end
