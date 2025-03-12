@@ -1,4 +1,4 @@
-# ![adiutor logo](logo/readme_logo.png "adiutor logo") Adiutor
+# [![adiutor logo](logo/readme_logo.png "adiutor logo")][adiutor_antiphon] Adiutor
 
 Private chant database assisting work on the [In adiutorium][ia] project.
 Internal tool, not intended for public deployment.
@@ -91,3 +91,4 @@ and execute parts of the Rails application outside of Docker.
 
 [ia]: https://github.com/igneus/In-adiutorium
 [verovio]: https://www.verovio.org
+[adiutor_antiphon]: https://gregobase.selapa.net/chant.php?id=18061
