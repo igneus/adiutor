@@ -7,7 +7,7 @@ ul
   - @sources.each do |source|
     li
       - if GregobaseImporter.to_be_imported?(source)
-        span title='imported' +
+        span.gregobase-already-imported title='imported' +
       - else
         span title='not imported' -
 

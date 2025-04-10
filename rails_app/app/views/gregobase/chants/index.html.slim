@@ -13,9 +13,13 @@ h1
 
 ul
   - @chants.each do |chant|
+    - already_imported = @imported_ids.include? chant.id
     li
-      = chant['office-part']
-      em=< chant.incipit
+      span.gregobase-genre(
+        class=(already_imported ? 'gregobase-already-imported' : nil)
+        title=(already_imported ? 'already imported' : nil)
+      )= chant['office-part']
+      =< chant.incipit
       =< link_to "[Gregobase]", GregobaseUri.chant_uri(chant.id), class: 'small'
       br
       = image_tag GregobaseUri.chant_image_uri(chant.id), loading: 'lazy'
