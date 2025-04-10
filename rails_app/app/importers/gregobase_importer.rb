@@ -322,11 +322,11 @@ class GregobaseImporter < BaseImporter
         'bsop'
       in {title: /Antiphonarium Cisterciense/, year: ^before_loth}
         'bcist'
-      in {title: /Antiphonale Romanum/, editor: 'Solesmes', year: ->(i) { i > 2000 }} |
+      in {title: /Antiphonale Romanum/, publisher: 'Solesmes', year: ->(i) { i > 2000 }} |
         {title: /Antiphon. et Responsoria/} |
         {title: /Les Heures Grégoriennes/} # LHG don't match the OCO2015 (by far) 100%, but I don't want to introduce a new Book just for them
         'oco2015'
-      in {title: 'Liber Hymnarius', editor: 'Solesmes'}
+      in {title: 'Liber Hymnarius', publisher: 'Solesmes'}
         'oco1983'
       in {title: 'Graduale simplex'}
         'gs'
