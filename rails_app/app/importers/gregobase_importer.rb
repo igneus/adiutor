@@ -32,7 +32,22 @@ class GregobaseImporter < BaseImporter
   end
 
   def self.to_be_imported?(gregobase_source)
-    gregobase_source.title =~ /(antiphonale|antiphonarium|antiphonarius|completorium|hebdomad|in nocte|les heures|liber hymnarius|matutinum|nocturnale|nocturnalis|psalterium|semaine|usualis|graduale simplex|et responsoria|responsorialis)/i
+    gregobase_source.title =~ /(
+      antiphona(le|riu[ms])
+      |completorium
+      |hebdomad
+      |in\ nocte
+      |les\ heures
+      |liber\ hymnarius
+      |matutinum
+      |nocturnal(e|is)
+      |psalterium
+      |semaine
+      |usualis
+      |graduale\ simplex
+      |et\ responsoria
+      |responsorialis
+    )/xi
   end
 
   def build_common_attributes
