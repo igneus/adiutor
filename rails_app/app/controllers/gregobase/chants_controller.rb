@@ -9,6 +9,7 @@ module Gregobase
           .where(gregobase_chant_id: @chants.collect(&:id))
           .pluck(:gregobase_chant_id)
       )
+      @relevant_genres = Set.new(GregobaseImporter::GENRES.keys)
     end
 
     def show

@@ -14,9 +14,10 @@ h1
 ul
   - @chants.each do |chant|
     - already_imported = @imported_ids.include? chant.id
+    - relevant_genre = @relevant_genres.include? chant['office-part']
     li
       span.gregobase-genre(
-        class=(already_imported ? 'gregobase-already-imported' : nil)
+        class=(already_imported ? 'gregobase-already-imported' : (relevant_genre ? 'gregobase-unimported-relevant-genre' : nil))
         title=(already_imported ? 'already imported' : nil)
       )= chant['office-part']
       =< chant.incipit
