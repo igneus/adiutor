@@ -34,6 +34,7 @@ class GregobaseImporter < BaseImporter
   def self.to_be_imported?(gregobase_source)
     gregobase_source.title =~ /(
       antiphona(le|riu[ms])
+      |cantus\ selecti
       |completorium
       |hebdomad
       |in\ nocte
@@ -41,12 +42,14 @@ class GregobaseImporter < BaseImporter
       |liber\ hymnarius
       |matutinum
       |nocturnal(e|is)
+      |processionarium
       |psalterium
       |semaine
       |usualis
       |graduale\ simplex
       |et\ responsoria
       |responsorialis
+      |vari.\ preces
     )/xi
   end
 
@@ -327,6 +330,8 @@ class GregobaseImporter < BaseImporter
         'oco1983'
       in {title: 'Graduale simplex'}
         'gs'
+      else
+        'other'
       end
     end
 
