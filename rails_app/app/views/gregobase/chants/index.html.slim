@@ -22,6 +22,9 @@ ul
       )= chant['office-part']
       =< chant.incipit
       =< link_to "[Gregobase]", GregobaseUri.chant_uri(chant.id), class: 'small'
+      - if chant.remarks
+        br
+        em= chant.remarks
       br
       = image_tag GregobaseUri.chant_image_uri(chant.id), loading: 'lazy'
 
