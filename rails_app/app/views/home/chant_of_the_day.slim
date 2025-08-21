@@ -12,6 +12,8 @@ h1
           =< date_field_tag :date, @date.to_s
         .column.column-50
           = form.submit 'Select'
+          - if @date != Date.today
+            = link_to 'today', chant_of_the_day_path, class: 'button button-outline'
   .column.column-10
     = link_to 'next', chant_of_the_day_path(date: (@date + 1).to_s), class: 'button button-outline', data: {navigation: 'next'}
 
