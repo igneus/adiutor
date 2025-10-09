@@ -10,9 +10,9 @@ class LiturgiaHorarumLinkBuilder
 
   def date_and_hour(chant)
     date = chant.source_file_path.match(/^sanktoral\/(\d{2})(\d{2})/) do |m|
-      Date.new(2000, m[1].to_i, m[2].to_i)
-    rescue Date::Error
-      nil
+      next nil if m[2].to_i > 90 # movable sanctorale feasts not supported for now
+
+      sanctorale_celebration_date CalendariumRomanum::AbstractDate.new(m[1].to_i, m[2].to_i)
     end
 
     return nil unless date
@@ -27,6 +27,20 @@ class LiturgiaHorarumLinkBuilder
       :invitatory
 
     [date, hour_sym]
+  end
+
+  def sanctorale_celebration_date(abstract_date)
+    year = 2000 - 1
+    begin
+      year += 1
+      date = abstract_date.concretize(year)
+    end until calendar[date].celebrations.any? do |i|
+      i.cycle == :sanctorale &&
+        i.date == abstract_date &&
+        (date.sunday? || i.rank != CalendariumRomanum::Ranks::FEAST_LORD_GENERAL)
+    end
+
+    date
   end
 
   def link(date, hour)
@@ -61,5 +75,15 @@ class LiturgiaHorarumLinkBuilder
       path: '/cgi-bin/l.cgi',
       query: query
     ).to_s
+  end
+
+  private
+
+  def calendar
+    @calendar ||= begin
+      CalendariumRomanum::PerpetualCalendar.new(
+        sanctorale: CalendariumRomanum::Data::CZECH.load
+      )
+    end
   end
 end

@@ -47,6 +47,21 @@ describe LiturgiaHorarumLinkBuilder do
         nil,
         'movable sanctorale feasts unsupported for now'
       ],
+      [
+        'sanktoral/0425marek.ly', 'aben', 'lauds',
+        [Date.new(2001, 4, 25), :lauds],
+        'for suppressed celebrations a year when they are not suppressed is found'
+      ],
+      [
+        'sanktoral/0914povysenisvatehokrize.ly', 'aben', 'lauds',
+        [Date.new(2003, 9, 14), :lauds],
+        'for feasts of the Lord a year when they fall on a Sunday is found'
+      ],
+
+      # TODO:
+      # psalter
+      # Eastertide psalter
+      # temporale
 
       # handling differences between our and breviar.sk Hour ontology:
       # 1. here invitatories have no Hour, over there they "are" an hour
