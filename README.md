@@ -12,7 +12,7 @@ Many features are specific to the corpus being worked on
 (keeping track of relations between pieces,
 of settings for a few special psalms and canticles required to match the respective antiphons,
 of non-standard tunes worth occasional re-evaluation;
-continual focus on pieces marked as needing a revision).
+continual focus on pieces marked as in need of a revision).
 
 The application is only used as visualization and accessibility tool,
 not to edit the data. The music corpus is maintained as a source code
