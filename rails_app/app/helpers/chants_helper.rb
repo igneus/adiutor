@@ -28,6 +28,7 @@ module ChantsHelper
 
       c << Tag.new('OP', 'from Dominican books') if chant.book.system_name == 'bsop'
       c << Tag.new('OSB', 'from Monastic books') if %w(bm lhm).include? chant.book.system_name
+      chant.book.name.match(/^Proprium (\w.*)$/) {|m| c << Tag.new(m[1], m[0]) }
 
       if chant.import != chant.corpus.last_import
         c << Tag.new('obsolete', "not seen by import since #{chant.import.started_at.strftime('%F')}")
