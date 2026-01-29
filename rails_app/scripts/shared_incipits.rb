@@ -25,6 +25,8 @@ url_helpers = Rails.application.routes.url_helpers
 
 
 
+# TODO: check not only direct sorting neighbours, but all combinations of antiphons
+#   sharing some initial word
 Chant
   .all_antiphons
   .where.not(corpus: Corpus.find_by_system_name('in_adiutorium'))
@@ -39,6 +41,8 @@ Chant
 
   music_incipit = common_beginning_length_contextualized volpiano_syllables(a.volpiano), volpiano_syllables(b.volpiano)
 
+  # TODO ignore cases of 100% lyrics&music match and difference just in trailing alleluia
+
   cols = [
     # the interesting results
     *lyrics_incipit,
@@ -50,6 +54,7 @@ Chant
     b.id,
     b.lyrics,
 
+    # link for visual comparison
     url_helpers.chants_url(
       ids: [a, b].collect {|i| i.id.to_s }.join(','),
       host: 'localhost:3000'
